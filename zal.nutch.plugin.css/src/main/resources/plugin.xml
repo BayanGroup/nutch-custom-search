@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin id="filter-css" name="Apache Nutch XML/HTML Parser/Indexing Filter" version="1.6" provider-name="nutch.org">
+
+   	<runtime>
+      	<library name="filter-css.jar">
+         	<export name="*"/>
+      	</library>
+      	<library name="commons-lang3.jar"/>
+      	<library name="jsoup.jar"/>
+      	<library name="log4j.jar"/>
+   	</runtime>
+
+   	<requires>
+      	<import plugin="nutch-extensionpoints"/>
+   	</requires>
+
+   	<extension id="org.apache.nutch.parse" name="Nutch XML/HTML Html parser filter" point="org.apache.nutch.parse.HtmlParseFilter">
+      	<implementation id="ir.co.bayan.simorq.zal.nutch.plugin.css.CssSelectorParseFilter" class="ir.co.bayan.simorq.zal.nutch.plugin.css.CssSelectorParseFilter" />
+   	</extension>
+   	<extension id="org.apache.nutch.indexer" name="Nutch XML/HTML Indexing Filter" point="org.apache.nutch.indexer.IndexingFilter">
+      	<implementation id="ir.co.bayan.simorq.zal.nutch.plugin.css.CssSelectorIndexingFilter" class="ir.co.bayan.simorq.zal.nutch.plugin.css.CssSelectorIndexingFilter"/>
+   	</extension>
+
+</plugin>

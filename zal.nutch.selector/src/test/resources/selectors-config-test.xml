@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir css-paths.xsd"
+	omitNonMatching="true">
+	<types>
+		<type name="long" converter="ir.co.bayan.simorq.zal.nutch.selector.convert.LongConverter" />
+		<type name="persian_date" converter="ir.co.bayan.simorq.zal.nutch.selector.convert.PersianDateConverter"/>
+		<type name="persian_long" converter="ir.co.bayan.simorq.zal.nutch.selector.convert.PersianLongConverter"/>
+	</types>
+	<fields>
+		<field name="post-title" />
+		<field name="post-body" />
+		<field name="post-date" type="persian_date"/>
+		<field name="post-comments" />
+		<field name="document-type" />
+		<field name="blog-title" />
+		<field name="blog-sub-title" />
+		<field name="blog-author" />
+	</fields>
+	<documents>
+		<document id="post-page">
+			<extract-to field="post-title">
+				<content selector="div.post > div.title > h2 > a" />
+			</extract-to>
+			<extract-to field="post-body">
+				<content selector="div.post > div.body > div.cnt" />
+			</extract-to>
+		</document>
+		<document url="^http://.+?\.blog.ir/\d{4}/\d{2}/\d{2}/.+" inherits="post-page">
+			<extract-to field="post-date" >
+				<content selector="url" pattern="^http://.+?\.blog.ir/(\d{4})/(\d{2})/(\d{2})/.+" substitution="$1-$2-$3"/>
+			</extract-to>
+			<extract-to field="post-comments">
+				<content selector="div.post_comments > div.body_cmt > div.cnt > span.cnt_l" />
+				<content selector="div.cmt_reply" pattern="^(پاسخ:)?(.*)" substitution="$2" />
+			</extract-to>
+			<extract-to field="document-type">
+				<constant>Post</constant>
+			</extract-to>
+		</document>
+		<document url="^http://.+?\.blog.ir/page/.+" inherits="post-page">
+			<extract-to field="document-type">
+				<constant>Custom-Page</constant>
+			</extract-to>
+		</document>
+		<document url="^http://.+?\.blog.ir">
+			<extract-to field="blog-title">
+				<content selector="div.title_desc > h1 > a" />
+				<content selector="url" pattern="^http://(.+?)\.blog.ir" substitution="$1"/>
+			</extract-to>
+			<extract-to field="blog-sub-title">
+				<content selector="div.desc > h2" />
+			</extract-to>
+			<extract-to field="blog-author">
+				<content selector="span.author2" select="first"/>
+			</extract-to>
+			<extract-to field="document-type">
+				<constant>First-Page</constant>
+			</extract-to>
+		</document>
+	</documents>
+</config>

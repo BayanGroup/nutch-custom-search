@@ -1,0 +1,97 @@
+<xs:schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://bayan.ir" xmlns="http://bayan.ir">
+
+	<xs:complexType name="typeType">
+		<xs:attribute type="xs:ID" name="name" use="required" />
+		<xs:attribute type="xs:string" name="converter" use="optional" />
+	</xs:complexType>
+
+	<xs:complexType name="fieldType">
+		<xs:attribute type="xs:ID" name="name" use="required" />
+		<xs:attribute type="xs:IDREF" name="type" use="optional" />
+	</xs:complexType>
+	
+	<xs:simpleType name="selectType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="first" />
+			<xs:enumeration value="last" />
+			<xs:enumeration value="all" />
+			<xs:enumeration value="size" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="selectorValue">
+		<xs:attribute type="xs:string" name="selector" use="optional" />
+		<xs:attribute type="xs:string" name="pattern" use="optional" />
+		<xs:attribute type="xs:string" name="substitution" use="optional" />
+		<xs:attribute type="selectType" name="select" use="optional" default="all"/>
+		<xs:attribute type="xs:string" name="delimiter" use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="contentType">
+		<xs:complexContent>
+			<xs:extension base="selectorValue">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="attributeType">
+		<xs:complexContent>
+			<xs:extension base="selectorValue">
+				<xs:attribute type="xs:string" name="name" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="extractToType">
+		<xs:sequence>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="content" maxOccurs="unbounded" minOccurs="0" type="contentType" />
+				<xs:element name="attribute" maxOccurs="unbounded" minOccurs="0" type="attributeType" />
+				<xs:element name="constant" minOccurs="0" type="xs:string" />
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute type="xs:IDREF" name="field" use="required" />
+		<xs:attribute type="xs:string" name="delimiter" use="optional"/>
+	</xs:complexType>
+
+	<xs:complexType name="documentType">
+		<xs:sequence>
+			<xs:element name="extract-to" maxOccurs="unbounded" minOccurs="0" type="extractToType" />
+		</xs:sequence>
+		<xs:attribute type="xs:ID" name="id" use="optional" />
+		<xs:attribute type="xs:string" name="url" use="optional" />
+		<xs:attribute type="xs:IDREF" name="inherits" use="optional" />
+		<xs:attribute type="xs:string" name="selector" use="optional"/>
+	</xs:complexType>
+
+	<xs:element name="config">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="types">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="type" maxOccurs="unbounded" minOccurs="0" type="typeType" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="fields">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="field" maxOccurs="unbounded" minOccurs="0" type="fieldType" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="documents">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="document" maxOccurs="unbounded" minOccurs="0" type="documentType" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="omitNonMatching" type="xs:boolean" default="true"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

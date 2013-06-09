@@ -9,7 +9,7 @@ import java.util.Map;
 public class ExtractedDoc {
 
 	private final Map<String, String> fields;
-	private final String url;
+	private String url;
 
 	public ExtractedDoc(Map<String, String> fields, String url) {
 		this.fields = fields;
@@ -32,6 +32,14 @@ public class ExtractedDoc {
 	 */
 	public String getUrl() {
 		return url;
+	}
+
+	/**
+	 * @param url
+	 *            the url to set
+	 */
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }

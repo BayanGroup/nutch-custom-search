@@ -22,6 +22,9 @@
 		<field name="f11" />
 		
 		<field name="f12" type="hello"/>
+		
+		<field name="id" />
+		<field name="content" />
 	</fields>
 	<documents>
 		<document id="base" url="^http://.+?\.blog.ir">
@@ -73,6 +76,15 @@
 			</extract-to>
 			<extract-to field="f12">
 				<constant>world!</constant>
+			</extract-to>
+		</document>
+		
+		<document url="^http://.+?\.blog.ir3" partition-by=".doc">
+			<extract-to field="id">
+				<attribute name="href" selector="a" />
+			</extract-to>
+			<extract-to field="content">
+				<content selector="a" />
 			</extract-to>
 		</document>
 	</documents>

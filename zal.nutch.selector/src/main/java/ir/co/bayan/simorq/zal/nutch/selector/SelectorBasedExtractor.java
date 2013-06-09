@@ -70,11 +70,13 @@ public class SelectorBasedExtractor {
 
 	private List<ExtractedDoc> extractDocuments(Document document, org.jsoup.nodes.Document parsedDoc, String url) {
 		List<ExtractedDoc> result = new ArrayList<>();
-		if (document.getSelector() != null) {
-			for (Element element : parsedDoc.select(document.getSelector())) {
+		if (document.getPartitionBy() != null) {
+			for (Element element : parsedDoc.select(document.getPartitionBy())) {
 				ExtractedDoc extractedDoc = new ExtractedDoc(new HashMap<String, String>(document.getExtractTos()
-						.size() * 2 + 1), url);
+						.size() * 2 + 1), null);
 				extractDocument(document, element, url, extractedDoc);
+				String id = extractedDoc.getFields().remove("id");
+				extractedDoc.setUrl(id);
 				result.add(extractedDoc);
 			}
 		} else {

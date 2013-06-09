@@ -63,7 +63,7 @@
 		<xs:attribute type="xs:ID" name="id" use="optional" />
 		<xs:attribute type="xs:string" name="url" use="optional" />
 		<xs:attribute type="xs:IDREF" name="inherits" use="optional" />
-		<xs:attribute type="xs:string" name="selector" use="optional"/>
+		<xs:attribute type="xs:string" name="partition-by" use="optional"/>
 	</xs:complexType>
 
 	<xs:element name="config">

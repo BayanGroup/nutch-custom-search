@@ -26,8 +26,8 @@ public class Document {
 	@XmlAttribute
 	private String inherits;
 
-	@XmlAttribute
-	private String selector;
+	@XmlAttribute(name = "partition-by")
+	private String partitionBy;
 
 	/**
 	 * @return the url
@@ -74,8 +74,8 @@ public class Document {
 	/**
 	 * @return the selector
 	 */
-	public String getSelector() {
-		return selector;
+	public String getPartitionBy() {
+		return partitionBy;
 	}
 
 }

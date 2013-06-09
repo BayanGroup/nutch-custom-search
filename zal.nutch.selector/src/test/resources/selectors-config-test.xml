@@ -20,7 +20,7 @@
 	<documents>
 		<document id="post-page">
 			<extract-to field="post-title">
-				<content selector="div.post > div.title > h2 > a" />
+				<content selector="div.post > div.title > h2 > a"/>
 			</extract-to>
 			<extract-to field="post-body">
 				<content selector="div.post > div.body > div.cnt" />

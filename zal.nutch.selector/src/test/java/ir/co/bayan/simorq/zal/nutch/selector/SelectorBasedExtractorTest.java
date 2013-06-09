@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -82,7 +84,14 @@ public class SelectorBasedExtractorTest {
 	}
 
 	@Test
-	public void testMultiDoc() throws IOException {
-		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir", testPageContent, "text/html");
+	public void testMultiDoc() throws IOException, JAXBException {
+		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir3", testPageContent, "text/html");
+		assertEquals(2, extractedDocs.size());
+
+		assertEquals("a", extractedDocs.get(0).getFields().get("content"));
+		assertEquals("http://1", extractedDocs.get(0).getUrl());
+
+		assertEquals("b", extractedDocs.get(1).getFields().get("content"));
+		assertEquals("http://2", extractedDocs.get(1).getUrl());
 	}
 }

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir extractors.xsd"
+	omitNonMatching="true">
+	<types>
+		<type name="long" converter="ir.co.bayan.simorq.zal.nutch.extractor.convert.LongConverter" />
+		<type name="date" converter="ir.co.bayan.simorq.zal.nutch.extractor.convert.DateConverter" />
+		<type name="persian_date" converter="ir.co.bayan.simorq.zal.nutch.extractor.convert.PersianDateConverter"/>
+		<type name="persian_long" converter="ir.co.bayan.simorq.zal.nutch.extractor.convert.PersianLongConverter"/>
+	</types>
+	<fields>
+		<field name="post-title" />
+		<field name="post-blog-title" />
+		<field name="post-body" />
+		<field name="post-date" type="date"/>
+		<field name="post-comments" />
+		<field name="post-keywords" />
+		<field name="document-type" />
+		<field name="blog-title" />
+		<field name="blog-sub-title" />
+		<field name="blog-desc" />
+		<field name="blog-author" />
+		<field name="blog-keywords" />
+		<field name="csi" type="long" />
+	</fields>
+	<documents>
+		<document id="blog-ir-post-page">
+			<extract-to field="post-title">
+				<content selector="title" pattern="(.+?) :: (.+)" substitution="$2" />
+			</extract-to>
+			<extract-to field="post-blog-title">
+				<content selector="title" pattern="(.+?) :: (.+)" substitution="$1" />
+			</extract-to>
+			<extract-to field="post-body">
+				<content selector=".post .body .cnt" />
+			</extract-to>
+		</document>
+		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css">
+			<extract-to field="post-date" >
+				<attribute name="content" selector="meta[name=date]" pattern="(.+?)T(.+)" substitution="$1"/>
+				<xpath expression="//[name=a]" pattern="(.+?)T(.+)" substitution="$1" />
+			</extract-to>
+			<extract-to field="post-comments">
+				<content selector=".post_comments .body_cmt .cnt span.cnt_l" />
+				<content selector=".cmt_reply" pattern="^(پاسخ:)?(.*)" substitution="$2" />
+			</extract-to>
+			<extract-to field="post-keywords">
+				<content selector=".keywords_post h3" />
+			</extract-to>
+			<extract-to field="document-type">
+				<constant>Post</constant>
+			</extract-to>
+			<extract-to field="csi">
+				<constant>1</constant>
+			</extract-to>
+		</document>
+		<document url="^http://.+?\.blog.ir/page/.+" inherits="blog-ir-post-page">
+			<extract-to field="document-type">
+				<constant>Custom-Page</constant>
+			</extract-to>
+			<extract-to field="csi">
+				<constant>1</constant>
+			</extract-to>
+		</document>
+		<document url="^http://.+?\.blog.ir/?">
+			<extract-to field="blog-title">
+				<content selector="title" />
+				<content selector="url" pattern="^http://(.+?)\.blog.ir/?" substitution="$1"/>
+			</extract-to>
+			<extract-to field="blog-sub-title">
+				<content selector="div.desc h2" />
+			</extract-to>
+			<extract-to field="blog-desc">
+				<content selector=".blog_description h4" />
+			</extract-to>
+			<extract-to field="blog-author">
+				<content selector="span.author, span.author2" select="first"/>
+			</extract-to>
+			<extract-to field="blog-keywords">
+				<content selector=".tagcloud a h3, .tagcloud h3 a"/>
+			</extract-to>
+			<extract-to field="document-type">
+				<constant>First-Page</constant>
+			</extract-to>
+			<extract-to field="csi">
+				<constant>1</constant>
+			</extract-to>
+		</document>
+		<document url="^http://.+?\.blog.ir/rss.*" >
+			
+		</document>
+	</documents>
+</config>

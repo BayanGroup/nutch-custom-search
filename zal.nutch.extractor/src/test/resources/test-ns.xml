@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<data xmlns="http://bayan.ir" xmlns:b="http://bayan.ir2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir data.xsd">
+	<authors>
+		<author name="a1" />
+		<author name="a2" />
+	</authors>
+	<books>
+		<category name="c1">
+			<b:book title="b1">content1</b:book>
+			<book>content2</book>
+		</category>
+		<book title="b3">content3</book>
+	</books>
+</data>

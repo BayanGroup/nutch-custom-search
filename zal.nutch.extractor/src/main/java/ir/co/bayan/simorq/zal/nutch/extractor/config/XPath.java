@@ -84,6 +84,12 @@ public class XPath extends FieldValue {
 	@Override
 	public void extract(ExtractContext eContext) throws Exception {
 		XPathContext context = (XPathContext) eContext;
+		if (context.getNsContext() != null) {
+			javax.xml.xpath.XPath xPath = xPathFactory.newXPath();
+			xPath.setNamespaceContext(context.getNsContext());
+			xPathExpression = xPath.compile(expression);
+		}
+
 		StringBuilder tempRes;
 		if (pattern == null) {
 			tempRes = context.getResult();

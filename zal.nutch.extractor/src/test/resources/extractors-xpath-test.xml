@@ -35,6 +35,12 @@
 			<extract-to field="f2">
 				<xpath expression="//book[@title]/@title" />
 			</extract-to>
+			<extract-to field="f3">
+				<xpath expression="//b:book[@title='b1']" />
+			</extract-to>
+			<extract-to field="f4">
+				<xpath expression="//dns:book[@title='b3']" />
+			</extract-to>
 		</document>
 	</documents>
 </config>

@@ -19,14 +19,12 @@ import org.junit.Test;
 public class XPathEngineTest {
 
 	private static XPathEngine engine;
-	private static byte[] content;
 	private static SelectorConfiguration configuration;
 	private static String encoding = "UTF-8";
 
 	@BeforeClass
 	public static void init() throws Exception {
 		engine = new XPathEngine();
-		content = IOUtils.toByteArray(XPathEngine.class.getResourceAsStream("/test.xml"));
 		configuration = SelectorConfiguration.readConfig(new InputStreamReader(XPathEngine.class
 				.getResourceAsStream("/extractors-xpath-test.xml")));
 	}
@@ -40,10 +38,24 @@ public class XPathEngineTest {
 	 */
 	@Test
 	public void testExtractDocuments() throws Exception {
+		byte[] content = IOUtils.toByteArray(XPathEngine.class.getResourceAsStream("/test.xml"));
 		Document document = configuration.getDocuments().get(0);
 		List<ExtractedDoc> docs = engine.extractDocuments(document, "", content, encoding, "");
 		ExtractedDoc doc = docs.get(0);
 		assertEquals("content1", doc.getFields().get("f1"));
 		assertEquals("b1 b3", doc.getFields().get("f2"));
+		assertEquals("", doc.getFields().get("f3"));
+	}
+
+	@Test
+	public void testExtractDocumentsNamespace() throws Exception {
+		byte[] content = IOUtils.toByteArray(XPathEngine.class.getResourceAsStream("/test-ns.xml"));
+		Document document = configuration.getDocuments().get(0);
+		List<ExtractedDoc> docs = engine.extractDocuments(document, "", content, encoding, "");
+		ExtractedDoc doc = docs.get(0);
+		assertEquals("", doc.getFields().get("f1"));
+		assertEquals("", doc.getFields().get("f2"));
+		assertEquals("content1", doc.getFields().get("f3"));
+		assertEquals("content3", doc.getFields().get("f4"));
 	}
 }

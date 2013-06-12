@@ -10,12 +10,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang3.StringUtils;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 /**
@@ -43,11 +48,37 @@ public class XPathEngine extends ExtractEngine {
 			String contentType) throws Exception {
 		Reader contentReader = new InputStreamReader(new ByteArrayInputStream(content), encoding);
 		org.w3c.dom.Document parsedDoc = builder.parse(new InputSource(contentReader));
-		XPathContext context = new XPathContext(url, parsedDoc.getDocumentElement());
+		Element root = parsedDoc.getDocumentElement();
+
+		NamespaceContext nsContext = getNamespaceContext(root);
+
+		XPathContext context = new XPathContext(url, root, nsContext);
 		ExtractedDoc extractedDoc = new ExtractedDoc(new HashMap<String, String>(
 				document.getExtractTos().size() * 2 + 1), url);
 		extractDocument(document, extractedDoc, context);
 		return Arrays.asList(extractedDoc);
 	}
 
+	private NamespaceContext getNamespaceContext(Element root) {
+		NamespaceContext nsContext = null;
+		MapNamespaceContext mapNs = new MapNamespaceContext();
+		NamedNodeMap namedNodeMap = root.getAttributes();
+
+		for (int i = 0; i < namedNodeMap.getLength(); i++) {
+			Node item = namedNodeMap.item(i);
+			String nodeName = item.getNodeName();
+			if (nodeName.startsWith("xmlns")) {
+				if ("xmlns".equals(nodeName)) {
+					mapNs.addNamespace("dns", item.getNodeValue());
+				} else {
+					nodeName = StringUtils.removeStart(nodeName, "xmlns:");
+					mapNs.addNamespace(nodeName, item.getNodeValue());
+				}
+			}
+		}
+		if (!mapNs.getNamespaces().isEmpty()) {
+			nsContext = mapNs;
+		}
+		return nsContext;
+	}
 }

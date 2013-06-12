@@ -6,12 +6,9 @@ import ir.co.bayan.simorq.zal.nutch.extractor.engine.CssEngine;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractEngine;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.XPathEngine;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -33,7 +30,7 @@ public class Extractor {
 	private final Map<String, Document> docById;
 	private final Map<String, ExtractEngine> extractEngines;
 
-	public Extractor(SelectorConfiguration config) throws JAXBException {
+	public Extractor(SelectorConfiguration config) throws Exception {
 		Validate.notNull(config);
 
 		this.config = config;
@@ -45,21 +42,18 @@ public class Extractor {
 		}
 
 		extractEngines = new HashMap<>();
-		extractEngines.put(CSS_ENGINE, new CssEngine(this));
-		extractEngines.put(XPATH_ENGINE, new XPathEngine(this));
+		extractEngines.put(CSS_ENGINE, new CssEngine());
+		extractEngines.put(XPATH_ENGINE, new XPathEngine());
 	}
 
 	/**
 	 * Extracts parts of the given content based on the defined extract-to rules in the config file. It uses the first
 	 * matching document with the given url as the document that defines those extract-to rules.
 	 * 
-	 * @param contentType
-	 *            TODO
-	 * 
 	 * @return a map of field names to the extracted value for that field according to the last last extract-to rule
 	 *         that matches the field name. If no document matches the given url, null will be returned.
 	 */
-	public List<ExtractedDoc> extract(String url, String content, String contentType) throws IOException {
+	public List<ExtractedDoc> extract(String url, byte[] content, String encoding, String contentType) throws Exception {
 		Validate.notNull(url);
 		Validate.notNull(content);
 
@@ -74,7 +68,7 @@ public class Extractor {
 		if (extractEngine == null)
 			throw new IllegalArgumentException("No engine found with name " + engine);
 
-		return extractEngine.extractDocuments(document, content, url);
+		return extractEngine.extractDocuments(document, url, content, encoding, contentType);
 	}
 
 	private Document findMatchingDoc(String url) {

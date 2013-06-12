@@ -1,11 +1,20 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.config;
 
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractContext;
+import ir.co.bayan.simorq.zal.nutch.extractor.engine.XPathContext;
 
 import java.util.regex.Pattern;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
@@ -14,8 +23,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "xpath")
 public class XPath extends FieldValue {
 
-	@XmlAttribute
+	private static XPathFactory xPathFactory = XPathFactory.newInstance();
+
 	private String expression;
+
+	private XPathExpression xPathExpression;
 
 	@XmlAttribute
 	private final String delimiter = " ";
@@ -45,6 +57,17 @@ public class XPath extends FieldValue {
 	}
 
 	/**
+	 * @param expression
+	 *            the expression to set
+	 * @throws XPathExpressionException
+	 */
+	@XmlAttribute
+	public void setExpression(String expression) throws XPathExpressionException {
+		this.expression = expression;
+		xPathExpression = xPathFactory.newXPath().compile(expression);
+	}
+
+	/**
 	 * @return the selector
 	 */
 	public String getExpression() {
@@ -59,7 +82,36 @@ public class XPath extends FieldValue {
 	}
 
 	@Override
-	public void extract(ExtractContext context) {
-	}
+	public void extract(ExtractContext eContext) throws Exception {
+		XPathContext context = (XPathContext) eContext;
+		StringBuilder tempRes;
+		if (pattern == null) {
+			tempRes = context.getResult();
+		} else {
+			tempRes = new StringBuilder();
+		}
 
+		NodeList nodeList = (NodeList) xPathExpression.evaluate(context.getRoot(), XPathConstants.NODESET);
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			Node node = nodeList.item(i);
+			switch (node.getNodeType()) {
+			case Node.ATTRIBUTE_NODE:
+				Attr attr = (Attr) node;
+				tempRes.append(attr.getValue());
+				break;
+			default:
+				tempRes.append(node.getTextContent());
+				break;
+			}
+			if (i < nodeList.getLength() - 1) {
+				tempRes.append(delimiter);
+			}
+		}
+
+		// Do any substitution if required
+		if (pattern != null) {
+			context.getResult().append(compiledPattern.matcher(tempRes).replaceAll(substitution));
+		}
+
+	}
 }

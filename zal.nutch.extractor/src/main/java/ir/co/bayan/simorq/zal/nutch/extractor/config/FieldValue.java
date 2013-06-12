@@ -21,6 +21,6 @@ public abstract class FieldValue {
 		return value;
 	}
 
-	public abstract void extract(ExtractContext context);
+	public abstract void extract(ExtractContext context) throws Exception;
 
 }

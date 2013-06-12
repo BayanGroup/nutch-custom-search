@@ -3,13 +3,10 @@ package ir.co.bayan.simorq.zal.nutch.extractor;
 import static org.junit.Assert.assertEquals;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
@@ -22,7 +19,8 @@ import org.junit.Test;
 public class ExtractorTest {
 
 	private static Extractor extractor;
-	private static String testPageContent;
+	private static byte[] testPageContent;
+	private static String encoding = "UTF-8";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -31,12 +29,13 @@ public class ExtractorTest {
 		SelectorConfiguration config = SelectorConfiguration.readConfig(configReader);
 		extractor = new Extractor(config);
 		InputStream testPage = ExtractorTest.class.getResourceAsStream("/test.htm");
-		testPageContent = IOUtils.toString(testPage, "UTF-8");
+		testPageContent = IOUtils.toByteArray(testPage);
 	}
 
 	@Test
-	public void testValues() throws IOException {
-		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir", testPageContent, "text/html");
+	public void testValues() throws Exception {
+		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir", testPageContent, encoding,
+				"text/html");
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("t1", result.get("f1"));
@@ -47,8 +46,9 @@ public class ExtractorTest {
 	}
 
 	@Test
-	public void testSub() throws IOException {
-		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir", testPageContent, "text/html");
+	public void testSub() throws Exception {
+		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir", testPageContent, encoding,
+				"text/html");
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("2-t", result.get("f6"));
@@ -56,8 +56,9 @@ public class ExtractorTest {
 	}
 
 	@Test
-	public void testSelect() throws IOException {
-		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir", testPageContent, "text/html");
+	public void testSelect() throws Exception {
+		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir", testPageContent, encoding,
+				"text/html");
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("a b", result.get("f7"));
@@ -67,8 +68,9 @@ public class ExtractorTest {
 	}
 
 	@Test
-	public void testInheritence() throws IOException {
-		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir2", testPageContent, "text/html");
+	public void testInheritence() throws Exception {
+		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir2", testPageContent, encoding,
+				"text/html");
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("t1", result.get("f1"));
@@ -76,16 +78,18 @@ public class ExtractorTest {
 	}
 
 	@Test
-	public void testType() throws IOException {
-		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir2", testPageContent, "text/html");
+	public void testType() throws Exception {
+		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir2", testPageContent, encoding,
+				"text/html");
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("world!", result.get("f12"));
 	}
 
 	@Test
-	public void testMultiDoc() throws IOException, JAXBException {
-		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir3", testPageContent, "text/html");
+	public void testMultiDoc() throws Exception {
+		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir3", testPageContent, encoding,
+				"text/html");
 		assertEquals(2, extractedDocs.size());
 
 		assertEquals("a", extractedDocs.get(0).getFields().get("content"));

@@ -1,7 +1,6 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
 import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc;
-import ir.co.bayan.simorq.zal.nutch.extractor.Extractor;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractTo;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
@@ -17,17 +16,13 @@ import org.apache.commons.lang3.Validate;
  */
 public abstract class ExtractEngine {
 
-	private final Extractor extractor;
+	public abstract List<ExtractedDoc> extractDocuments(Document document, String url, byte[] content, String encoding,
+			String contentType) throws Exception;
 
-	public ExtractEngine(Extractor extractor) {
-		this.extractor = extractor;
-	}
-
-	public abstract List<ExtractedDoc> extractDocuments(Document document, String content, String url);
-
-	protected void extractDocument(Document document, ExtractedDoc extractedDoc, ExtractContext context) {
+	protected void extractDocument(Document document, ExtractedDoc extractedDoc, ExtractContext context)
+			throws Exception {
 		if (document.getInherits() != null) {
-			Document parent = extractor.getDocById(document.getInherits());
+			Document parent = document.getInherits();
 			Validate.notNull(parent,
 					"Can not find the document defined in inherits section with id " + document.getInherits());
 
@@ -45,7 +40,7 @@ public abstract class ExtractEngine {
 		}
 	}
 
-	protected void extractField(ExtractTo extractTo, ExtractContext context) {
+	protected void extractField(ExtractTo extractTo, ExtractContext context) throws Exception {
 		if (extractTo.getValues() != null) {
 			int i = 0;
 			for (FieldValue value : extractTo.getValues()) {

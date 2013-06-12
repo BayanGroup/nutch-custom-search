@@ -3,12 +3,13 @@
 <data>
 	<authors>
 		<author name="a1" />
-		<authro name="a2" />
+		<author name="a2" />
 	</authors>
 	<books>
 		<category name="c1">
-			<book name="b1">content1</book>
+			<book title="b1">content1</book>
 			<book>content2</book>
 		</category>
+		<book title="b3">content3</book>
 	</books>
 </data>

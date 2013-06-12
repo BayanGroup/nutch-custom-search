@@ -1,5 +1,6 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
+import org.w3c.dom.Element;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
@@ -7,8 +8,18 @@ package ir.co.bayan.simorq.zal.nutch.extractor.engine;
  */
 public class XPathContext extends ExtractContext {
 
-	public XPathContext(String url) {
+	private final Element root;
+
+	public XPathContext(String url, Element root) {
 		super(url);
+		this.root = root;
+	}
+
+	/**
+	 * @return the root
+	 */
+	public Element getRoot() {
+		return root;
 	}
 
 }

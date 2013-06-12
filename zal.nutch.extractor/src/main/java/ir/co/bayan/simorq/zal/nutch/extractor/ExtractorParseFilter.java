@@ -2,12 +2,8 @@ package ir.co.bayan.simorq.zal.nutch.extractor;
 
 import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map.Entry;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -35,9 +31,8 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 		try {
 			Metadata metadata = parseResult.get(content.getUrl()).getData().getParseMeta();
 			String encoding = StringUtils.defaultString(metadata.get(Metadata.ORIGINAL_CHAR_ENCODING), defaultEncoding);
-			String contentStr = new String(content.getContent(), encoding);
-			List<ExtractedDoc> extractedDocs = extractor
-					.extract(content.getUrl(), contentStr, content.getContentType());
+			List<ExtractedDoc> extractedDocs = extractor.extract(content.getUrl(), content.getContent(), encoding,
+					content.getContentType());
 			if (extractedDocs != null) {
 				for (ExtractedDoc doc : extractedDocs) {
 					Metadata docMetadata = parseResult.get(doc.getUrl()).getData().getParseMeta();
@@ -51,7 +46,7 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 				}
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.warn("", e);
 		}
 
@@ -69,13 +64,13 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 		defaultEncoding = configuration.get("parser.character.encoding.default", "UTF-8");
 		try {
 			initConf();
-		} catch (UnsupportedEncodingException | JAXBException e) {
+		} catch (Exception e) {
 			logger.error("", e);
 		}
 
 	}
 
-	private void initConf() throws UnsupportedEncodingException, JAXBException {
+	private void initConf() throws Exception {
 		extractor = new Extractor(SelectorConfiguration.readConfig(configuration));
 	}
 

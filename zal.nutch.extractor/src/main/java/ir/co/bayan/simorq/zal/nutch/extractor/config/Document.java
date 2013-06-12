@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
@@ -24,7 +25,8 @@ public class Document {
 	private String id;
 
 	@XmlAttribute
-	private String inherits;
+	@XmlIDREF
+	private Document inherits;
 
 	@XmlAttribute(name = "partition-by")
 	private String partitionBy;
@@ -70,7 +72,7 @@ public class Document {
 	/**
 	 * @return the inherits
 	 */
-	public String getInherits() {
+	public Document getInherits() {
 		return inherits;
 	}
 

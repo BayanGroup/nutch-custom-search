@@ -78,7 +78,8 @@ public class SelectorConfiguration {
 		Validate.notNull(configReader);
 
 		JAXBContext context = JAXBContext.newInstance(SelectorConfiguration.class, Document.class, ExtractTo.class,
-				Field.class, FieldValue.class, Constant.class, Content.class, TypeDef.class, Attribute.class);
+				Field.class, FieldValue.class, Constant.class, Content.class, TypeDef.class, Attribute.class,
+				XPath.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		return (SelectorConfiguration) unmarshaller.unmarshal(configReader);
 	}

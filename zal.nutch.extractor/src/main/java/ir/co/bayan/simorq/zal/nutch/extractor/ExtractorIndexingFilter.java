@@ -41,7 +41,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 		this.configuration = configuration;
 		try {
 			initConfig(configuration);
-		} catch (UnsupportedEncodingException | JAXBException e) {
+		} catch (Exception e) {
 			logger.error("", e);
 		}
 	}

@@ -2,6 +2,9 @@ package ir.co.bayan.simorq.zal.nutch.extractor;
 
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
+import ir.co.bayan.simorq.zal.nutch.extractor.engine.CssEngine;
+import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractEngine;
+import ir.co.bayan.simorq.zal.nutch.extractor.engine.XPathEngine;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,6 +26,9 @@ import org.apache.commons.lang3.Validate;
  */
 public class Extractor {
 
+	public static final String XPATH_ENGINE = "xpath";
+	public static final String CSS_ENGINE = "css";
+
 	private final SelectorConfiguration config;
 	private final Map<String, Document> docById;
 	private final Map<String, ExtractEngine> extractEngines;
@@ -39,8 +45,8 @@ public class Extractor {
 		}
 
 		extractEngines = new HashMap<>();
-		extractEngines.put("css", new CssEngine(this));
-		extractEngines.put("xpath", new XPathEngine(this));
+		extractEngines.put(CSS_ENGINE, new CssEngine(this));
+		extractEngines.put(XPATH_ENGINE, new XPathEngine(this));
 	}
 
 	/**
@@ -63,7 +69,7 @@ public class Extractor {
 			return null;
 		}
 
-		String engine = StringUtils.defaultIfEmpty(document.getEngine(), "css");
+		String engine = StringUtils.defaultIfEmpty(document.getEngine(), config.getDefaultEngine());
 		ExtractEngine extractEngine = extractEngines.get(engine);
 		if (extractEngine == null)
 			throw new IllegalArgumentException("No engine found with name " + engine);

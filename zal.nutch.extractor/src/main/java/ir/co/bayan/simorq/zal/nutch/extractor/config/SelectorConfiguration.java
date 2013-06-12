@@ -1,5 +1,7 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.config;
 
+import ir.co.bayan.simorq.zal.nutch.extractor.Extractor;
+
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -31,6 +33,9 @@ public class SelectorConfiguration {
 	@XmlAttribute
 	private final boolean omitNonMatching = true;
 
+	@XmlAttribute
+	private final String defaultEngine = Extractor.CSS_ENGINE;
+
 	@XmlElementWrapper(name = "types")
 	@XmlElement(name = "type")
 	private List<TypeDef> types;
@@ -60,6 +65,13 @@ public class SelectorConfiguration {
 
 	public boolean isOmitNonMatching() {
 		return omitNonMatching;
+	}
+
+	/**
+	 * @return the defaultEngine
+	 */
+	public String getDefaultEngine() {
+		return defaultEngine;
 	}
 
 	public static SelectorConfiguration readConfig(Reader configReader) throws JAXBException {

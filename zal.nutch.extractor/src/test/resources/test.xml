@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<data>
+	<authors>
+		<author name="a1" />
+		<authro name="a2" />
+	</authors>
+	<books>
+		<category name="c1">
+			<book name="b1">content1</book>
+			<book>content2</book>
+		</category>
+	</books>
+</data>

@@ -1,4 +1,4 @@
-package ir.co.bayan.simorq.zal.nutch.extractor;
+package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir extractors.xsd">
+	<types>
+		<type name="hello" converter="ir.co.bayan.simorq.zal.nutch.extractor.TestConverter" />
+	</types>
+	<fields>
+		<field name="f1" />
+		<field name="f2" />
+		<field name="f3" />
+		<field name="f4" />
+		<field name="f5" />
+		
+		<field name="f6" />
+		<field name="f6.1" />
+		
+		<field name="f7" />
+		<field name="f8" />
+		<field name="f9" />
+		<field name="f10" />
+		
+		<field name="f11" />
+		
+		<field name="f12" type="hello"/>
+		
+		<field name="id" />
+		<field name="content" />
+	</fields>
+	<documents>
+		<document id="base" url="^http://.+?\.blog.ir">
+			<extract-to field="f1">
+				<constant>t1</constant>
+			</extract-to>
+			<extract-to field="f2">
+				<content selector="head > title"/>
+			</extract-to>
+			<extract-to field="f3">
+				<attribute selector=".title-div" name="title" />
+			</extract-to>
+			<extract-to field="f4">
+				<content selector="url" />
+			</extract-to>
+			
+			<extract-to field="f5">
+				<constant>t1</constant>
+				<content selector="head > title"/>
+				<attribute selector=".title-div" name="title" />
+				<content selector="url" />
+			</extract-to>
+			
+			<extract-to field="f6">
+				<content selector="head > title" pattern="(t)(\d)+" substitution="$2-$1"/>
+			</extract-to>
+			<extract-to field="f6.1">
+				<attribute name="content" selector="meta[name=date]" pattern="(.+?)T(.+)" substitution="$1"/>
+			</extract-to>
+			
+			<extract-to field="f7">
+				<content selector="div.target" select="all"/>
+			</extract-to>
+			<extract-to field="f8">
+				<content selector="div.target" select="first"/>
+			</extract-to>
+			<extract-to field="f9">
+				<content selector="div.target" select="size"/>
+			</extract-to>
+			<extract-to field="f10">
+				<content selector="div.target" select="last"/>
+			</extract-to>
+			
+		</document>
+		
+		<document url="^http://.+?\.blog.ir2" inherits="base">
+			<extract-to field="f11">
+				<constant>t1</constant>
+			</extract-to>
+			<extract-to field="f12">
+				<constant>world!</constant>
+			</extract-to>
+		</document>
+		
+		<document url="^http://.+?\.blog.ir3" partition-by=".doc">
+			<extract-to field="id">
+				<attribute name="href" selector="a" />
+			</extract-to>
+			<extract-to field="content">
+				<content selector="a" />
+			</extract-to>
+		</document>
+	</documents>
+</config>

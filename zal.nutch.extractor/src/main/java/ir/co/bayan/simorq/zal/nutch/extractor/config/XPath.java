@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.config;
 
-import ir.co.bayan.simorq.zal.nutch.extractor.ExtractContext;
+import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractContext;
 
 import java.util.regex.Pattern;
 

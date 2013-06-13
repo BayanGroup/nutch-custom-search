@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Concat extends Function {
 
 	@XmlAttribute
-	private final String delimiter = " ";
+	private String delimiter = " ";
 
 	/**
 	 * @return the delimiter

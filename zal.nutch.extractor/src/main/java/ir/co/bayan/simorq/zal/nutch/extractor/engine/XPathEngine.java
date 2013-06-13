@@ -70,7 +70,8 @@ public class XPathEngine extends ExtractEngine<XPathContext> {
 	@Override
 	public Object evaluate(String value, XPathContext context) throws Exception {
 		XPath xPath = xPathFactory.newXPath();
-		xPath.setNamespaceContext(context.getNsContext());
+		if (context.getNsContext() != null)
+			xPath.setNamespaceContext(context.getNsContext());
 		return xPath.compile(value).evaluate(context.getRoot(), XPathConstants.NODESET);
 	}
 

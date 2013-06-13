@@ -30,23 +30,41 @@
 	<documents>
 		<document id="d1" url="^http://.+?\.blog.ir">
 			<extract-to field="f1">
-				<expr value="//book[@title='b1']" />
+				<concat>
+					<text>
+						<expr value="//book[@title='b1']" />
+					</text>
+				</concat>
 			</extract-to>
 			<extract-to field="f2">
 				<concat delimiter="-">
-					<expr value="//book[@title]/@title" />
+					<text>
+						<expr value="//book[@title]/@title" />
+					</text>
 				</concat>
 			</extract-to>
 			<extract-to field="f3">
-				<expr value="//b:book[@title='b1']"/>
+				<concat>
+					<text>
+						<expr value="//b:book[@title='b1']"/>
+					</text>
+				</concat>
 			</extract-to>
 			<extract-to field="f4">
-				<expr value="//dns:book[@title='b3']"/>
+				<concat>
+					<text>
+						<expr value="//dns:book[@title='b3']"/>
+					</text>
+				</concat>
 			</extract-to>
 			<extract-to field="f5">
-				<replace pattern="content(.*)" substitution="$1">
-					<expr value="//book[@title='b1']"/>
-				</replace>
+				<concat>
+					<replace pattern="content(.*)" substitution="$1">
+						<text>
+							<expr value="//book[@title='b1']"/>
+						</text>
+					</replace>
+				</concat>
 			</extract-to>
 		</document>
 		<document id="d2" url="^http://.+?\.blog.ir2">
@@ -54,10 +72,18 @@
 				<expr value="//books/category[@name]" />
 			</partition>
 			<extract-to field="id">
-				<expr value="./@name" />
+				<concat>
+					<text>
+						<expr value="./@name" />
+					</text>
+				</concat>
 			</extract-to>
 			<extract-to field="content">
-				<expr value="//book" />
+				<concat>
+					<text>
+						<expr value=".//book" />
+					</text>
+				</concat>
 			</extract-to>
 		</document>
 	</documents>

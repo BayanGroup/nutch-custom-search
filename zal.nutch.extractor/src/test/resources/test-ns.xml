@@ -10,6 +10,8 @@
 			<b:book title="b1">content1</b:book>
 			<book>content2</book>
 		</category>
-		<book title="b3">content3</book>
+		<category name="c2">
+			<book title="b3">content3</book>
+		</category>
 	</books>
 </data>

@@ -43,8 +43,10 @@ public class XPathEngineTest {
 		List<ExtractedDoc> docs = engine.extractDocuments(document, "", content, encoding, "");
 		ExtractedDoc doc = docs.get(0);
 		assertEquals("content1", doc.getFields().get("f1"));
-		assertEquals("b1 b3", doc.getFields().get("f2"));
+		assertEquals("b1-b3", doc.getFields().get("f2"));
 		assertEquals("", doc.getFields().get("f3"));
+		assertEquals("", doc.getFields().get("f4"));
+		assertEquals("1", doc.getFields().get("f5"));
 	}
 
 	@Test
@@ -53,9 +55,23 @@ public class XPathEngineTest {
 		Document document = configuration.getDocuments().get(0);
 		List<ExtractedDoc> docs = engine.extractDocuments(document, "", content, encoding, "");
 		ExtractedDoc doc = docs.get(0);
+
 		assertEquals("", doc.getFields().get("f1"));
 		assertEquals("", doc.getFields().get("f2"));
 		assertEquals("content1", doc.getFields().get("f3"));
 		assertEquals("content3", doc.getFields().get("f4"));
+		assertEquals("", doc.getFields().get("f5"));
+	}
+
+	@Test
+	public void testMultiDoc() throws Exception {
+		byte[] content = IOUtils.toByteArray(XPathEngine.class.getResourceAsStream("/test.xml"));
+		Document document = configuration.getDocuments().get(1);
+		List<ExtractedDoc> docs = engine.extractDocuments(document, "", content, encoding, "");
+
+		assertEquals(2, docs.size());
+		ExtractedDoc doc = docs.get(0);
+		assertEquals("c1", doc.getUrl());
+		assertEquals("content1 content2 content3", doc.getFields().get("content"));
 	}
 }

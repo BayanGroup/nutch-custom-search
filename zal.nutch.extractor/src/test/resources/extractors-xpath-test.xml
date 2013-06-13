@@ -33,13 +33,24 @@
 				<xpath expression="//book[@title='b1']" />
 			</extract-to>
 			<extract-to field="f2">
-				<xpath expression="//book[@title]/@title" />
+				<xpath expression="//book[@title]/@title" delimiter="-"/>
 			</extract-to>
 			<extract-to field="f3">
 				<xpath expression="//b:book[@title='b1']" />
 			</extract-to>
 			<extract-to field="f4">
 				<xpath expression="//dns:book[@title='b3']" />
+			</extract-to>
+			<extract-to field="f5">
+				<xpath expression="//book[@title='b1']" pattern="content(.*)" substitution="$1" />
+			</extract-to>
+		</document>
+		<document id="d2" url="^http://.+?\.blog.ir2" partition-by="//books/category[@name]">
+			<extract-to field="id">
+				<xpath expression="./@name" />
+			</extract-to>
+			<extract-to field="content">
+				<xpath expression="//book" />
 			</extract-to>
 		</document>
 	</documents>

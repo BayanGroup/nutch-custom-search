@@ -30,7 +30,7 @@ public class XPath extends FieldValue {
 	private XPathExpression xPathExpression;
 
 	@XmlAttribute
-	private final String delimiter = " ";
+	private String delimiter = " ";
 
 	private String pattern;
 

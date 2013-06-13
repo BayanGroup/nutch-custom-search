@@ -9,7 +9,10 @@
 		<category name="c1">
 			<book title="b1">content1</book>
 			<book>content2</book>
+			<book>content3</book>
 		</category>
-		<book title="b3">content3</book>
+		<category name="c2">
+			<book title="b3">content3</book>
+		</category>
 	</books>
 </data>

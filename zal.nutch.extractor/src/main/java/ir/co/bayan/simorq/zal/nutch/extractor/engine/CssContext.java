@@ -8,25 +8,18 @@ import org.jsoup.nodes.Element;
  */
 public class CssContext extends ExtractContext {
 
-	private Element root;
-
-	public CssContext(String url) {
-		super(url);
-	}
-
-	/**
-	 * @param root
-	 *            the root to set
-	 */
-	public void setRoot(Element root) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public CssContext(ExtractEngine<CssContext> engine, String url, Element root) {
+		super((ExtractEngine) engine, url);
 		this.root = root;
 	}
 
 	/**
 	 * @return the root
 	 */
+	@Override
 	public Element getRoot() {
-		return root;
+		return (Element) root;
 	}
 
 }

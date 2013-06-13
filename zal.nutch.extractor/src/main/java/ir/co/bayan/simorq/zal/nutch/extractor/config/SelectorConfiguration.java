@@ -27,8 +27,8 @@ import org.apache.hadoop.conf.Configuration;
 @XmlType(propOrder = { "types", "fields", "documents" })
 public class SelectorConfiguration {
 
-	private static final String FILTER_CSS_FILE = "filter.css.file";
-	private static final String CSS_PATHS_FILE = "css-paths.xml";
+	private static final String FILE_CONFIG_KEY = "extractor.file";
+	private static final String DEFATUL_CONFIG_FILE = "extractors.xml";
 
 	@XmlAttribute
 	private final boolean omitNonMatching = true;
@@ -78,8 +78,9 @@ public class SelectorConfiguration {
 		Validate.notNull(configReader);
 
 		JAXBContext context = JAXBContext.newInstance(SelectorConfiguration.class, Document.class, ExtractTo.class,
-				Field.class, FieldValue.class, Constant.class, Content.class, TypeDef.class, Attribute.class,
-				XPath.class);
+				Filter.class, Partition.class, Field.class, Function.class, Constant.class, TypeDef.class, Text.class,
+				Attribute.class, Concat.class, Expr.class, Replace.class, Url.class, First.class, Last.class,
+				Size.class, Matches.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		return (SelectorConfiguration) unmarshaller.unmarshal(configReader);
 	}
@@ -88,7 +89,7 @@ public class SelectorConfiguration {
 			JAXBException {
 		Validate.notNull(configuration);
 
-		String configFileName = configuration.get(FILTER_CSS_FILE, CSS_PATHS_FILE);
+		String configFileName = configuration.get(FILE_CONFIG_KEY, DEFATUL_CONFIG_FILE);
 		InputStreamReader configReader = new InputStreamReader(
 				configuration.getConfResourceAsInputStream(configFileName), "UTF-8");
 		return readConfig(configReader);

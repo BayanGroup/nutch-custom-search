@@ -2,6 +2,7 @@ package ir.co.bayan.simorq.zal.nutch.extractor.config;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.InputStreamReader;
 
@@ -26,11 +27,14 @@ public class ExtractorConfigurationTest {
 
 	@Test
 	public void test() {
-		assertEquals(3, config.getTypes().size());
-		assertEquals(8, config.getFields().size());
-		assertEquals(4, config.getDocuments().size());
+		assertEquals(4, config.getTypes().size());
+		assertEquals(13, config.getFields().size());
+		assertEquals(5, config.getDocuments().size());
 		assertNotNull(config.getDocuments().get(0).getExtractTos().get(0).getField());
-		assertNotNull(config.getFields().get(2).getType());
+		assertNotNull(config.getFields().get(3).getType());
+		Function func = config.getDocuments().get(0).getExtractTos().get(0).getValue();
+		assertTrue(func instanceof Concat);
+		assertEquals(1, func.getArgs().size());
+		assertTrue(func.getArgs().get(0) instanceof Replace);
 	}
-
 }

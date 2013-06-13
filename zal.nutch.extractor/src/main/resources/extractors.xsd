@@ -12,66 +12,113 @@
 		<xs:attribute type="xs:IDREF" name="type" use="optional" />
 	</xs:complexType>
 	
-	<xs:simpleType name="selectType">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="first" />
-			<xs:enumeration value="last" />
-			<xs:enumeration value="all" />
-			<xs:enumeration value="size" />
-		</xs:restriction>
-	</xs:simpleType>
-	
-	<xs:complexType name="selectorValue">
-		<xs:attribute type="xs:string" name="selector" use="optional" />
-		<xs:attribute type="xs:string" name="pattern" use="optional" />
-		<xs:attribute type="xs:string" name="substitution" use="optional" />
-		<xs:attribute type="selectType" name="select" use="optional" default="all"/>
-		<xs:attribute type="xs:string" name="delimiter" use="optional"/>
+	<xs:complexType name="functionType">
+		<xs:sequence>
+			<xs:choice maxOccurs="unbounded">
+				<xs:element name="expr" type="exprType"/>
+				<xs:element name="constant" type="constantType"/>
+				<xs:element name="concat" type="concatType" />
+				<xs:element name="replace" type="replaceType" />
+				<xs:element name="text" type="textType" />
+				<xs:element name="attribute" type="attributeType" />
+				<xs:element name="first" type="firstType" />
+				<xs:element name="last" type="lastType" />
+				<xs:element name="size" type="sizeType" />
+				<xs:element name="url" type="urlType" />
+			</xs:choice>
+		</xs:sequence>
 	</xs:complexType>
-
-	<xs:complexType name="contentType">
+	
+	<xs:complexType name="exprType">
+		<xs:attribute name="value" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="constantType">
+		<xs:attribute name="value" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="concatType">
 		<xs:complexContent>
-			<xs:extension base="selectorValue">
+			<xs:extension base="functionType">
+				<xs:attribute name="delimiter" default=" "/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="replaceType">
+		<xs:complexContent>
+			<xs:extension base="functionType">
+				<xs:attribute name="pattern" use="required"/>
+				<xs:attribute name="substitution" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="textType">
+		<xs:complexContent>
+			<xs:extension base="functionType">
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	
 	<xs:complexType name="attributeType">
 		<xs:complexContent>
-			<xs:extension base="selectorValue">
-				<xs:attribute type="xs:string" name="name" use="required" />
+			<xs:extension base="functionType">
+				<xs:attribute name="name" use="required"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<xs:complexType name="xpathType">
-		<xs:attribute type="xs:string" name="expression" use="optional" />
-		<xs:attribute type="xs:string" name="pattern" use="optional" />
-		<xs:attribute type="xs:string" name="substitution" use="optional" />
-		<xs:attribute type="xs:string" name="delimiter" use="optional"/>
+	<xs:complexType name="firstType">
+		<xs:complexContent>
+			<xs:extension base="functionType">
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
-
+	
+	<xs:complexType name="lastType">
+		<xs:complexContent>
+			<xs:extension base="functionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="sizeType">
+		<xs:complexContent>
+			<xs:extension base="functionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="urlType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"></xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
 	<xs:complexType name="extractToType">
+		<xs:complexContent>
+			<xs:extension base="functionType">
+				<xs:attribute type="xs:IDREF" name="field" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="partitionType">
 		<xs:sequence>
-			<xs:choice maxOccurs="unbounded">
-				<xs:element name="content" maxOccurs="unbounded" minOccurs="0" type="contentType" />
-				<xs:element name="attribute" maxOccurs="unbounded" minOccurs="0" type="attributeType" />
-				<xs:element name="xpath" maxOccurs="unbounded" minOccurs="0" type="xpathType" />
-				<xs:element name="constant" maxOccurs="unbounded"  minOccurs="0" type="xs:string" />
-			</xs:choice>
+			<xs:element name="expr" type="exprType"/>
 		</xs:sequence>
-		<xs:attribute type="xs:IDREF" name="field" use="required" />
-		<xs:attribute type="xs:string" name="delimiter" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="documentType">
 		<xs:sequence>
+			<xs:element name="partition" type="partitionType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="extract-to" maxOccurs="unbounded" minOccurs="0" type="extractToType" />
 		</xs:sequence>
 		<xs:attribute type="xs:ID" name="id" use="optional" />
 		<xs:attribute type="xs:string" name="url" use="optional" />
+		<xs:attribute type="xs:string" name="contentType" use="optional" />
 		<xs:attribute type="xs:IDREF" name="inherits" use="optional" />
-		<xs:attribute type="xs:string" name="partition-by" use="optional"/>
 		<xs:attribute type="xs:string" name="engine" use="optional" default="css"/>
 	</xs:complexType>
 

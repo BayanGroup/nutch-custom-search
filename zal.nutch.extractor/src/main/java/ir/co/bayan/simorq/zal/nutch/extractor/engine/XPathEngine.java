@@ -1,13 +1,13 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
-import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
+import ir.co.bayan.simorq.zal.nutch.extractor.config.Partition;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
@@ -16,7 +16,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +29,7 @@ import org.xml.sax.InputSource;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class XPathEngine extends ExtractEngine {
+public class XPathEngine extends ExtractEngine<XPathContext> {
 
 	public static final String DEFAULT_NAMESPACE = "dns";
 	private static final String XMLNS = "xmlns";
@@ -43,45 +42,6 @@ public class XPathEngine extends ExtractEngine {
 		factory.setNamespaceAware(true);
 		builder = factory.newDocumentBuilder();
 		xPathFactory = XPathFactory.newInstance();
-	}
-
-	@Override
-	public List<ExtractedDoc> extractDocuments(Document document, String url, byte[] content, String encoding,
-			String contentType) throws Exception {
-		Reader contentReader = new InputStreamReader(new ByteArrayInputStream(content), encoding);
-		Element root = builder.parse(new InputSource(contentReader)).getDocumentElement();
-		NamespaceContext nsContext = getNamespaceContext(root);
-
-		List<ExtractedDoc> result = new ArrayList<>();
-		if (document.getPartitionBy() != null) {
-			XPath partitionXPath = xPathFactory.newXPath();
-			if (nsContext != null)
-				partitionXPath.setNamespaceContext(nsContext);
-			XPathExpression xpath = partitionXPath.compile(document.getPartitionBy());
-			NodeList documents = (NodeList) xpath.evaluate(root, XPathConstants.NODESET);
-			for (int i = 0; i < documents.getLength(); i++) {
-				Node item = documents.item(i);
-				if (item instanceof Element) {
-					ExtractedDoc extractedDoc = extractDocument(document, url, (Element) item, nsContext);
-					String id = extractedDoc.getFields().remove("id");
-					extractedDoc.setUrl(id);
-					result.add(extractedDoc);
-				}
-			}
-		} else {
-			ExtractedDoc extractedDoc = extractDocument(document, url, root, nsContext);
-			result.add(extractedDoc);
-		}
-		return result;
-	}
-
-	private ExtractedDoc extractDocument(Document document, String url, Element root, NamespaceContext nsContext)
-			throws Exception {
-		XPathContext context = new XPathContext(url, root, nsContext);
-		ExtractedDoc extractedDoc = new ExtractedDoc(new HashMap<String, String>(
-				document.getExtractTos().size() * 2 + 1), url);
-		extractDocument(document, extractedDoc, context);
-		return extractedDoc;
 	}
 
 	protected NamespaceContext getNamespaceContext(Element root) {
@@ -106,4 +66,63 @@ public class XPathEngine extends ExtractEngine {
 		}
 		return nsContext;
 	}
+
+	@Override
+	public Object evaluate(String value, XPathContext context) throws Exception {
+		XPath xPath = xPathFactory.newXPath();
+		xPath.setNamespaceContext(context.getNsContext());
+		return xPath.compile(value).evaluate(context.getRoot(), XPathConstants.NODESET);
+	}
+
+	@Override
+	public Object getAttribute(Object res, String name, XPathContext context) throws Exception {
+		if (res instanceof NodeList) {
+			NodeList nodes = (NodeList) res;
+			List<String> texts = new ArrayList<>(nodes.getLength());
+			for (int i = 0; i < nodes.getLength(); i++) {
+				Node node = nodes.item(i);
+				if (node instanceof Element)
+					texts.add(((Element) node).getAttribute(name));
+			}
+			return texts;
+		} else
+			return ((Element) res).getAttribute(name);
+	}
+
+	@Override
+	public Object getText(Object res, XPathContext context) throws Exception {
+		if (res instanceof NodeList) {
+			NodeList nodes = (NodeList) res;
+			List<String> texts = new ArrayList<>(nodes.getLength());
+			for (int i = 0; i < nodes.getLength(); i++)
+				texts.add(nodes.item(i).getTextContent());
+			return texts;
+		} else
+			return ((Node) res).getTextContent();
+	}
+
+	@Override
+	protected XPathContext createContext(String url, byte[] content, String encoding, String contentType)
+			throws Exception {
+		Reader contentReader = new InputStreamReader(new ByteArrayInputStream(content), encoding);
+		Element root = builder.parse(new InputSource(contentReader)).getDocumentElement();
+		NamespaceContext nsContext = getNamespaceContext(root);
+		return new XPathContext(this, url, root, nsContext);
+	}
+
+	@Override
+	protected List<?> getRoots(Document document, XPathContext context) throws Exception {
+		Partition partition = document.getPartition();
+		if (partition == null) {
+			return Arrays.asList(context.getRoot());
+		} else {
+			NodeList nodes = (NodeList) partition.getExpr().extract(context);
+			List<Node> res = new ArrayList<>(nodes.getLength());
+			for (int i = 0; i < nodes.getLength(); i++) {
+				res.add(nodes.item(i));
+			}
+			return res;
+		}
+	}
+
 }

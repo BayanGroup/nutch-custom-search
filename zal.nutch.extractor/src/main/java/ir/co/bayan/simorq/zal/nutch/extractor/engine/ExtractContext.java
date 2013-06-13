@@ -4,20 +4,22 @@ package ir.co.bayan.simorq.zal.nutch.extractor.engine;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class ExtractContext {
+public abstract class ExtractContext {
 
-	private StringBuilder result;
-	private final String url;
+	protected final String url;
+	protected Object root;
+	protected final ExtractEngine<ExtractContext> engine;
 
-	public ExtractContext(String url) {
+	public ExtractContext(ExtractEngine<ExtractContext> engine, String url) {
+		this.engine = engine;
 		this.url = url;
 	}
 
 	/**
-	 * @return the res
+	 * @return the engine
 	 */
-	public StringBuilder getResult() {
-		return result;
+	public ExtractEngine<ExtractContext> getEngine() {
+		return engine;
 	}
 
 	/**
@@ -27,12 +29,15 @@ public class ExtractContext {
 		return url;
 	}
 
+	public void setRoot(Object root) {
+		this.root = root;
+	}
+
 	/**
-	 * @param result
-	 *            the result to set
+	 * @return the root
 	 */
-	public void setResult(StringBuilder result) {
-		this.result = result;
+	public Object getRoot() {
+		return root;
 	}
 
 }

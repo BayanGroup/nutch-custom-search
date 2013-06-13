@@ -1,4 +1,4 @@
-package ir.co.bayan.simorq.zal.nutch.convert;
+package ir.co.bayan.simorq.zal.nutch.extractor.convert;
 
 import static org.junit.Assert.assertTrue;
 

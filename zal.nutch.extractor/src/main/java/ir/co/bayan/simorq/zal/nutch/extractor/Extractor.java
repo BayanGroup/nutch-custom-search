@@ -3,6 +3,7 @@ package ir.co.bayan.simorq.zal.nutch.extractor;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.CssEngine;
+import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractContext;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractEngine;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.XPathEngine;
 
@@ -28,7 +29,7 @@ public class Extractor {
 
 	private final SelectorConfiguration config;
 	private final Map<String, Document> docById;
-	private final Map<String, ExtractEngine> extractEngines;
+	private final Map<String, ExtractEngine<? extends ExtractContext>> extractEngines;
 
 	public Extractor(SelectorConfiguration config) throws Exception {
 		Validate.notNull(config);
@@ -58,26 +59,30 @@ public class Extractor {
 		Validate.notNull(content);
 
 		// First decide on which document matches the url
-		Document document = findMatchingDoc(url);
+		Document document = findMatchingDoc(url, contentType);
 		if (document == null) {
 			return null;
 		}
 
 		String engine = StringUtils.defaultIfEmpty(document.getEngine(), config.getDefaultEngine());
-		ExtractEngine extractEngine = extractEngines.get(engine);
+		ExtractEngine<? extends ExtractContext> extractEngine = extractEngines.get(engine);
 		if (extractEngine == null)
 			throw new IllegalArgumentException("No engine found with name " + engine);
 
 		return extractEngine.extractDocuments(document, url, content, encoding, contentType);
 	}
 
-	private Document findMatchingDoc(String url) {
+	private Document findMatchingDoc(String url, String contentType) throws Exception {
 		for (Document doc : config.getDocuments()) {
-			if (doc.getUrl() != null) {
-				if (doc.getUrlPattern().matcher(url).matches()) {
-					return doc;
-				}
+			boolean matches = true;
+			if (doc.getUrlPattern() != null) {
+				matches = doc.getUrlPattern().matcher(url).matches();
 			}
+			if (matches && doc.getContentTypePattern() != null) {
+				matches = doc.getContentTypePattern().matcher(contentType).matches();
+			}
+			if (matches)
+				return doc;
 		}
 		return null;
 	}

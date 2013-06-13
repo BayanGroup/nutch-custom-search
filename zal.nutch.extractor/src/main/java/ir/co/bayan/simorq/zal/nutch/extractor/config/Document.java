@@ -17,6 +17,9 @@ public class Document {
 	private String url;
 	private Pattern urlPattern;
 
+	private String contentType;
+	private Pattern contentTypePattern;
+
 	@XmlElement(name = "extract-to")
 	private List<ExtractTo> extractTos;
 
@@ -28,11 +31,14 @@ public class Document {
 	@XmlIDREF
 	private Document inherits;
 
-	@XmlAttribute(name = "partition-by")
-	private String partitionBy;
-
 	@XmlAttribute
 	private String engine;
+
+	@XmlElement
+	private Filter filter;
+
+	@XmlElement
+	private Partition partition;
 
 	/**
 	 * @return the url
@@ -58,6 +64,29 @@ public class Document {
 		this.urlPattern = Pattern.compile(url);
 	}
 
+	/**
+	 * @return the contentType
+	 */
+	public String getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * @return the contentTypePatter
+	 */
+	public Pattern getContentTypePattern() {
+		return contentTypePattern;
+	}
+
+	/**
+	 * @param contentType
+	 *            the contentType to set
+	 */
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
+		this.contentTypePattern = Pattern.compile(contentType);
+	}
+
 	public List<ExtractTo> getExtractTos() {
 		return extractTos;
 	}
@@ -77,17 +106,24 @@ public class Document {
 	}
 
 	/**
-	 * @return the selector
-	 */
-	public String getPartitionBy() {
-		return partitionBy;
-	}
-
-	/**
 	 * @return the engine
 	 */
 	public String getEngine() {
 		return engine;
+	}
+
+	/**
+	 * @return the filter
+	 */
+	public Filter getFilter() {
+		return filter;
+	}
+
+	/**
+	 * @return the partition
+	 */
+	public Partition getPartition() {
+		return partition;
 	}
 
 }

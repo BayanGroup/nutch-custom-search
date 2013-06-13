@@ -10,11 +10,11 @@ import org.w3c.dom.Element;
  */
 public class XPathContext extends ExtractContext {
 
-	private final Element root;
 	private final NamespaceContext nsContext;
 
-	public XPathContext(String url, Element root, NamespaceContext nsContext) {
-		super(url);
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public XPathContext(ExtractEngine<XPathContext> engine, String url, Element root, NamespaceContext nsContext) {
+		super((ExtractEngine) engine, url);
 		this.root = root;
 		this.nsContext = nsContext;
 	}
@@ -22,8 +22,9 @@ public class XPathContext extends ExtractContext {
 	/**
 	 * @return the root
 	 */
+	@Override
 	public Element getRoot() {
-		return root;
+		return (Element) root;
 	}
 
 	/**

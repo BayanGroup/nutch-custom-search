@@ -2,7 +2,8 @@ package ir.co.bayan.simorq.zal.nutch.extractor.config;
 
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractContext;
 
-import javax.xml.bind.annotation.XmlAttribute;
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.Validate;
@@ -12,23 +13,14 @@ import org.apache.commons.lang3.Validate;
  * 
  */
 @XmlRootElement
-public class Attribute extends Function {
-
-	@XmlAttribute
-	private String name;
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
+public class Last extends Function {
 
 	@Override
 	public Object extract(ExtractContext context) throws Exception {
 		Validate.isTrue(args != null && args.size() == 1, "Only one arg should be specified");
 		Object res = args.get(0).extract(context);
-		return context.getEngine().getAttribute(res, name, context);
+		Validate.isInstanceOf(List.class, res, "This function only operates on list");
+		List<?> list = (List<?>) res;
+		return list.get(list.size() - 1);
 	}
-
 }

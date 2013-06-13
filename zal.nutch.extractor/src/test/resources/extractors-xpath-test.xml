@@ -30,27 +30,34 @@
 	<documents>
 		<document id="d1" url="^http://.+?\.blog.ir">
 			<extract-to field="f1">
-				<xpath expression="//book[@title='b1']" />
+				<expr value="//book[@title='b1']" />
 			</extract-to>
 			<extract-to field="f2">
-				<xpath expression="//book[@title]/@title" delimiter="-"/>
+				<concat delimiter="-">
+					<expr value="//book[@title]/@title" />
+				</concat>
 			</extract-to>
 			<extract-to field="f3">
-				<xpath expression="//b:book[@title='b1']" />
+				<expr value="//b:book[@title='b1']"/>
 			</extract-to>
 			<extract-to field="f4">
-				<xpath expression="//dns:book[@title='b3']" />
+				<expr value="//dns:book[@title='b3']"/>
 			</extract-to>
 			<extract-to field="f5">
-				<xpath expression="//book[@title='b1']" pattern="content(.*)" substitution="$1" />
+				<replace pattern="content(.*)" substitution="$1">
+					<expr value="//book[@title='b1']"/>
+				</replace>
 			</extract-to>
 		</document>
-		<document id="d2" url="^http://.+?\.blog.ir2" partition-by="//books/category[@name]">
+		<document id="d2" url="^http://.+?\.blog.ir2">
+			<partition>
+				<expr value="//books/category[@name]" />
+			</partition>
 			<extract-to field="id">
-				<xpath expression="./@name" />
+				<expr value="./@name" />
 			</extract-to>
 			<extract-to field="content">
-				<xpath expression="//book" />
+				<expr value="//book" />
 			</extract-to>
 		</document>
 	</documents>

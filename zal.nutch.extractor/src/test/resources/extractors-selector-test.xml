@@ -29,62 +29,112 @@
 	<documents>
 		<document id="base" url="^http://.+?\.blog.ir">
 			<extract-to field="f1">
-				<constant>t1</constant>
+				<constant value="t1"/>
 			</extract-to>
 			<extract-to field="f2">
-				<content selector="head > title"/>
+				<concat>
+					<text>
+						<expr value="head > title"/>
+					</text>
+				</concat>
 			</extract-to>
 			<extract-to field="f3">
-				<attribute selector=".title-div" name="title" />
+				<concat>
+					<attribute name="title">
+						<expr value=".title-div"/>
+					</attribute>
+				</concat>
 			</extract-to>
 			<extract-to field="f4">
-				<content selector="url" />
+				<url />
 			</extract-to>
 			
 			<extract-to field="f5">
-				<constant>t1</constant>
-				<content selector="head > title"/>
-				<attribute selector=".title-div" name="title" />
-				<content selector="url" />
+				<concat>
+					<constant value="t1"/>
+					<text>
+						<expr value="head > title"/>
+					</text>
+					<attribute name="title">
+						<expr value=".title-div"/>
+					</attribute>
+					<url />
+				</concat>
 			</extract-to>
 			
 			<extract-to field="f6">
-				<content selector="head > title" pattern="(t)(\d)+" substitution="$2-$1"/>
+				<concat>
+					<replace pattern="(t)(\d)+" substitution="$2-$1">
+						<text>
+							<expr value="head > title"/>
+						</text>
+					</replace>
+				</concat>
 			</extract-to>
 			<extract-to field="f6.1">
-				<attribute name="content" selector="meta[name=date]" pattern="(.+?)T(.+)" substitution="$1"/>
+				<concat>
+					<replace pattern="(.+?)T(.+)" substitution="$1">
+						<attribute name="content">
+							<expr value="meta[name=date]"/>
+						</attribute>
+					</replace>
+				</concat>
 			</extract-to>
 			
 			<extract-to field="f7">
-				<content selector="div.target" select="all"/>
+				<concat>
+					<text>
+						<expr value="div.target"/>
+					</text>
+				</concat>
 			</extract-to>
 			<extract-to field="f8">
-				<content selector="div.target" select="first"/>
+				<text>
+					<first>
+						<expr value="div.target"/>
+					</first>
+				</text>
 			</extract-to>
 			<extract-to field="f9">
-				<content selector="div.target" select="size"/>
+				<size>
+					<expr value="div.target"/>
+				</size>
 			</extract-to>
 			<extract-to field="f10">
-				<content selector="div.target" select="last"/>
+				<text>
+					<last>
+						<expr value="div.target"/>
+					</last>
+				</text>
 			</extract-to>
-			
 		</document>
 		
 		<document url="^http://.+?\.blog.ir2" inherits="base">
 			<extract-to field="f11">
-				<constant>t1</constant>
+				<constant value="t1" />
 			</extract-to>
 			<extract-to field="f12">
-				<constant>world!</constant>
+				<constant value="world!" />
 			</extract-to>
 		</document>
 		
-		<document url="^http://.+?\.blog.ir3" partition-by=".doc">
+		<document url="^http://.+?\.blog.ir3">
+			<partition>
+				<expr value=".doc"/>
+			</partition>
 			<extract-to field="id">
-				<attribute name="href" selector="a" />
+				<concat>
+					<attribute name="href">
+					 	<expr value="a"/>
+					 </attribute>
+				</concat>
 			</extract-to>
 			<extract-to field="content">
-				<content selector="a" />
+				<concat>
+					<text>
+						<expr value="a" />
+					</text>
+				</concat>
 			</extract-to>
 		</document>
 	</documents>

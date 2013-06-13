@@ -4,49 +4,57 @@ import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractTo;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.FieldValue;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import org.apache.commons.lang3.Validate;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public abstract class ExtractEngine {
+public abstract class ExtractEngine<C extends ExtractContext> {
 
-	public abstract List<ExtractedDoc> extractDocuments(Document document, String url, byte[] content, String encoding,
-			String contentType) throws Exception;
+	public abstract Object evaluate(String value, C context) throws Exception;
 
-	protected void extractDocument(Document document, ExtractedDoc extractedDoc, ExtractContext context)
-			throws Exception {
-		if (document.getInherits() != null) {
-			Document parent = document.getInherits();
-			Validate.notNull(parent,
-					"Can not find the document defined in inherits section with id " + document.getInherits());
+	public abstract Object getAttribute(Object res, String name, C context) throws Exception;
 
+	public abstract Object getText(Object res, C context) throws Exception;
+
+	public List<ExtractedDoc> extractDocuments(Document document, String url, byte[] content, String encoding,
+			String contentType) throws Exception {
+		C context = createContext(url, content, encoding, contentType);
+		List<?> roots = getRoots(document, context);
+		List<ExtractedDoc> res = new ArrayList<>(roots.size());
+		for (Object root : roots) {
+			context.setRoot(root);
+			ExtractedDoc extractedDoc = new ExtractedDoc(new HashMap<String, String>(
+					document.getExtractTos().size() * 2 + 1), url);
+			extractDocument(document, extractedDoc, context);
+			String id = extractedDoc.getFields().get("id");
+			if (id != null)
+				extractedDoc.setUrl(id);
+			res.add(extractedDoc);
+		}
+		return res;
+	}
+
+	protected abstract C createContext(String url, byte[] content, String encoding, String contentType)
+			throws Exception;
+
+	protected abstract List<?> getRoots(Document document, C context) throws Exception;
+
+	protected void extractDocument(Document document, ExtractedDoc extractedDoc, C context) throws Exception {
+		Document parent = document.getInherits();
+		if (parent != null) {
 			extractDocument(parent, extractedDoc, context);
 		}
 
 		for (ExtractTo extractTo : document.getExtractTos()) {
-			StringBuilder fieldValue = new StringBuilder();
-			context.setResult(fieldValue);
 			Field field = extractTo.getField();
 			if (field != null) {
-				extractField(extractTo, context);
-				extractedDoc.addField(field.getName(), fieldValue.toString());
-			}
-		}
-	}
-
-	protected void extractField(ExtractTo extractTo, ExtractContext context) throws Exception {
-		if (extractTo.getValues() != null) {
-			int i = 0;
-			for (FieldValue value : extractTo.getValues()) {
-				value.extract(context);
-				if (i++ < extractTo.getValues().size() - 1)
-					context.getResult().append(extractTo.getDelimiter());
+				String fieldValue = String.valueOf(extractTo.getValue().extract(context));
+				extractedDoc.addField(field.getName(), fieldValue);
 			}
 		}
 	}

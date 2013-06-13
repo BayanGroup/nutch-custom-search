@@ -5,30 +5,25 @@ import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractContext;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.Validate;
-
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
 @XmlRootElement
-public class Attribute extends Function {
+public class Expr extends Function {
 
 	@XmlAttribute
-	private String name;
+	private String value;
 
 	/**
-	 * @return the name
+	 * @return the value
 	 */
-	public String getName() {
-		return name;
+	public String getValue() {
+		return value;
 	}
 
 	@Override
 	public Object extract(ExtractContext context) throws Exception {
-		Validate.isTrue(args != null && args.size() == 1, "Only one arg should be specified");
-		Object res = args.get(0).extract(context);
-		return context.getEngine().getAttribute(res, name, context);
+		return context.getEngine().evaluate(value, context);
 	}
-
 }

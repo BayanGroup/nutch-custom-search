@@ -32,18 +32,14 @@
 				<constant value="t1"/>
 			</extract-to>
 			<extract-to field="f2">
-				<concat>
-					<text>
-						<expr value="head > title"/>
-					</text>
-				</concat>
+				<text>
+					<expr value="head > title"/>
+				</text>
 			</extract-to>
 			<extract-to field="f3">
-				<concat>
-					<attribute name="title">
-						<expr value=".title-div"/>
-					</attribute>
-				</concat>
+				<attribute name="title">
+					<expr value=".title-div"/>
+				</attribute>
 			</extract-to>
 			<extract-to field="f4">
 				<url />
@@ -63,30 +59,24 @@
 			</extract-to>
 			
 			<extract-to field="f6">
-				<concat>
-					<replace pattern="(t)(\d)+" substitution="$2-$1">
-						<text>
-							<expr value="head > title"/>
-						</text>
-					</replace>
-				</concat>
+				<replace pattern="(t)(\d)+" substitution="$2-$1">
+					<text>
+						<expr value="head > title"/>
+					</text>
+				</replace>
 			</extract-to>
 			<extract-to field="f6.1">
-				<concat>
-					<replace pattern="(.+?)T(.+)" substitution="$1">
-						<attribute name="content">
-							<expr value="meta[name=date]"/>
-						</attribute>
-					</replace>
-				</concat>
+				<replace pattern="(.+?)T(.+)" substitution="$1">
+					<attribute name="content">
+						<expr value="meta[name=date]"/>
+					</attribute>
+				</replace>
 			</extract-to>
 			
 			<extract-to field="f7">
-				<concat>
-					<text>
-						<expr value="div.target"/>
-					</text>
-				</concat>
+				<text>
+					<expr value="div.target"/>
+				</text>
 			</extract-to>
 			<extract-to field="f8">
 				<text>
@@ -123,18 +113,14 @@
 				<expr value=".doc"/>
 			</partition>
 			<extract-to field="id">
-				<concat>
-					<attribute name="href">
-					 	<expr value="a"/>
-					 </attribute>
-				</concat>
+				<attribute name="href">
+				 	<expr value="a"/>
+				 </attribute>
 			</extract-to>
 			<extract-to field="content">
-				<concat>
-					<text>
-						<expr value="a" />
-					</text>
-				</concat>
+				<text>
+					<expr value="a" />
+				</text>
 			</extract-to>
 		</document>
 	</documents>

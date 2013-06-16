@@ -63,11 +63,24 @@ public abstract class ExtractEngine<C extends ExtractContext> {
 			Field field = extractTo.getField();
 			if (field != null) {
 				List<?> res = extractTo.getValue().extract(context);
-				StringBuilder fieldValue = new StringBuilder();
-				for (Object item : res)
-					fieldValue.append(item);
-				extractedDoc.addField(field.getName(), fieldValue.toString());
+				if (res != null) {
+					StringBuilder fieldValue = new StringBuilder();
+					join(fieldValue, res);
+					extractedDoc.addField(field.getName(), fieldValue.toString());
+				}
 			}
+		}
+	}
+
+	public static void join(StringBuilder res, List<?> items) {
+		for (int i = 0; i < items.size(); i++) {
+			Object item = items.get(i);
+			if (item instanceof List) {
+				join(res, (List<?>) item);
+			} else
+				res.append(item);
+			if (i < items.size() - 1)
+				res.append(' ');
 		}
 	}
 

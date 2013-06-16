@@ -26,63 +26,47 @@
 	<documents>
 		<document id="blog-ir-post-page">
 			<extract-to field="post-title">
-				<concat>
-					<replace pattern="(.+?) :: (.+)" substitution="$2">
-						<text>
-							<expr value="title"/>
-						</text>
-					</replace>
-				</concat>
+				<replace pattern="(.+?) :: (.+)" substitution="$2">
+					<text>
+						<expr value="title"/>
+					</text>
+				</replace>
 			</extract-to>
 			<extract-to field="post-blog-title">
-				<concat>
-					<replace pattern="(.+?) :: (.+)" substitution="$1">
-						<text>
-							<expr value="title"/>
-						</text>
-					</replace>
-				</concat>	
+				<replace pattern="(.+?) :: (.+)" substitution="$1">
+					<text>
+						<expr value="title"/>
+					</text>
+				</replace>
 			</extract-to>
 			<extract-to field="post-body">
-				<concat>
-					<text>
-						<expr value=".post .body .cnt"/>
-					</text>
-				</concat>
+				<text>
+					<expr value=".post .body .cnt"/>
+				</text>
 			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css">
 			<extract-to field="post-date" >
-				<concat>
-					<replace pattern="(.+?)T(.+)" substitution="$1">
-						<attribute name="content">
-							<expr value="meta[name=date]"/>
-						</attribute>
-					</replace>
-				</concat>
+				<replace pattern="(.+?)T(.+)" substitution="$1">
+					<attribute name="content">
+						<expr value="meta[name=date]"/>
+					</attribute>
+				</replace>
 			</extract-to>
 			<extract-to field="post-comments">
-				<concat>
-					<concat>
-						<text>
-							<expr value=".post_comments .body_cmt .cnt span.cnt_l"/>
-						</text>
-					</concat>
-					<concat>
-						<replace pattern="^(پاسخ:)?(.*)" substitution="$2">
-							<text>
-								<expr value=".cmt_reply"/>
-							</text>
-						</replace>
-					</concat>
-				</concat>
+				<text>
+					<expr value=".post_comments .body_cmt .cnt span.cnt_l"/>
+				</text>
+				<replace pattern="^(پاسخ:)?(.*)" substitution="$2">
+					<text>
+						<expr value=".cmt_reply"/>
+					</text>
+				</replace>
 			</extract-to>
 			<extract-to field="post-keywords">
-				<concat>
-					<text>
-						<expr value=".keywords_post h3"/>
-					</text>
-				</concat>
+				<text>
+					<expr value=".keywords_post h3"/>
+				</text>
 			</extract-to>
 			<extract-to field="document-type">
 				<constant value="Post"/>
@@ -123,11 +107,9 @@
 				</text>
 			</extract-to>
 			<extract-to field="blog-keywords">
-				<concat>
-					<text>
-						<expr value=".tagcloud a h3, .tagcloud h3 a"/>
-					</text>
-				</concat>
+				<text>
+					<expr value=".tagcloud a h3, .tagcloud h3 a"/>
+				</text>
 			</extract-to>
 			<extract-to field="document-type">
 				<constant value="First-Page"/>

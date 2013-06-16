@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
@@ -25,30 +24,26 @@ public class CssEngine extends ExtractEngine<CssContext> {
 		return context.getRoot().select(value);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<?> getAttribute(List<?> res, String name, CssContext context) throws Exception {
-		if (res instanceof Elements) {
-			Elements elements = (Elements) res;
-			List<String> attrs = new ArrayList<>(elements.size());
-			for (Element element : elements) {
-				attrs.add(element.attr(name));
-			}
-			return attrs;
+		List<Element> elements = (List<Element>) res;
+		List<String> attrs = new ArrayList<>(elements.size());
+		for (Element element : elements) {
+			attrs.add(element.attr(name));
 		}
-		return null;
+		return attrs;
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<?> getText(List<?> res, CssContext context) throws Exception {
-		if (res instanceof Elements) {
-			Elements elements = (Elements) res;
-			List<String> texts = new ArrayList<>(elements.size());
-			for (Element element : elements) {
-				texts.add(element.text());
-			}
-			return texts;
+		List<Element> elements = (List<Element>) res;
+		List<String> texts = new ArrayList<>(elements.size());
+		for (Element element : elements) {
+			texts.add(element.text());
 		}
-		return null;
+		return texts;
 	}
 }

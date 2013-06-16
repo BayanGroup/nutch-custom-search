@@ -26,6 +26,6 @@ public class Expr extends Function {
 
 	@Override
 	public List<?> extract(ExtractContext context) throws Exception {
-		return context.getEngine().evaluate(value, context);
+		return context.getEngine().evaluate(context, value);
 	}
 }

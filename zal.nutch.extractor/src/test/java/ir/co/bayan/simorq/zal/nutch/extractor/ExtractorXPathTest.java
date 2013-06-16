@@ -1,9 +1,8 @@
-package ir.co.bayan.simorq.zal.nutch.extractor.engine;
+package ir.co.bayan.simorq.zal.nutch.extractor;
 
 import static org.junit.Assert.assertEquals;
-import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
+import ir.co.bayan.simorq.zal.nutch.extractor.engine.XPathEngine;
 
 import java.io.InputStreamReader;
 import java.util.List;
@@ -16,31 +15,22 @@ import org.junit.Test;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class XPathEngineTest {
+public class ExtractorXPathTest {
 
-	private static XPathEngine engine;
-	private static SelectorConfiguration configuration;
+	private static Extractor extractor;
 	private static String encoding = "UTF-8";
 
 	@BeforeClass
 	public static void init() throws Exception {
-		engine = new XPathEngine();
-		configuration = SelectorConfiguration.readConfig(new InputStreamReader(XPathEngine.class
+		SelectorConfiguration config = SelectorConfiguration.readConfig(new InputStreamReader(XPathEngine.class
 				.getResourceAsStream("/extractors-xpath-test.xml")));
+		extractor = new Extractor(config);
 	}
 
-	/**
-	 * Test method for
-	 * {@link ir.co.bayan.simorq.zal.nutch.extractor.engine.XPathEngine#extractDocuments(ir.co.bayan.simorq.zal.nutch.extractor.config.Document, java.lang.String, java.lang.String)}
-	 * .
-	 * 
-	 * @throws Exception
-	 */
 	@Test
 	public void testExtractDocuments() throws Exception {
 		byte[] content = IOUtils.toByteArray(XPathEngine.class.getResourceAsStream("/test.xml"));
-		Document document = configuration.getDocuments().get(0);
-		List<ExtractedDoc> docs = engine.extractDocuments(document, "", content, encoding, "");
+		List<ExtractedDoc> docs = extractor.extract("http://a.blog.ir", content, encoding, "");
 		ExtractedDoc doc = docs.get(0);
 		assertEquals("content1", doc.getFields().get("f1"));
 		assertEquals("b1-b3", doc.getFields().get("f2"));
@@ -52,8 +42,7 @@ public class XPathEngineTest {
 	@Test
 	public void testExtractDocumentsNamespace() throws Exception {
 		byte[] content = IOUtils.toByteArray(XPathEngine.class.getResourceAsStream("/test-ns.xml"));
-		Document document = configuration.getDocuments().get(0);
-		List<ExtractedDoc> docs = engine.extractDocuments(document, "", content, encoding, "");
+		List<ExtractedDoc> docs = extractor.extract("http://a.blog.ir", content, encoding, "");
 		ExtractedDoc doc = docs.get(0);
 
 		assertEquals("", doc.getFields().get("f1"));
@@ -66,8 +55,7 @@ public class XPathEngineTest {
 	@Test
 	public void testMultiDoc() throws Exception {
 		byte[] content = IOUtils.toByteArray(XPathEngine.class.getResourceAsStream("/test.xml"));
-		Document document = configuration.getDocuments().get(1);
-		List<ExtractedDoc> docs = engine.extractDocuments(document, "", content, encoding, "");
+		List<ExtractedDoc> docs = extractor.extract("http://a.blog.ir2", content, encoding, "");
 
 		assertEquals(2, docs.size());
 		ExtractedDoc doc = docs.get(0);

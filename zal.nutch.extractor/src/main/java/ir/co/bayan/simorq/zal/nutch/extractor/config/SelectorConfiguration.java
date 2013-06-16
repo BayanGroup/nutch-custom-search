@@ -31,10 +31,10 @@ public class SelectorConfiguration {
 	private static final String DEFATUL_CONFIG_FILE = "extractors.xml";
 
 	@XmlAttribute
-	private final boolean omitNonMatching = true;
+	private boolean omitNonMatching = true;
 
 	@XmlAttribute
-	private final String defaultEngine = Extractor.CSS_ENGINE;
+	private String defaultEngine = Extractor.CSS_ENGINE;
 
 	@XmlElementWrapper(name = "types")
 	@XmlElement(name = "type")

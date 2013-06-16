@@ -16,7 +16,7 @@ import org.junit.Test;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class ExtractorTest {
+public class ExtractorCssTest {
 
 	private static Extractor extractor;
 	private static byte[] testPageContent;
@@ -25,10 +25,10 @@ public class ExtractorTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		InputStreamReader configReader = new InputStreamReader(
-				ExtractorTest.class.getResourceAsStream("/extractors-selector-test.xml"));
+				ExtractorCssTest.class.getResourceAsStream("/extractors-selector-test.xml"));
 		SelectorConfiguration config = SelectorConfiguration.readConfig(configReader);
 		extractor = new Extractor(config);
-		InputStream testPage = ExtractorTest.class.getResourceAsStream("/test.htm");
+		InputStream testPage = ExtractorCssTest.class.getResourceAsStream("/test.htm");
 		testPageContent = IOUtils.toByteArray(testPage);
 	}
 

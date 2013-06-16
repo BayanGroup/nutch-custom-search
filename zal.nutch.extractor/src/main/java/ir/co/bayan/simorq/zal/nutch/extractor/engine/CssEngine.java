@@ -7,27 +7,28 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
 /**
+ * An implementation of ExtractEngine which uses jsoup for evaluating css 3 selectors.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class CssEngine extends ExtractEngine<CssContext> {
+public class CssEngine implements ExtractEngine<CssContext> {
 
 	@Override
-	protected CssContext createContext(String url, byte[] content, String encoding, String contentType)
-			throws Exception {
+	public CssContext createContext(String url, byte[] content, String encoding, String contentType) throws Exception {
 		org.jsoup.nodes.Document parsedDoc = Jsoup.parse(new String(content, encoding));
 		return new CssContext(this, url, parsedDoc);
 	}
 
 	@Override
-	public List<?> evaluate(String value, CssContext context) throws Exception {
+	public List<?> evaluate(CssContext context, String value) throws Exception {
 		return context.getRoot().select(value);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<?> getAttribute(List<?> res, String name, CssContext context) throws Exception {
-		List<Element> elements = (List<Element>) res;
+	public List<?> getAttribute(CssContext context, List<?> input, String name) throws Exception {
+		List<Element> elements = (List<Element>) input;
 		List<String> attrs = new ArrayList<>(elements.size());
 		for (Element element : elements) {
 			attrs.add(element.attr(name));
@@ -38,8 +39,8 @@ public class CssEngine extends ExtractEngine<CssContext> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<?> getText(List<?> res, CssContext context) throws Exception {
-		List<Element> elements = (List<Element>) res;
+	public List<?> getText(CssContext context, List<?> input) throws Exception {
+		List<Element> elements = (List<Element>) input;
 		List<String> texts = new ArrayList<>(elements.size());
 		for (Element element : elements) {
 			texts.add(element.text());

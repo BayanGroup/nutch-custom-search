@@ -5,6 +5,8 @@ import javax.xml.namespace.NamespaceContext;
 import org.w3c.dom.Element;
 
 /**
+ * Context used by {@link XPathEngine}.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */

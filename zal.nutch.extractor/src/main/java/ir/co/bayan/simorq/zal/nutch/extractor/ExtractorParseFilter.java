@@ -17,9 +17,7 @@ import org.w3c.dom.DocumentFragment;
 
 public class ExtractorParseFilter implements HtmlParseFilter {
 
-	public static final String MATCHED_DOC = "matched-doc";
-
-	private static final Logger logger = Logger.getLogger(ExtractorParseFilter.class);
+	private static final Logger LOGGER = Logger.getLogger(ExtractorParseFilter.class);
 
 	private Configuration configuration;
 	private Extractor extractor;
@@ -38,7 +36,7 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 					Metadata docMetadata = parseResult.get(doc.getUrl()).getData().getParseMeta();
 					// Indicates that this document is matched with one of urls defined in the config.
 					// This will be used in ParseMetadataIndexingFilter to decide whether exclude document or not
-					docMetadata.add(MATCHED_DOC, "true");
+					docMetadata.add(ExtractorIndexingFilter.MATCHED_DOC, "true");
 					for (Entry<String, String> entry : doc.getFields().entrySet()) {
 						docMetadata.add(entry.getKey(), entry.getValue());
 					}
@@ -47,7 +45,7 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 			}
 
 		} catch (Exception e) {
-			logger.warn("", e);
+			LOGGER.warn("", e);
 		}
 
 		return parseResult;
@@ -65,7 +63,7 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 		try {
 			initConf();
 		} catch (Exception e) {
-			logger.error("", e);
+			LOGGER.error("", e);
 		}
 
 	}

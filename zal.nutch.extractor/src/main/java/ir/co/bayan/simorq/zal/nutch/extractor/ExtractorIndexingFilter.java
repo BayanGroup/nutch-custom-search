@@ -26,7 +26,9 @@ import org.apache.nutch.parse.Parse;
  */
 public class ExtractorIndexingFilter implements IndexingFilter {
 
-	private static final Logger logger = Logger.getLogger(ExtractorIndexingFilter.class);
+	public static final String MATCHED_DOC = "matched-doc";
+
+	private static final Logger LOGGER = Logger.getLogger(ExtractorIndexingFilter.class);
 
 	private Configuration configuration;
 	private SelectorConfiguration config;
@@ -42,7 +44,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 		try {
 			initConfig(configuration);
 		} catch (Exception e) {
-			logger.error("", e);
+			LOGGER.error("", e);
 		}
 	}
 
@@ -54,7 +56,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 	public NutchDocument filter(NutchDocument doc, Parse parse, Text text, CrawlDatum crawlDatum, Inlinks inlinks)
 			throws IndexingException {
 		Metadata metadata = parse.getData().getParseMeta();
-		if ("true".equals(metadata.get(ExtractorParseFilter.MATCHED_DOC))) {
+		if ("true".equals(metadata.get(MATCHED_DOC))) {
 			addFieldsToDoc(doc, metadata);
 			return doc;
 		} else if (config.isOmitNonMatching()) {

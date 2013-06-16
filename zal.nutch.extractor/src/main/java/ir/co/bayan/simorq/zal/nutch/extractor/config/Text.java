@@ -19,7 +19,7 @@ public class Text extends Function {
 	public List<?> extract(ExtractContext context) throws Exception {
 		Validate.isTrue(args != null && args.size() == 1, "Only one arg should be specified");
 		List<?> res = args.get(0).extract(context);
-		return context.getEngine().getText(res, context);
+		return context.getEngine().getText(context, res);
 	}
 
 }

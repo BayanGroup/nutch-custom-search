@@ -3,6 +3,9 @@ package ir.co.bayan.simorq.zal.nutch.extractor;
 import java.util.Map;
 
 /**
+ * Represents an extracted fragment from a given content (HTML or XML). It is possible that from a single content,
+ * multiple fragments extracted, each will be identified by its URL.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */

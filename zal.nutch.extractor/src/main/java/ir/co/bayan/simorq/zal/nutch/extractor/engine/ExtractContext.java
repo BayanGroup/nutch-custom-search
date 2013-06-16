@@ -1,6 +1,8 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
 /**
+ * ExtractContext contains all information necessary for evaluation of extract expressions.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */

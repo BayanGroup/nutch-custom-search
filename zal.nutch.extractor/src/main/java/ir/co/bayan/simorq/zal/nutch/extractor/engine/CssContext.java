@@ -3,6 +3,8 @@ package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 import org.jsoup.nodes.Element;
 
 /**
+ * Context used by {@link CssEngine}.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */

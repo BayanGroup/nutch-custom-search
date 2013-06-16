@@ -22,10 +22,14 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
+ * An implementation of ExtractEngine which uses JAXP xpath engine to evaluate expressions. It also handles the
+ * namespaces. If the given xml has a default namespace, it can be accessed in the xpath expression by prefix dns
+ * (Default Name Space).
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class XPathEngine extends ExtractEngine<XPathContext> {
+public class XPathEngine implements ExtractEngine<XPathContext> {
 
 	public static final String DEFAULT_NAMESPACE = "dns";
 	private static final String XMLNS = "xmlns";
@@ -64,7 +68,7 @@ public class XPathEngine extends ExtractEngine<XPathContext> {
 	}
 
 	@Override
-	public List<?> evaluate(String value, XPathContext context) throws Exception {
+	public List<?> evaluate(XPathContext context, String value) throws Exception {
 		XPath xPath = xPathFactory.newXPath();
 		if (context.getNsContext() != null)
 			xPath.setNamespaceContext(context.getNsContext());
@@ -78,7 +82,7 @@ public class XPathEngine extends ExtractEngine<XPathContext> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<?> getAttribute(List<?> res, String name, XPathContext context) throws Exception {
+	public List<?> getAttribute(XPathContext context, List<?> res, String name) throws Exception {
 		List<Node> nodes = (List<Node>) res;
 		List<String> texts = new ArrayList<>(nodes.size());
 		for (Node node : nodes)
@@ -89,8 +93,8 @@ public class XPathEngine extends ExtractEngine<XPathContext> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<?> getText(List<?> res, XPathContext context) throws Exception {
-		List<Node> nodes = (List<Node>) res;
+	public List<?> getText(XPathContext context, List<?> input) throws Exception {
+		List<Node> nodes = (List<Node>) input;
 		List<String> texts = new ArrayList<>(nodes.size());
 		for (Node node : nodes)
 			texts.add(node.getTextContent());
@@ -98,8 +102,7 @@ public class XPathEngine extends ExtractEngine<XPathContext> {
 	}
 
 	@Override
-	protected XPathContext createContext(String url, byte[] content, String encoding, String contentType)
-			throws Exception {
+	public XPathContext createContext(String url, byte[] content, String encoding, String contentType) throws Exception {
 		Reader contentReader = new InputStreamReader(new ByteArrayInputStream(content), encoding);
 		Element root = builder.parse(new InputSource(contentReader)).getDocumentElement();
 		NamespaceContext nsContext = getNamespaceContext(root);

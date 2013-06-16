@@ -1,87 +1,35 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
-import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractTo;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Partition;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 /**
+ * Evaluates a given expression in a way that it can extract its attributes or texts later. ExtractEngine operates on a
+ * context that creates itself and can hold engine specific fields.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public abstract class ExtractEngine<C extends ExtractContext> {
+public interface ExtractEngine<C extends ExtractContext> {
 
-	public abstract List<?> evaluate(String value, C context) throws Exception;
+	/**
+	 * Evaluates the given expression.
+	 */
+	List<?> evaluate(C context, String expression) throws Exception;
 
-	public abstract List<?> getAttribute(List<?> res, String name, C context) throws Exception;
+	/**
+	 * Retrieves the value of the attribute with the given from each item in the input and return their list as the
+	 * result.
+	 */
+	List<?> getAttribute(C context, List<?> input, String name) throws Exception;
 
-	public abstract List<?> getText(List<?> res, C context) throws Exception;
+	/**
+	 * Retrieves the text from each item in the input and return their list as the result.
+	 */
+	List<?> getText(C context, List<?> input) throws Exception;
 
-	protected abstract C createContext(String url, byte[] content, String encoding, String contentType)
-			throws Exception;
-
-	public List<ExtractedDoc> extractDocuments(Document document, String url, byte[] content, String encoding,
-			String contentType) throws Exception {
-		C context = createContext(url, content, encoding, contentType);
-		List<?> roots = getRoots(document, context);
-		List<ExtractedDoc> res = new ArrayList<>(roots.size());
-		for (Object root : roots) {
-			context.setRoot(root);
-			ExtractedDoc extractedDoc = new ExtractedDoc(new HashMap<String, String>(
-					document.getExtractTos().size() * 2 + 1), url);
-			extractDocument(document, extractedDoc, context);
-			String id = extractedDoc.getFields().get("id");
-			if (id != null)
-				extractedDoc.setUrl(id);
-			res.add(extractedDoc);
-		}
-		return res;
-	}
-
-	protected List<?> getRoots(Document document, C context) throws Exception {
-		Partition partition = document.getPartition();
-		if (partition == null) {
-			return Arrays.asList(context.getRoot());
-		} else {
-			return partition.getExpr().extract(context);
-		}
-	}
-
-	protected void extractDocument(Document document, ExtractedDoc extractedDoc, C context) throws Exception {
-		Document parent = document.getInherits();
-		if (parent != null) {
-			extractDocument(parent, extractedDoc, context);
-		}
-
-		for (ExtractTo extractTo : document.getExtractTos()) {
-			Field field = extractTo.getField();
-			if (field != null) {
-				List<?> res = extractTo.getValue().extract(context);
-				if (res != null) {
-					StringBuilder fieldValue = new StringBuilder();
-					join(fieldValue, res);
-					extractedDoc.addField(field.getName(), fieldValue.toString());
-				}
-			}
-		}
-	}
-
-	public static void join(StringBuilder res, List<?> items) {
-		for (int i = 0; i < items.size(); i++) {
-			Object item = items.get(i);
-			if (item instanceof List) {
-				join(res, (List<?>) item);
-			} else
-				res.append(item);
-			if (i < items.size() - 1)
-				res.append(' ');
-		}
-	}
+	/**
+	 * Creates a context for evaluation. This context will be passed in the subsequent calls.
+	 */
+	C createContext(String url, byte[] content, String encoding, String contentType) throws Exception;
 
 }

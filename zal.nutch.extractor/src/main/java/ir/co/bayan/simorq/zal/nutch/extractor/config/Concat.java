@@ -2,6 +2,7 @@ package ir.co.bayan.simorq.zal.nutch.extractor.config;
 
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractContext;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAttribute;
@@ -15,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Concat extends Function {
 
 	@XmlAttribute
-	private String delimiter = " ";
+	private final String delimiter = " ";
 
 	/**
 	 * @return the delimiter
@@ -25,23 +26,19 @@ public class Concat extends Function {
 	}
 
 	@Override
-	public Object extract(ExtractContext context) throws Exception {
+	public List<?> extract(ExtractContext context) throws Exception {
 		StringBuilder res = new StringBuilder();
 		for (int i = 0; i < args.size(); i++) {
-			Object extracted = args.get(i).extract(context);
-			if (extracted instanceof List<?>) {
-				List<?> list = (List<?>) extracted;
-				for (int j = 0; j < list.size(); j++) {
-					res.append(list.get(j));
-					if (j < list.size() - 1)
-						res.append(delimiter);
-				}
-			} else
-				res.append(extracted);
+			List<?> list = args.get(i).extract(context);
+			for (int j = 0; j < list.size(); j++) {
+				res.append(list.get(j));
+				if (j < list.size() - 1)
+					res.append(delimiter);
+			}
 			if (i < args.size() - 1)
 				res.append(delimiter);
 		}
-		return res.toString();
+		return Arrays.asList(res.toString());
 	}
 
 }

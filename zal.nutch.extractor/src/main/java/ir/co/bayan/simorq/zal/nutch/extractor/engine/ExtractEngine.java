@@ -4,8 +4,10 @@ import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractTo;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
+import ir.co.bayan.simorq.zal.nutch.extractor.config.Partition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,11 +17,14 @@ import java.util.List;
  */
 public abstract class ExtractEngine<C extends ExtractContext> {
 
-	public abstract Object evaluate(String value, C context) throws Exception;
+	public abstract List<?> evaluate(String value, C context) throws Exception;
 
-	public abstract Object getAttribute(Object res, String name, C context) throws Exception;
+	public abstract List<?> getAttribute(List<?> res, String name, C context) throws Exception;
 
-	public abstract Object getText(Object res, C context) throws Exception;
+	public abstract List<?> getText(List<?> res, C context) throws Exception;
+
+	protected abstract C createContext(String url, byte[] content, String encoding, String contentType)
+			throws Exception;
 
 	public List<ExtractedDoc> extractDocuments(Document document, String url, byte[] content, String encoding,
 			String contentType) throws Exception {
@@ -39,10 +44,14 @@ public abstract class ExtractEngine<C extends ExtractContext> {
 		return res;
 	}
 
-	protected abstract C createContext(String url, byte[] content, String encoding, String contentType)
-			throws Exception;
-
-	protected abstract List<?> getRoots(Document document, C context) throws Exception;
+	protected List<?> getRoots(Document document, C context) throws Exception {
+		Partition partition = document.getPartition();
+		if (partition == null) {
+			return Arrays.asList(context.getRoot());
+		} else {
+			return partition.getExpr().extract(context);
+		}
+	}
 
 	protected void extractDocument(Document document, ExtractedDoc extractedDoc, C context) throws Exception {
 		Document parent = document.getInherits();
@@ -53,8 +62,11 @@ public abstract class ExtractEngine<C extends ExtractContext> {
 		for (ExtractTo extractTo : document.getExtractTos()) {
 			Field field = extractTo.getField();
 			if (field != null) {
-				String fieldValue = String.valueOf(extractTo.getValue().extract(context));
-				extractedDoc.addField(field.getName(), fieldValue);
+				List<?> res = extractTo.getValue().extract(context);
+				StringBuilder fieldValue = new StringBuilder();
+				for (Object item : res)
+					fieldValue.append(item);
+				extractedDoc.addField(field.getName(), fieldValue.toString());
 			}
 		}
 	}

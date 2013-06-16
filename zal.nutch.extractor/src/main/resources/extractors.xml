@@ -44,18 +44,22 @@
 				</concat>	
 			</extract-to>
 			<extract-to field="post-body">
-				<text>
-					<expr value=".post .body .cnt"/>
-				</text>
+				<concat>
+					<text>
+						<expr value=".post .body .cnt"/>
+					</text>
+				</concat>
 			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css">
 			<extract-to field="post-date" >
-				<replace pattern="(.+?)T(.+)" substitution="$1">
-					<attribute name="content">
-						<expr value="meta[name=date]"/>
-					</attribute>
-				</replace>
+				<concat>
+					<replace pattern="(.+?)T(.+)" substitution="$1">
+						<attribute name="content">
+							<expr value="meta[name=date]"/>
+						</attribute>
+					</replace>
+				</concat>
 			</extract-to>
 			<extract-to field="post-comments">
 				<concat>

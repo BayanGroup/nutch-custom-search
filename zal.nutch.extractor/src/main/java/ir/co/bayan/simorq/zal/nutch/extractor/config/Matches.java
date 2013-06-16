@@ -2,12 +2,12 @@ package ir.co.bayan.simorq.zal.nutch.extractor.config;
 
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractContext;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.apache.commons.lang3.Validate;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
@@ -31,11 +31,8 @@ public class Matches extends Function {
 	}
 
 	@Override
-	public Object extract(ExtractContext context) throws Exception {
-		Validate.isTrue(args.size() == 1, "Only one inner function is expected.");
-		String res = String.valueOf(args.get(0).extract(context));
-
-		return compiledPattern.matcher(res).matches();
+	public List<?> extract(ExtractContext context) throws Exception {
+		return Arrays.asList(compiledPattern.matcher(null).matches());
 	}
 
 }

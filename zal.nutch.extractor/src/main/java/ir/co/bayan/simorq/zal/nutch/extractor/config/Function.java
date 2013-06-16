@@ -23,6 +23,6 @@ public abstract class Function {
 		return args;
 	}
 
-	public abstract Object extract(ExtractContext context) throws Exception;
+	public abstract List<?> extract(ExtractContext context) throws Exception;
 
 }

@@ -1,13 +1,9 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Partition;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
@@ -68,38 +64,37 @@ public class XPathEngine extends ExtractEngine<XPathContext> {
 	}
 
 	@Override
-	public Object evaluate(String value, XPathContext context) throws Exception {
+	public List<?> evaluate(String value, XPathContext context) throws Exception {
 		XPath xPath = xPathFactory.newXPath();
 		if (context.getNsContext() != null)
 			xPath.setNamespaceContext(context.getNsContext());
-		return xPath.compile(value).evaluate(context.getRoot(), XPathConstants.NODESET);
+		NodeList nodeList = (NodeList) xPath.compile(value).evaluate(context.getRoot(), XPathConstants.NODESET);
+		List<Node> list = new ArrayList<>(nodeList.getLength());
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			list.add(nodeList.item(i));
+		}
+		return list;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getAttribute(Object res, String name, XPathContext context) throws Exception {
-		if (res instanceof NodeList) {
-			NodeList nodes = (NodeList) res;
-			List<String> texts = new ArrayList<>(nodes.getLength());
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				if (node instanceof Element)
-					texts.add(((Element) node).getAttribute(name));
-			}
-			return texts;
-		} else
-			return ((Element) res).getAttribute(name);
+	public List<?> getAttribute(List<?> res, String name, XPathContext context) throws Exception {
+		List<Node> nodes = (List<Node>) res;
+		List<String> texts = new ArrayList<>(nodes.size());
+		for (Node node : nodes)
+			if (node instanceof Element)
+				texts.add(((Element) node).getAttribute(name));
+		return texts;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getText(Object res, XPathContext context) throws Exception {
-		if (res instanceof NodeList) {
-			NodeList nodes = (NodeList) res;
-			List<String> texts = new ArrayList<>(nodes.getLength());
-			for (int i = 0; i < nodes.getLength(); i++)
-				texts.add(nodes.item(i).getTextContent());
-			return texts;
-		} else
-			return ((Node) res).getTextContent();
+	public List<?> getText(List<?> res, XPathContext context) throws Exception {
+		List<Node> nodes = (List<Node>) res;
+		List<String> texts = new ArrayList<>(nodes.size());
+		for (Node node : nodes)
+			texts.add(node.getTextContent());
+		return texts;
 	}
 
 	@Override
@@ -109,21 +104,6 @@ public class XPathEngine extends ExtractEngine<XPathContext> {
 		Element root = builder.parse(new InputSource(contentReader)).getDocumentElement();
 		NamespaceContext nsContext = getNamespaceContext(root);
 		return new XPathContext(this, url, root, nsContext);
-	}
-
-	@Override
-	protected List<?> getRoots(Document document, XPathContext context) throws Exception {
-		Partition partition = document.getPartition();
-		if (partition == null) {
-			return Arrays.asList(context.getRoot());
-		} else {
-			NodeList nodes = (NodeList) partition.getExpr().extract(context);
-			List<Node> res = new ArrayList<>(nodes.getLength());
-			for (int i = 0; i < nodes.getLength(); i++) {
-				res.add(nodes.item(i));
-			}
-			return res;
-		}
 	}
 
 }

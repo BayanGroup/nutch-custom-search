@@ -1,10 +1,6 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Partition;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -25,22 +21,12 @@ public class CssEngine extends ExtractEngine<CssContext> {
 	}
 
 	@Override
-	protected List<?> getRoots(Document document, CssContext context) throws Exception {
-		Partition partition = document.getPartition();
-		if (partition == null) {
-			return Arrays.asList(context.getRoot());
-		} else {
-			return (Elements) partition.getExpr().extract(context);
-		}
-	}
-
-	@Override
-	public Object evaluate(String value, CssContext context) throws Exception {
+	public List<?> evaluate(String value, CssContext context) throws Exception {
 		return context.getRoot().select(value);
 	}
 
 	@Override
-	public Object getAttribute(Object res, String name, CssContext context) throws Exception {
+	public List<?> getAttribute(List<?> res, String name, CssContext context) throws Exception {
 		if (res instanceof Elements) {
 			Elements elements = (Elements) res;
 			List<String> attrs = new ArrayList<>(elements.size());
@@ -48,13 +34,13 @@ public class CssEngine extends ExtractEngine<CssContext> {
 				attrs.add(element.attr(name));
 			}
 			return attrs;
-		} else
-			return ((Element) res).attr(name);
+		}
+		return null;
 
 	}
 
 	@Override
-	public Object getText(Object res, CssContext context) throws Exception {
+	public List<?> getText(List<?> res, CssContext context) throws Exception {
 		if (res instanceof Elements) {
 			Elements elements = (Elements) res;
 			List<String> texts = new ArrayList<>(elements.size());
@@ -62,7 +48,7 @@ public class CssEngine extends ExtractEngine<CssContext> {
 				texts.add(element.text());
 			}
 			return texts;
-		} else
-			return ((Element) res).text();
+		}
+		return null;
 	}
 }

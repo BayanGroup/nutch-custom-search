@@ -43,18 +43,13 @@ public class Replace extends Function {
 	}
 
 	@Override
-	public Object extract(ExtractContext context) throws Exception {
+	public List<?> extract(ExtractContext context) throws Exception {
 		Validate.isTrue(args != null && args.size() == 1, "Only one inner function is expected.");
-		Object res = args.get(0).extract(context);
-		if (res instanceof List<?>) {
-			List<?> list = (List<?>) res;
-			List<String> changed = new ArrayList<>(list.size());
-			for (Object item : list) {
-				changed.add(compiledPattern.matcher(String.valueOf(item)).replaceAll(substitution));
-			}
-			return changed;
-
-		} else
-			return compiledPattern.matcher(String.valueOf(res)).replaceAll(substitution);
+		List<?> list = args.get(0).extract(context);
+		List<String> changed = new ArrayList<>(list.size());
+		for (Object item : list) {
+			changed.add(compiledPattern.matcher(String.valueOf(item)).replaceAll(substitution));
+		}
+		return changed;
 	}
 }

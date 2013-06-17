@@ -1,8 +1,8 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
+import ir.co.bayan.simorq.zal.nutch.extractor.ExtractorUtil;
+
 import java.io.ByteArrayInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +15,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -103,10 +104,25 @@ public class XPathEngine implements ExtractEngine<XPathContext> {
 
 	@Override
 	public XPathContext createContext(String url, byte[] content, String encoding, String contentType) throws Exception {
-		Reader contentReader = new InputStreamReader(new ByteArrayInputStream(content), encoding);
-		Element root = builder.parse(new InputSource(contentReader)).getDocumentElement();
-		NamespaceContext nsContext = getNamespaceContext(root);
-		return new XPathContext(this, url, root, nsContext);
+		InputSource is = new InputSource(new ByteArrayInputStream(content));
+		is.setEncoding(encoding);
+		Element root = null;
+		if (ExtractorUtil.isHtml(contentType)) {
+			DOMParser parser = new DOMParser();
+			parser.setProperty("http://cyberneko.org/html/properties/default-encoding", encoding);
+			parser.setFeature("http://cyberneko.org/html/features/scanner/ignore-specified-charset", true);
+			parser.setFeature("http://cyberneko.org/html/features/balance-tags/ignore-outside-content", false);
+			parser.parse(is);
+			root = parser.getDocument().getDocumentElement();
+		} else if (ExtractorUtil.isXml(contentType)) {
+			root = builder.parse(is).getDocumentElement();
+		}
+		if (root != null) {
+			NamespaceContext nsContext = getNamespaceContext(root);
+			return new XPathContext(this, url, root, nsContext);
+		}
+		throw new RuntimeException("Only html or xml is valid in XPathEngine but the given content type is "
+				+ contentType);
 	}
 
 }

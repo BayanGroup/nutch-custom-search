@@ -1,5 +1,8 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.engine;
 
+import ir.co.bayan.simorq.zal.nutch.extractor.ExtractorUtil;
+
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +19,11 @@ public class CssEngine implements ExtractEngine<CssContext> {
 
 	@Override
 	public CssContext createContext(String url, byte[] content, String encoding, String contentType) throws Exception {
-		org.jsoup.nodes.Document parsedDoc = Jsoup.parse(new String(content, encoding));
-		return new CssContext(this, url, parsedDoc);
+		if (ExtractorUtil.isHtml(contentType)) {
+			org.jsoup.nodes.Document parsedDoc = Jsoup.parse(new ByteArrayInputStream(content), encoding, url);
+			return new CssContext(this, url, parsedDoc);
+		}
+		throw new RuntimeException("Only html is accepted in CssEngine but the given content type is " + contentType);
 	}
 
 	@Override

@@ -4,17 +4,18 @@ import ir.co.bayan.simorq.zal.nutch.extractor.Extractor;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.lang3.Validate;
 import org.apache.hadoop.conf.Configuration;
@@ -74,7 +75,7 @@ public class ExtractorConfig {
 		return defaultEngine;
 	}
 
-	public static ExtractorConfig readConfig(Reader configReader) throws JAXBException {
+	public static ExtractorConfig readConfig(Reader configReader) throws Exception {
 		Validate.notNull(configReader);
 
 		JAXBContext context = JAXBContext.newInstance(ExtractorConfig.class, Document.class, ExtractTo.class,
@@ -82,11 +83,15 @@ public class ExtractorConfig {
 				Attribute.class, Concat.class, Expr.class, Replace.class, Url.class, First.class, Last.class,
 				Size.class, Matches.class, Link.class, FunctionHolder.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
+
+		Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(
+				ExtractorConfig.class.getResource("/extractors.xsd"));
+		unmarshaller.setSchema(schema);
+
 		return (ExtractorConfig) unmarshaller.unmarshal(configReader);
 	}
 
-	public static ExtractorConfig readConfig(Configuration configuration) throws UnsupportedEncodingException,
-			JAXBException {
+	public static ExtractorConfig readConfig(Configuration configuration) throws Exception {
 		Validate.notNull(configuration);
 
 		String configFileName = configuration.get(FILE_CONFIG_KEY, DEFATUL_CONFIG_FILE);

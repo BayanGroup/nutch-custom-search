@@ -1,12 +1,8 @@
 package ir.co.bayan.simorq.zal.nutch.extractor;
 
-import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractorConfig;
+import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.TypeDef;
-
-import java.io.UnsupportedEncodingException;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
@@ -48,7 +44,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 		}
 	}
 
-	private void initConfig(Configuration configuration) throws UnsupportedEncodingException, JAXBException {
+	private void initConfig(Configuration configuration) throws Exception {
 		extractorConfig = ExtractorConfig.readConfig(configuration);
 	}
 

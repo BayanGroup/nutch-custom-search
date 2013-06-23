@@ -86,9 +86,22 @@ public class XPathEngine implements ExtractEngine<XPathContext> {
 	public List<?> getAttribute(XPathContext context, List<?> res, String name) throws Exception {
 		List<Node> nodes = (List<Node>) res;
 		List<String> texts = new ArrayList<>(nodes.size());
-		for (Node node : nodes)
-			if (node instanceof Element)
-				texts.add(((Element) node).getAttribute(name));
+		String localName;
+		String ns;
+		String[] parts = name.split(":");
+		if (parts.length == 2) {
+			ns = context.getNsContext().getNamespaceURI(parts[0]);
+			localName = parts[1];
+		} else {
+			ns = null;
+			localName = parts[0];
+		}
+		for (Node node : nodes) {
+			if (node instanceof Element) {
+				String attrValue = ((Element) node).getAttributeNS(ns, localName);
+				texts.add(attrValue);
+			}
+		}
 		return texts;
 	}
 
@@ -97,8 +110,9 @@ public class XPathEngine implements ExtractEngine<XPathContext> {
 	public List<?> getText(XPathContext context, List<?> input) throws Exception {
 		List<Node> nodes = (List<Node>) input;
 		List<String> texts = new ArrayList<>(nodes.size());
-		for (Node node : nodes)
+		for (Node node : nodes) {
 			texts.add(node.getTextContent());
+		}
 		return texts;
 	}
 

@@ -74,5 +74,32 @@
 				</text>
 			</extract-to>
 		</document>
+		<document url="^http://.+?\.blog.ir3">
+			<outlinks>
+				<link>
+					<partition>
+						<expr value="//category[@name='c2']" />
+					</partition>
+					<href>
+						<attribute name="title">
+							<expr value="./book" />
+						</attribute>
+					</href>
+					<anchor>
+						<text>
+							<expr value="./book" />
+						</text>
+					</anchor>
+				</link>
+				<link>
+					<href>
+						<concat delimiter="">
+							<url />
+							<constant value="/sitemap.xml" />
+						</concat>
+					</href>
+				</link>
+			</outlinks>
+		</document>
 	</documents>
 </config>

@@ -4,6 +4,7 @@ import ir.co.bayan.simorq.zal.nutch.extractor.ExtractorUtil;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -28,6 +29,9 @@ public class CssEngine implements ExtractEngine<CssContext> {
 
 	@Override
 	public List<?> evaluate(CssContext context, String value) throws Exception {
+		if (".".equals(value)) {
+			return Arrays.asList(context.getRoot());
+		}
 		return context.getRoot().select(value);
 	}
 

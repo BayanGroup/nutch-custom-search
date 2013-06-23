@@ -6,7 +6,7 @@ import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractTo;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Link;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Partition;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
+import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractorConfig;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.CssEngine;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractContext;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.ExtractEngine;
@@ -37,16 +37,16 @@ public class Extractor {
 	public static final String XPATH_ENGINE = "xpath";
 	public static final String CSS_ENGINE = "css";
 
-	private final SelectorConfiguration config;
+	private final ExtractorConfig extractorConfig;
 	private final Map<String, Document> docById;
 	private final Map<String, ExtractEngine<? extends ExtractContext>> extractEngines;
 
-	public Extractor(SelectorConfiguration config) throws Exception {
-		Validate.notNull(config);
+	public Extractor(ExtractorConfig extractorConfig) throws Exception {
+		Validate.notNull(extractorConfig);
 
-		this.config = config;
-		docById = new HashMap<>(config.getDocuments().size() * 2 + 1);
-		for (Document doc : config.getDocuments()) {
+		this.extractorConfig = extractorConfig;
+		docById = new HashMap<>(extractorConfig.getDocuments().size() * 2 + 1);
+		for (Document doc : extractorConfig.getDocuments()) {
 			if (doc.getId() != null) {
 				docById.put(doc.getId(), doc);
 			}
@@ -74,7 +74,7 @@ public class Extractor {
 			return null;
 		}
 
-		String engine = StringUtils.defaultIfEmpty(document.getEngine(), config.getDefaultEngine());
+		String engine = StringUtils.defaultIfEmpty(document.getEngine(), extractorConfig.getDefaultEngine());
 		ExtractEngine<? extends ExtractContext> extractEngine = extractEngines.get(engine);
 		if (extractEngine == null)
 			throw new IllegalArgumentException("No engine found with name " + engine);
@@ -83,7 +83,7 @@ public class Extractor {
 	}
 
 	private Document findMatchingDoc(String url, String contentType) throws Exception {
-		for (Document doc : config.getDocuments()) {
+		for (Document doc : extractorConfig.getDocuments()) {
 			boolean matches = true;
 			if (doc.getUrlPattern() != null) {
 				matches = doc.getUrlPattern().matcher(url).matches();
@@ -105,7 +105,7 @@ public class Extractor {
 			ExtractEngine<? extends ExtractContext> extractEngine, String url, byte[] content, String encoding,
 			String contentType) throws Exception {
 		ExtractContext context = extractEngine.createContext(url, content, encoding, contentType);
-		List<?> roots = getRoots(document, context);
+		List<?> roots = getRoots(document.getPartition(), context);
 		List<ExtractedDoc> res = new ArrayList<>(roots.size());
 		for (Object root : roots) {
 			context.setRoot(root);
@@ -120,8 +120,7 @@ public class Extractor {
 		return res;
 	}
 
-	protected List<?> getRoots(Document document, ExtractContext context) throws Exception {
-		Partition partition = document.getPartition();
+	public static List<?> getRoots(Partition partition, ExtractContext context) throws Exception {
 		if (partition == null) {
 			return Arrays.asList(context.getRoot());
 		} else {
@@ -139,7 +138,7 @@ public class Extractor {
 		for (ExtractTo extractTo : document.getExtractTos()) {
 			Field field = extractTo.getField();
 			if (field != null) {
-				List<?> res = extractTo.getValue().extract(context);
+				List<String> res = extractTo.extract(context);
 				if (res != null) {
 					StringBuilder fieldValue = new StringBuilder();
 					join(fieldValue, res);

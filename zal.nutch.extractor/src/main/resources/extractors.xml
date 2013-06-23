@@ -84,6 +84,24 @@
 			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/?">
+			<outlinks>
+				<link>
+					<href>
+						<concat delimiter="">
+							<url />
+							<constant value="/rss" />
+						</concat>
+					</href>
+				</link>
+				<link>
+					<href>
+						<concat delimiter="">
+							<url />
+							<constant value="/sitemap.xml" />
+						</concat>
+					</href>
+				</link>
+			</outlinks>
 			<extract-to field="blog-title">
 				<text>
 					<expr value="title"/>
@@ -118,7 +136,26 @@
 				<constant value="1"/>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/rss.*" >
+		<document url="^http://.+?\.blog.ir/sitemap.xml" engine="xpath">
+			<outlinks>
+				<link>
+					<partition>
+						<expr value="dns:url" />
+					</partition>
+					<anchor>
+						<text>
+							<expr value="./blog:dloc" />
+						</text>
+					</anchor>
+					<href>
+						<text>
+							<expr value="./dns:loc" />
+						</text>
+					</href>
+				</link>
+			</outlinks>			
+		</document>
+		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath">
 			
 		</document>
 	</documents>

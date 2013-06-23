@@ -126,8 +126,20 @@
 		
 		<document url="^http://.+?\.blog.ir4">
 			<outlinks>
-				<link url="href" anchor=".text()">
-					<expr value="a.outlink" />
+				<link>
+					<partition>
+						<expr value="a.outlink" />
+					</partition>
+					<href>
+						<attribute name="href">
+							<expr value="." />
+						</attribute>
+					</href>
+					<anchor>
+						<text>
+							<expr value="." />
+						</text>
+					</anchor>
 				</link>
 			</outlinks>
 		</document>

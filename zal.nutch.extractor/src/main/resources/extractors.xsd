@@ -111,11 +111,11 @@
 	</xs:complexType>
 	
 	<xs:complexType name="linkType">
-		<xs:sequence>
-			<xs:element name="expr" type="exprType" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="url" use="required"/>
-		<xs:attribute name="anchor" use="required"/>
+		<xs:all>
+			<xs:element name="partition" type="partitionType" minOccurs="0"/>
+			<xs:element name="href" type="functionType" minOccurs="1"/>
+			<xs:element name="anchor" type="functionType" minOccurs="0"/>
+		</xs:all>
 	</xs:complexType>
 	
 	<xs:complexType name="outlinksType">

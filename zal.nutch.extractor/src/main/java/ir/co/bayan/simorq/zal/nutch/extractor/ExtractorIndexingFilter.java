@@ -1,7 +1,7 @@
 package ir.co.bayan.simorq.zal.nutch.extractor;
 
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
+import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractorConfig;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.TypeDef;
 
 import java.io.UnsupportedEncodingException;
@@ -31,7 +31,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 	private static final Logger LOGGER = Logger.getLogger(ExtractorIndexingFilter.class);
 
 	private Configuration configuration;
-	private SelectorConfiguration config;
+	private ExtractorConfig extractorConfig;
 
 	@Override
 	public Configuration getConf() {
@@ -49,7 +49,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 	}
 
 	private void initConfig(Configuration configuration) throws UnsupportedEncodingException, JAXBException {
-		config = SelectorConfiguration.readConfig(configuration);
+		extractorConfig = ExtractorConfig.readConfig(configuration);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 		if ("true".equals(metadata.get(MATCHED_DOC))) {
 			addFieldsToDoc(doc, metadata);
 			return doc;
-		} else if (config.isOmitNonMatching()) {
+		} else if (extractorConfig.isOmitNonMatching()) {
 			return null;
 		} else {
 			return doc;
@@ -67,7 +67,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 	}
 
 	void addFieldsToDoc(NutchDocument doc, Metadata metadata) {
-		for (Field field : config.getFields()) {
+		for (Field field : extractorConfig.getFields()) {
 			String name = field.getName();
 			for (String value : metadata.getValues(name)) {
 				Object finalValue = value;

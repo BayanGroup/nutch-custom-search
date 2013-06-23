@@ -25,7 +25,7 @@ import org.apache.hadoop.conf.Configuration;
  */
 @XmlRootElement(name = "config")
 @XmlType(propOrder = { "types", "fields", "documents" })
-public class SelectorConfiguration {
+public class ExtractorConfig {
 
 	private static final String FILE_CONFIG_KEY = "extractor.file";
 	private static final String DEFATUL_CONFIG_FILE = "extractors.xml";
@@ -74,18 +74,18 @@ public class SelectorConfiguration {
 		return defaultEngine;
 	}
 
-	public static SelectorConfiguration readConfig(Reader configReader) throws JAXBException {
+	public static ExtractorConfig readConfig(Reader configReader) throws JAXBException {
 		Validate.notNull(configReader);
 
-		JAXBContext context = JAXBContext.newInstance(SelectorConfiguration.class, Document.class, ExtractTo.class,
+		JAXBContext context = JAXBContext.newInstance(ExtractorConfig.class, Document.class, ExtractTo.class,
 				Filter.class, Partition.class, Field.class, Function.class, Constant.class, TypeDef.class, Text.class,
 				Attribute.class, Concat.class, Expr.class, Replace.class, Url.class, First.class, Last.class,
-				Size.class, Matches.class, Link.class);
+				Size.class, Matches.class, Link.class, FunctionHolder.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		return (SelectorConfiguration) unmarshaller.unmarshal(configReader);
+		return (ExtractorConfig) unmarshaller.unmarshal(configReader);
 	}
 
-	public static SelectorConfiguration readConfig(Configuration configuration) throws UnsupportedEncodingException,
+	public static ExtractorConfig readConfig(Configuration configuration) throws UnsupportedEncodingException,
 			JAXBException {
 		Validate.notNull(configuration);
 

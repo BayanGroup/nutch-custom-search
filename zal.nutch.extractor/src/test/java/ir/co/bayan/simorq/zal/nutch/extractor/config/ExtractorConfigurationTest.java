@@ -16,26 +16,26 @@ import org.junit.Test;
  */
 public class ExtractorConfigurationTest {
 
-	private SelectorConfiguration config;
+	private ExtractorConfig extractorConfig;
 
 	@Before
 	public void setUp() throws Exception {
 		InputStreamReader configReader = new InputStreamReader(getClass().getResourceAsStream(
 				"/extractors-config-test.xml"));
-		config = SelectorConfiguration.readConfig(configReader);
+		extractorConfig = ExtractorConfig.readConfig(configReader);
 	}
 
 	@Test
 	public void test() {
-		assertEquals(4, config.getTypes().size());
-		assertEquals(13, config.getFields().size());
-		assertEquals(5, config.getDocuments().size());
-		assertNotNull(config.getDocuments().get(0).getExtractTos().get(0).getField());
-		assertNotNull(config.getFields().get(3).getType());
-		Function func = config.getDocuments().get(0).getExtractTos().get(0).getValue();
+		assertEquals(4, extractorConfig.getTypes().size());
+		assertEquals(13, extractorConfig.getFields().size());
+		assertEquals(5, extractorConfig.getDocuments().size());
+		assertNotNull(extractorConfig.getDocuments().get(0).getExtractTos().get(0).getField());
+		assertNotNull(extractorConfig.getFields().get(3).getType());
+		Function func = extractorConfig.getDocuments().get(0).getExtractTos().get(0).getValue();
 		assertTrue(func instanceof Concat);
 		assertEquals(1, func.getArgs().size());
 		assertTrue(func.getArgs().get(0) instanceof Replace);
-		assertEquals(1, config.getDocuments().get(0).getOutlinks().get(0).getExpressions().size());
+		assertNotNull(extractorConfig.getDocuments().get(0).getOutlinks().get(0));
 	}
 }

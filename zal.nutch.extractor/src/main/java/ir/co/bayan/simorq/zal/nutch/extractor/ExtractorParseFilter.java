@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.nutch.extractor;
 
-import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
+import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractorConfig;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -99,7 +99,7 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 	}
 
 	private void initConf() throws Exception {
-		extractor = new Extractor(SelectorConfiguration.readConfig(configuration));
+		extractor = new Extractor(ExtractorConfig.readConfig(configuration));
 	}
 
 }

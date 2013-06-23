@@ -2,7 +2,7 @@ package ir.co.bayan.simorq.zal.nutch.extractor;
 
 import static org.junit.Assert.assertEquals;
 import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc.LinkData;
-import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
+import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractorConfig;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,8 +27,8 @@ public class ExtractorCssTest {
 	public static void setUpBeforeClass() throws Exception {
 		InputStreamReader configReader = new InputStreamReader(
 				ExtractorCssTest.class.getResourceAsStream("/extractors-css-test.xml"));
-		SelectorConfiguration config = SelectorConfiguration.readConfig(configReader);
-		extractor = new Extractor(config);
+		ExtractorConfig extractorConfig = ExtractorConfig.readConfig(configReader);
+		extractor = new Extractor(extractorConfig);
 		InputStream testPage = ExtractorCssTest.class.getResourceAsStream("/test.htm");
 		testPageContent = IOUtils.toByteArray(testPage);
 	}

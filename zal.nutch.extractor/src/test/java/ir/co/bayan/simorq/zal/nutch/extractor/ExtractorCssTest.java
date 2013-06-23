@@ -1,6 +1,7 @@
 package ir.co.bayan.simorq.zal.nutch.extractor;
 
 import static org.junit.Assert.assertEquals;
+import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc.LinkData;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
 
 import java.io.InputStream;
@@ -25,7 +26,7 @@ public class ExtractorCssTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		InputStreamReader configReader = new InputStreamReader(
-				ExtractorCssTest.class.getResourceAsStream("/extractors-selector-test.xml"));
+				ExtractorCssTest.class.getResourceAsStream("/extractors-css-test.xml"));
 		SelectorConfiguration config = SelectorConfiguration.readConfig(configReader);
 		extractor = new Extractor(config);
 		InputStream testPage = ExtractorCssTest.class.getResourceAsStream("/test.htm");
@@ -97,5 +98,16 @@ public class ExtractorCssTest {
 
 		assertEquals("b", extractedDocs.get(1).getFields().get("content"));
 		assertEquals("http://2", extractedDocs.get(1).getUrl());
+	}
+
+	@Test
+	public void testOutlinks() throws Exception {
+		List<ExtractedDoc> extractedDocs = extractor.extract("http://some.blog.ir4", testPageContent, encoding,
+				"text/html");
+		List<LinkData> outlinks = extractedDocs.get(0).getOutlinks();
+		assertEquals(2, outlinks.size());
+		assertEquals("http://1", outlinks.get(0).getUrl());
+		assertEquals("a", outlinks.get(0).getAnchor());
+		assertEquals("http://some.blog.ir4/2", outlinks.get(1).getUrl());
 	}
 }

@@ -80,7 +80,7 @@ public class SelectorConfiguration {
 		JAXBContext context = JAXBContext.newInstance(SelectorConfiguration.class, Document.class, ExtractTo.class,
 				Filter.class, Partition.class, Field.class, Function.class, Constant.class, TypeDef.class, Text.class,
 				Attribute.class, Concat.class, Expr.class, Replace.class, Url.class, First.class, Last.class,
-				Size.class, Matches.class);
+				Size.class, Matches.class, Link.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		return (SelectorConfiguration) unmarshaller.unmarshal(configReader);
 	}

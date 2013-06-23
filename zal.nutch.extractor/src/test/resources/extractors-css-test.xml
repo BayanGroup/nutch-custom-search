@@ -123,5 +123,13 @@
 				</text>
 			</extract-to>
 		</document>
+		
+		<document url="^http://.+?\.blog.ir4">
+			<outlinks>
+				<link url="href" anchor=".text()">
+					<expr value="a.outlink" />
+				</link>
+			</outlinks>
+		</document>
 	</documents>
 </config>

@@ -36,5 +36,6 @@ public class ExtractorConfigurationTest {
 		assertTrue(func instanceof Concat);
 		assertEquals(1, func.getArgs().size());
 		assertTrue(func.getArgs().get(0) instanceof Replace);
+		assertEquals(1, config.getDocuments().get(0).getOutlinks().get(0).getExpressions().size());
 	}
 }

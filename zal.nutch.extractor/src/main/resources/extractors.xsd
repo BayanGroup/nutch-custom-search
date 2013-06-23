@@ -109,10 +109,25 @@
 			<xs:element name="expr" type="exprType"/>
 		</xs:sequence>
 	</xs:complexType>
+	
+	<xs:complexType name="linkType">
+		<xs:sequence>
+			<xs:element name="expr" type="exprType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="url" use="required"/>
+		<xs:attribute name="anchor" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="outlinksType">
+		<xs:sequence>
+			<xs:element name="link" type="linkType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
 
 	<xs:complexType name="documentType">
 		<xs:sequence>
 			<xs:element name="partition" type="partitionType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="outlinks" type="outlinksType" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="extract-to" maxOccurs="unbounded" minOccurs="0" type="extractToType" />
 		</xs:sequence>
 		<xs:attribute type="xs:ID" name="id" use="optional" />

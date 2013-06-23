@@ -25,6 +25,11 @@
 	</fields>
 	<documents>
 		<document id="blog-ir-post-page">
+			<outlinks>
+				<link url="href" title="@text">
+					<expr value="a" />
+				</link>
+			</outlinks>
 			<extract-to field="post-title">
 				<concat>
 					<replace pattern="(.+?) :: (.+)" substitution="$2">

@@ -15,11 +15,11 @@ import org.apache.nutch.parse.Outlink;
  */
 public class ExtractedDoc {
 
-	public static class Link {
+	public static class LinkData {
 		private final String url;
 		private final String anchor;
 
-		public Link(String url, String anchor) {
+		public LinkData(String url, String anchor) {
 			this.url = url;
 			this.anchor = anchor;
 		}
@@ -43,7 +43,7 @@ public class ExtractedDoc {
 	private final Map<String, String> fields;
 	private String url;
 	private String title;
-	private List<Link> outlinks;
+	private List<LinkData> outlinks;
 	private String text;
 
 	public ExtractedDoc(Map<String, String> fields, String url) {
@@ -80,8 +80,16 @@ public class ExtractedDoc {
 	/**
 	 * @return the outlinks
 	 */
-	public List<Link> getOutlinks() {
+	public List<LinkData> getOutlinks() {
 		return outlinks;
+	}
+
+	/**
+	 * @param outlinks
+	 *            the outlinks to set
+	 */
+	public void setOutlinks(List<LinkData> outlinks) {
+		this.outlinks = outlinks;
 	}
 
 	/**
@@ -105,8 +113,8 @@ public class ExtractedDoc {
 		else {
 			outlinks = new Outlink[getOutlinks().size()];
 			for (int i = 0; i < outlinks.length; i++) {
-				Link link = getOutlinks().get(i);
-				outlinks[i] = new Outlink(link.getUrl(), link.getAnchor());
+				LinkData linkData = getOutlinks().get(i);
+				outlinks[i] = new Outlink(linkData.getUrl(), linkData.getAnchor());
 			}
 		}
 		return outlinks;

@@ -1,8 +1,10 @@
 package ir.co.bayan.simorq.zal.nutch.extractor;
 
+import ir.co.bayan.simorq.zal.nutch.extractor.ExtractedDoc.LinkData;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Document;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.ExtractTo;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Field;
+import ir.co.bayan.simorq.zal.nutch.extractor.config.Link;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.Partition;
 import ir.co.bayan.simorq.zal.nutch.extractor.config.SelectorConfiguration;
 import ir.co.bayan.simorq.zal.nutch.extractor.engine.CssEngine;
@@ -144,6 +146,15 @@ public class Extractor {
 					extractedDoc.addField(field.getName(), fieldValue.toString());
 				}
 			}
+		}
+
+		if (document.getOutlinks() != null) {
+			List<LinkData> linkDatas = extractedDoc.getOutlinks() == null ? new ArrayList<LinkData>() : extractedDoc
+					.getOutlinks();
+			for (Link link : document.getOutlinks()) {
+				linkDatas.addAll(link.extract(context));
+			}
+			extractedDoc.setOutlinks(linkDatas);
 		}
 	}
 

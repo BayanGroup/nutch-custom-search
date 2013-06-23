@@ -1,10 +1,12 @@
 package ir.co.bayan.simorq.zal.nutch.extractor.config;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 
@@ -21,7 +23,7 @@ public class Document {
 	private Pattern contentTypePattern;
 
 	@XmlElement(name = "extract-to")
-	private List<ExtractTo> extractTos;
+	private List<ExtractTo> extractTos = new ArrayList<>();
 
 	@XmlAttribute
 	@XmlID
@@ -39,6 +41,10 @@ public class Document {
 
 	@XmlElement
 	private Partition partition;
+
+	@XmlElementWrapper(name = "outlinks")
+	@XmlElement(name = "link")
+	private List<Link> outlinks;
 
 	/**
 	 * @return the url
@@ -124,6 +130,13 @@ public class Document {
 	 */
 	public Partition getPartition() {
 		return partition;
+	}
+
+	/**
+	 * @return the outlinks
+	 */
+	public List<Link> getOutlinks() {
+		return outlinks;
 	}
 
 }

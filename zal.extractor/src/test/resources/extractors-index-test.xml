@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir extractors.xsd">
+	<types>
+		<type name="hello" converter="ir.co.bayan.simorq.zal.extractor.convert.TestConverter" />
+	</types>
+	<fields>
+		<field name="f1" type="hello"/>
+	</fields>
+	<documents>
+		<document url="^http://.+?\.blog.ir">
+			<extract-to field="f1">
+				<constant value="t1" />
+			</extract-to>
+		</document>
+	</documents>
+</config>

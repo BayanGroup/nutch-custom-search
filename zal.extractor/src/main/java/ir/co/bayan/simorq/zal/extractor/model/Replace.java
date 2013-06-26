@@ -54,4 +54,10 @@ public class Replace extends Function {
 		}
 		return changed;
 	}
+
+	@Override
+	public String toString() {
+		return "Replace [pattern=" + pattern + ", substitution=" + substitution + "]";
+	}
+
 }

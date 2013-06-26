@@ -30,4 +30,10 @@ public class Expr extends Function {
 	public List<?> extract(Object root, ExtractContext context) throws Exception {
 		return context.getEvaluator().evaluate(root, context, value);
 	}
+
+	@Override
+	public String toString() {
+		return "Expr [value=" + value + "]";
+	}
+
 }

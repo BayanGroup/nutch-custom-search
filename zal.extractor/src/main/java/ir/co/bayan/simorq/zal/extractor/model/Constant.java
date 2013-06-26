@@ -30,4 +30,9 @@ public class Constant extends Function {
 		return Arrays.asList(value);
 	}
 
+	@Override
+	public String toString() {
+		return "Constant [value=" + value + "]";
+	}
+
 }

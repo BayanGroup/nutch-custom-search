@@ -22,4 +22,9 @@ public class First extends Function {
 		List<?> res = args.get(0).extract(root, context);
 		return Arrays.asList(res.get(0));
 	}
+
+	@Override
+	public String toString() {
+		return "First [" + super.toString() + "]";
+	}
 }

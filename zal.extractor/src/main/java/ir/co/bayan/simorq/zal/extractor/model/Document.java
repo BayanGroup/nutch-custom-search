@@ -147,7 +147,7 @@ public class Document extends Fragment {
 
 		for (Object root : getRoots(context.getRoot(), context)) {
 			ExtractedDoc mainDoc = new ExtractedDoc();
-			mainDoc.setUrl(url);
+			mainDoc.addField(Fragment.URL_FIELD, context.getUrl().toString());
 			res.add(mainDoc);
 			extract(this, mainDoc, res, root, context);
 		}
@@ -163,7 +163,7 @@ public class Document extends Fragment {
 		}
 
 		document.extractFields(root, context, mainDoc);
-		document.insertSpecialFields(mainDoc);
+		document.insertSpecialFields(context, mainDoc);
 		document.extractOutlinks(root, context, mainDoc);
 
 		if (document.getFragments() != null) {
@@ -175,11 +175,11 @@ public class Document extends Fragment {
 	}
 
 	public boolean matches(String url, String contentType) {
-		boolean matches = true;
+		boolean matches = false;
 		if (urlPattern != null) {
 			matches = urlPattern.matcher(url).matches();
 		}
-		if (matches && contentTypePattern != null) {
+		if (!matches && contentTypePattern != null) {
 			matches = contentTypePattern.matcher(contentType).matches();
 		}
 		return matches;

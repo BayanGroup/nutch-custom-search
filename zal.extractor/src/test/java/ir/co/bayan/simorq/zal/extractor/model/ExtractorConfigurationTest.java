@@ -4,11 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import ir.co.bayan.simorq.zal.extractor.model.Concat;
-import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
-import ir.co.bayan.simorq.zal.extractor.model.Function;
-import ir.co.bayan.simorq.zal.extractor.model.Replace;
-
 import java.io.InputStreamReader;
 
 import org.junit.Before;

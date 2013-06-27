@@ -1,6 +1,5 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElementRef;
@@ -26,7 +25,7 @@ public abstract class Function implements Extractor {
 
 	@Override
 	public String toString() {
-		return (args != null ? "args=" + Arrays.deepToString(args.toArray()) : "");
+		return "args=" + args;
 	}
 
 }

@@ -60,10 +60,11 @@ public class ExtractorParser implements Parser {
 	public ParseResult getParse(Content content) {
 		ParseResult parseResult = new ParseResult(content.getUrl());
 		try {
-			List<ExtractedDoc> docs = extractEngine.extract(content.getUrl(), content.getContent(), getEncoding(content),
-					content.getContentType());
+			List<ExtractedDoc> docs = extractEngine.extract(content.getUrl(), content.getContent(),
+					getEncoding(content), content.getContentType());
 			if (docs != null) {
 				for (ExtractedDoc doc : docs) {
+					LOGGER.info(doc.toString());
 					ParseText parseText = new ParseText(doc.getText());
 					ParseData parseData = getParseData(content, doc);
 					parseResult.put(doc.getUrl(), parseText, parseData);

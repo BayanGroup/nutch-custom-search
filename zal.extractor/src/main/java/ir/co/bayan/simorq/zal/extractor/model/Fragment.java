@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
  */
 public class Fragment extends Rooted {
 
-	public static final String TEXT_FIELD = "text";
+	public static final String TEXT_FIELD = "content";
 	public static final String TITLE_FIELD = "title";
 	public static final String URL_FIELD = "url";
 
@@ -40,7 +40,7 @@ public class Fragment extends Rooted {
 			ExtractedDoc extractedDoc = new ExtractedDoc();
 
 			extractFields(subRoot, context, extractedDoc);
-			insertSpecialFields(extractedDoc);
+			insertSpecialFields(context, extractedDoc);
 			extractOutlinks(subRoot, context, extractedDoc);
 
 			docs.add(extractedDoc);
@@ -72,19 +72,25 @@ public class Fragment extends Rooted {
 		}
 	}
 
-	protected void insertSpecialFields(ExtractedDoc extractedDoc) {
+	protected void insertSpecialFields(ExtractContext context, ExtractedDoc extractedDoc) {
 		String url = extractedDoc.getFields().get(URL_FIELD);
 		if (url != null)
 			extractedDoc.setUrl(url);
+		else
+			throw new RuntimeException("Url field for a document or fragment can not be null. Current url: "
+					+ context.getUrl());
 
 		String title = extractedDoc.getFields().get(TITLE_FIELD);
 		if (title != null)
 			extractedDoc.setTitle(title);
+		else
+			extractedDoc.setTitle(url);
 
 		String text = extractedDoc.getFields().get(TEXT_FIELD);
 		if (text != null) {
 			extractedDoc.setText(text);
-		}
+		} else
+			extractedDoc.setText("");
 	}
 
 	public static void join(StringBuilder res, List<?> items) {

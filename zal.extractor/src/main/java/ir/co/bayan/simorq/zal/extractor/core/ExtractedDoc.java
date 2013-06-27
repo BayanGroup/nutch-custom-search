@@ -40,6 +40,11 @@ public class ExtractedDoc {
 			return anchor;
 		}
 
+		@Override
+		public String toString() {
+			return "LinkData [url=" + url + "]";
+		}
+
 	}
 
 	private final Map<String, String> fields = new HashMap<String, String>();
@@ -131,6 +136,11 @@ public class ExtractedDoc {
 			}
 		}
 		return outlinks;
+	}
+
+	@Override
+	public String toString() {
+		return "ExtractedDoc [fields=" + fields + ", url=" + url + ", title=" + title + ", outlinks=" + outlinks + "]";
 	}
 
 }

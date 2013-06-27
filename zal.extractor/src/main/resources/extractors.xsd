@@ -18,6 +18,8 @@
 			<xs:element name="constant" type="constantType"/>
 			<xs:element name="concat" type="concatType" />
 			<xs:element name="replace" type="replaceType" />
+			<xs:element name="trim" type="trimType" />
+			<xs:element name="trancate" type="trancateType" />
 			<xs:element name="text" type="textType" />
 			<xs:element name="attribute" type="attributeType" />
 			<xs:element name="first" type="firstType" />
@@ -80,8 +82,33 @@
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="singleFunctionType">
-				<xs:attribute name="pattern" use="required"/>
+				<xs:attribute name="pattern" use="required" />
 				<xs:attribute name="substitution" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="trancateType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Trancates a string if its size is greater than max.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+				<xs:attribute name="max" type="xs:integer" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="trimType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Trims a string.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

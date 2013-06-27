@@ -26,19 +26,26 @@
 		<field name="blog-keywords" />
 		
 		<field name="document-type" />
-		<field name="csi" type="long" />
+		<field name="csi" />
 		<field name="url"/>
 		<field name="title" />
-		<field name="text" />
+		<field name="content" />
 	</fields>
 	<documents>
-		<document id="blog-ir-post-page">
+		<document id="blog-ir">
+			<extract-to field="csi">
+				<constant value="1"/>
+			</extract-to>
+		</document>
+		<document id="blog-ir-post-page" inherits="blog-ir">
 			<extract-to field="post-title">
-				<replace pattern="(.+?) :: (.+)" substitution="$2">
-					<text>
-						<expr value="title"/>
-					</text>
-				</replace>
+				<trim>
+					<replace pattern="(.+?) :: (.+)" substitution="$2">
+						<text>
+							<expr value="title"/>
+						</text>
+					</replace>
+				</trim>
 			</extract-to>
 			<extract-to field="post-blog-title">
 				<replace pattern="(.+?) :: (.+)" substitution="$1">
@@ -81,25 +88,19 @@
 			<extract-to field="document-type">
 				<constant value="Post"/>
 			</extract-to>
-			<extract-to field="csi">
-				<constant value="1"/>
-			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/page/.+" inherits="blog-ir-post-page">
 			<extract-to field="document-type">
 				<constant value="Custom-Page"/>
 			</extract-to>
-			<extract-to field="csi">
-				<constant value="1"/>
-			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/?">
+		<document url="^http://.+?\.blog.ir/?" inherits="blog-ir">
 			<outlinks>
 				<link>
 					<href>
 						<concat delimiter="/">
 							<url />
-							<constant value="rss" />
+							<constant value="rss/" />
 						</concat>
 					</href>
 				</link>
@@ -142,9 +143,6 @@
 			<extract-to field="document-type">
 				<constant value="First-Page"/>
 			</extract-to>
-			<extract-to field="csi">
-				<constant value="1"/>
-			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/sitemap.xml" engine="xpath">
 			<outlinks>
@@ -162,7 +160,7 @@
 				</link>
 			</outlinks>			
 		</document>
-		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath" root="//item">
+		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath" root="//item" inherits="blog-ir">
 			<extract-to field="url">
 				<text>
 					<expr value="./link" />
@@ -184,7 +182,7 @@
 				</text>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/category/.*" engine="css" root=".post">
+		<document url="^http://.+?\.blog.ir/category/.*" engine="css" root=".post" inherits="blog-ir">
 			<extract-to field="url">
 				<resolve>
 					<attribute name="href">

@@ -73,6 +73,18 @@
 				</extract-to>
 			</fragment>
 		</document>
+		<document id="d3" url="^http://.+?\.blog.ir25" root="//books/category[@name]">
+			<extract-to field="url">
+				<text>
+					<expr value="./@name" />
+				</text>
+			</extract-to>
+			<extract-to field="content">
+				<text>
+					<expr value=".//book" />
+				</text>
+			</extract-to>
+		</document>
 		<document url="^http://.+?\.blog.ir3">
 			<outlinks>
 				<link root="//category[@name='c2']">

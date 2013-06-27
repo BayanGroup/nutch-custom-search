@@ -145,25 +145,26 @@ public class Document extends Fragment {
 	public List<ExtractedDoc> extract(ExtractContext context) throws Exception {
 		List<ExtractedDoc> res = new ArrayList<>();
 
-		ExtractedDoc mainDoc = new ExtractedDoc();
-		mainDoc.setUrl(url);
-		res.add(mainDoc);
-
-		extract(this, mainDoc, res, context);
+		for (Object root : getRoots(context.getRoot(), context)) {
+			ExtractedDoc mainDoc = new ExtractedDoc();
+			mainDoc.setUrl(url);
+			res.add(mainDoc);
+			extract(this, mainDoc, res, root, context);
+		}
 
 		return res;
 	}
 
-	private void extract(Document document, ExtractedDoc mainDoc, List<ExtractedDoc> extractedDocs,
+	private void extract(Document document, ExtractedDoc mainDoc, List<ExtractedDoc> extractedDocs, Object root,
 			ExtractContext context) throws Exception {
 		Document parent = document.getInherits();
 		if (parent != null) {
-			extract(parent, mainDoc, extractedDocs, context);
+			extract(parent, mainDoc, extractedDocs, root, context);
 		}
 
-		document.extractFields(context.getRoot(), context, mainDoc);
+		document.extractFields(root, context, mainDoc);
 		document.insertSpecialFields(mainDoc);
-		document.extractOutlinks(context.getRoot(), context, mainDoc);
+		document.extractOutlinks(root, context, mainDoc);
 
 		if (document.getFragments() != null) {
 			for (Fragment fragment : document.getFragments()) {
@@ -182,6 +183,12 @@ public class Document extends Fragment {
 			matches = contentTypePattern.matcher(contentType).matches();
 		}
 		return matches;
+	}
+
+	@Override
+	public String toString() {
+		return "Document [url=" + url + ", contentType=" + contentType + ", id=" + id + ", inherits=" + inherits
+				+ ", engine=" + engine + "]";
 	}
 
 }

@@ -162,45 +162,41 @@
 				</link>
 			</outlinks>			
 		</document>
-		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath">
-			<fragment root="//item">
-				<extract-to field="url">
-					<text>
-						<expr value="./link" />
-					</text>
-				</extract-to>
-				<extract-to field="post-author">
-					<text>
-						<expr value="./dc:creator" />
-					</text>
-				</extract-to>
-				<extract-to field="post-keywords">
-					<text>
-						<expr value="./category" />
-					</text>
-				</extract-to>
-				<extract-to field="post-comments-num">
-					<text>
-						<expr value="./slash:comments"/>
-					</text>
-				</extract-to>
-			</fragment>
+		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath" root="//item">
+			<extract-to field="url">
+				<text>
+					<expr value="./link" />
+				</text>
+			</extract-to>
+			<extract-to field="post-author">
+				<text>
+					<expr value="./dc:creator" />
+				</text>
+			</extract-to>
+			<extract-to field="post-keywords">
+				<text>
+					<expr value="./category" />
+				</text>
+			</extract-to>
+			<extract-to field="post-comments-num">
+				<text>
+					<expr value="./slash:comments"/>
+				</text>
+			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/category/.*" engine="css">
-			<fragment root=".post">
-				<extract-to field="url">
-					<resolve>
-						<attribute name="href">
-							<expr value=".title a" />
-						</attribute>
-					</resolve>
-				</extract-to>
-				<extract-to field="post-categories">
-					<replace substitution="^http://.+?\.blog.ir/category/(.+?)/?" pattern="$1">
-						<url />
-					</replace>
-				</extract-to>
-			</fragment>
+		<document url="^http://.+?\.blog.ir/category/.*" engine="css" root=".post">
+			<extract-to field="url">
+				<resolve>
+					<attribute name="href">
+						<expr value=".title a" />
+					</attribute>
+				</resolve>
+			</extract-to>
+			<extract-to field="post-categories">
+				<replace substitution="^http://.+?\.blog.ir/category/(.+?)/?" pattern="$1">
+					<url />
+				</replace>
+			</extract-to>
 		</document>
 	</documents>
 </config>

@@ -30,4 +30,9 @@ public class FunctionHolder implements Extractor {
 		return (List<String>) value.extract(root, context);
 	}
 
+	@Override
+	public String toString() {
+		return value != null ? value.toString() : "";
+	}
+
 }

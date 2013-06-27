@@ -199,6 +199,7 @@
 		<xs:attribute type="xs:string" name="contentType" use="optional" />
 		<xs:attribute type="xs:IDREF" name="inherits" use="optional" />
 		<xs:attribute type="xs:string" name="engine" use="optional" default="css"/>
+		<xs:attribute name="root" type="xs:string"/>
 	</xs:complexType>
 
 	<xs:element name="config">

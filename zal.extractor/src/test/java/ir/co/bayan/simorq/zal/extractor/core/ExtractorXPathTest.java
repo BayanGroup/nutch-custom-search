@@ -66,6 +66,17 @@ public class ExtractorXPathTest {
 	}
 
 	@Test
+	public void testMultiDocInsideDoc() throws Exception {
+		byte[] content = IOUtils.toByteArray(XPathEvaluator.class.getResourceAsStream("/test.xml"));
+		List<ExtractedDoc> docs = extractEngine.extract("http://a.blog.ir25", content, encoding, "+xml");
+
+		assertEquals(2, docs.size());
+		ExtractedDoc doc = docs.get(0);
+		assertEquals("c1", doc.getUrl());
+		assertEquals("content1 content2 content3", doc.getFields().get("content"));
+	}
+
+	@Test
 	public void testOutlinks() throws Exception {
 		byte[] content = IOUtils.toByteArray(XPathEvaluator.class.getResourceAsStream("/test.xml"));
 		List<ExtractedDoc> docs = extractEngine.extract("http://a.blog.ir3", content, encoding, "+xml");

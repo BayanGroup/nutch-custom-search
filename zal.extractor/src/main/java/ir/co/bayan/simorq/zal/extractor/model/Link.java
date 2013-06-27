@@ -48,4 +48,9 @@ public class Link extends Rooted {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "Link [href=" + href + ", anchor=" + anchor + "]";
+	}
+
 }

@@ -5,6 +5,7 @@
 	<types>
 		<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
 		<type name="date" converter="ir.co.bayan.simorq.zal.extractor.convert.DateConverter" />
+		<type name="date-time" converter="ir.co.bayan.simorq.zal.extractor.convert.DateTimeConverter" />
 		<type name="persian-date" converter="ir.co.bayan.simorq.zal.extractor.convert.PersianDateConverter"/>
 		<type name="persian-long" converter="ir.co.bayan.simorq.zal.extractor.convert.PersianLongConverter"/>
 	</types>
@@ -13,7 +14,7 @@
 		<field name="post-blog-title" />
 		<field name="post-body" />
 		<field name="post-author" />
-		<field name="post-date" type="date"/>
+		<field name="post-date" type="date-time"/>
 		<field name="post-comments" />
 		<field name="post-comments-num" type="long" />
 		<field name="post-keywords" />
@@ -48,11 +49,13 @@
 				</trim>
 			</extract-to>
 			<extract-to field="post-blog-title">
-				<replace pattern="(.+?) :: (.+)" substitution="$1">
-					<text>
-						<expr value="title"/>
-					</text>
-				</replace>
+				<trim>
+					<replace pattern="(.+?) :: (.+)" substitution="$1">
+						<text>
+							<expr value="title"/>
+						</text>
+					</replace>
+				</trim>
 			</extract-to>
 			<extract-to field="post-body">
 				<text>
@@ -62,7 +65,7 @@
 		</document>
 		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css">
 			<extract-to field="post-date" >
-				<replace pattern="(.+?)T(.+)" substitution="$1">
+				<replace pattern="(.+?)-(.+?)-(.+?)T(.+)" substitution="$3/$2/$1 $4">
 					<attribute name="content">
 						<expr value="meta[name=date]"/>
 					</attribute>
@@ -81,9 +84,11 @@
 				</concat>
 			</extract-to>
 			<extract-to field="post-keywords">
-				<text>
-					<expr value=".keywords_post h3"/>
-				</text>
+				<trim>
+					<text>
+						<expr value=".keywords_post h3"/>
+					</text>
+				</trim>
 			</extract-to>
 			<extract-to field="document-type">
 				<constant value="Post"/>
@@ -98,7 +103,7 @@
 			<outlinks>
 				<link>
 					<href>
-						<concat delimiter="/">
+						<concat delimiter="">
 							<url />
 							<constant value="rss/" />
 						</concat>
@@ -106,7 +111,7 @@
 				</link>
 				<link>
 					<href>
-						<concat delimiter="/">
+						<concat delimiter="">
 							<url />
 							<constant value="sitemap.xml" />
 						</concat>
@@ -114,9 +119,11 @@
 				</link>
 			</outlinks>
 			<extract-to field="blog-title">
-				<text>
-					<expr value="title"/>
-				</text>
+				<trim>
+					<text>
+						<expr value="title"/>
+					</text>
+				</trim>
 			</extract-to>
 			<extract-to field="blog-sub-title">
 				<text>
@@ -129,16 +136,20 @@
 				</text>
 			</extract-to>
 			<extract-to field="blog-author">
-				<text>
-					<first>
-						<expr value="span.author, span.author2"/>
-					</first>
-				</text>
+				<trim>
+					<text>
+						<first>
+							<expr value="span.author, span.author2"/>
+						</first>
+					</text>
+				</trim>
 			</extract-to>
 			<extract-to field="blog-keywords">
-				<text>
-					<expr value=".tagcloud a h3, .tagcloud h3 a"/>
-				</text>
+				<trim>
+					<text>
+						<expr value=".tagcloud a h3, .tagcloud h3 a"/>
+					</text>
+				</trim>
 			</extract-to>
 			<extract-to field="document-type">
 				<constant value="First-Page"/>
@@ -172,9 +183,11 @@
 				</text>
 			</extract-to>
 			<extract-to field="post-keywords">
-				<text>
-					<expr value="./category" />
-				</text>
+				<trim>
+					<text>
+						<expr value="./category" />
+					</text>
+				</trim>
 			</extract-to>
 			<extract-to field="post-comments-num">
 				<text>

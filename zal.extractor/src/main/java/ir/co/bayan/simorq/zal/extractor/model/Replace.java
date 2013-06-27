@@ -50,7 +50,8 @@ public class Replace extends Function {
 		List<String> list = (List<String>) args.get(0).extract(root, context);
 		for (int i = 0; i < list.size(); i++) {
 			String item = list.get(i);
-			item = compiledPattern.matcher(String.valueOf(item)).replaceAll(substitution);
+			if (item != null)
+				item = compiledPattern.matcher(item).replaceAll(substitution);
 			list.set(i, item);
 		}
 		return list;

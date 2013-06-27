@@ -26,7 +26,8 @@ public class Truncate extends Function {
 		List<String> res = (List<String>) args.get(0).extract(root, context);
 		for (int i = 0; i < res.size(); i++) {
 			String item = res.get(i);
-			item = item.substring(0, max);
+			if (item != null)
+				item = item.substring(0, max);
 			res.set(i, item);
 		}
 		return res;

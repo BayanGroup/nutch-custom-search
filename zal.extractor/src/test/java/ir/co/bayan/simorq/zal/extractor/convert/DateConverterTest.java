@@ -2,8 +2,6 @@ package ir.co.bayan.simorq.zal.extractor.convert;
 
 import static org.junit.Assert.assertTrue;
 
-import ir.co.bayan.simorq.zal.extractor.convert.DateConverter;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -27,8 +25,8 @@ public class DateConverterTest {
 	@Test
 	public void test() {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(2013, 3, 9);
-		assertTrue(DateUtils.isSameDay(calendar.getTime(), (Date) converter.convert("2013-03-09")));
+		calendar.set(2013, 3 - 1, 9);
+		assertTrue(DateUtils.isSameDay(calendar.getTime(), (Date) converter.convert("09/03/2013")));
 	}
 
 }

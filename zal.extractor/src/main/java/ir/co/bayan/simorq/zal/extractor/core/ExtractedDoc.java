@@ -125,17 +125,17 @@ public class ExtractedDoc {
 	}
 
 	public Outlink[] getOutlinksAsArray() throws MalformedURLException {
-		Outlink[] outlinks;
-		if (getOutlinks() == null)
-			outlinks = new Outlink[0];
+		Outlink[] res;
+		if (outlinks == null)
+			res = new Outlink[0];
 		else {
-			outlinks = new Outlink[getOutlinks().size()];
-			for (int i = 0; i < outlinks.length; i++) {
-				LinkData linkData = getOutlinks().get(i);
-				outlinks[i] = new Outlink(linkData.getUrl(), linkData.getAnchor());
+			res = new Outlink[outlinks.size()];
+			for (int i = 0; i < outlinks.size(); i++) {
+				LinkData linkData = outlinks.get(i);
+				res[i] = new Outlink(linkData.getUrl(), linkData.getAnchor());
 			}
 		}
-		return outlinks;
+		return res;
 	}
 
 	@Override

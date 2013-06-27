@@ -1,6 +1,5 @@
 package ir.co.bayan.simorq.zal.extractor.convert;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,9 +15,6 @@ public class LongConverter implements Converter {
 
 	@Override
 	public Object convert(String value) {
-		if (StringUtils.isEmpty(value)) {
-			return DEFAULT_VALUE;
-		}
 
 		try {
 			return Long.parseLong(value);

@@ -1,8 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.InputStreamReader;
 

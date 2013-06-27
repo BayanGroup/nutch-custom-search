@@ -19,6 +19,21 @@ public class Truncate extends Function {
 	@XmlAttribute
 	private int max;
 
+	/**
+	 * @return the max
+	 */
+	public int getMax() {
+		return max;
+	}
+
+	/**
+	 * @param max
+	 *            the max to set
+	 */
+	public void setMax(int max) {
+		this.max = max;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<?> extract(Object root, ExtractContext context) throws Exception {
@@ -26,7 +41,7 @@ public class Truncate extends Function {
 		List<String> res = (List<String>) args.get(0).extract(root, context);
 		for (int i = 0; i < res.size(); i++) {
 			String item = res.get(i);
-			if (item != null)
+			if (item != null && item.length() > max)
 				item = item.substring(0, max);
 			res.set(i, item);
 		}

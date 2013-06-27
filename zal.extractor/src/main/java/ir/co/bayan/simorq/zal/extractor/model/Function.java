@@ -23,6 +23,14 @@ public abstract class Function implements Extractor {
 		return args;
 	}
 
+	/**
+	 * @param args
+	 *            the args to set
+	 */
+	public void setArgs(List<Function> args) {
+		this.args = args;
+	}
+
 	@Override
 	public String toString() {
 		return "args=" + args;

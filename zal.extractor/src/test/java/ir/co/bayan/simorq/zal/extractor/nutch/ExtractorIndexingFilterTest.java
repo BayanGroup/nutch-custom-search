@@ -1,9 +1,7 @@
 package ir.co.bayan.simorq.zal.extractor.nutch;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import ir.co.bayan.simorq.zal.extractor.nutch.ExtractorIndexingFilter;
 

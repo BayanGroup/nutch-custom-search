@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin id="extractor" name="Nutch XML/HTML Parser/Indexing Filter" version="1.6" provider-name="bayan.ir">
+
+   	<runtime>
+      	<library name="extractor.jar">
+         	<export name="*"/>
+      	</library>
+      	<library name="commons-lang3.jar"/>
+      	<library name="jsoup.jar"/>
+      	<library name="slf4j-api-1.7.5.jar"/>
+   	</runtime>
+
+   	<requires>
+      	<import plugin="nutch-extensionpoints"/>
+   	</requires>
+
+	<!--
+   	<extension id="ir.co.bayan.simorq.zal.extractor.nutch.parseFilter" name="Extractor XML/HTML Parser filter" point="org.apache.nutch.parse.HtmlParseFilter">
+      	<implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorParseFilter" class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorParseFilter" />
+   	</extension> -->
+   	<extension id="ir.co.bayan.simorq.zal.extractor.nutch.indexingFilter" name="Extractor Indexing Filter" point="org.apache.nutch.indexer.IndexingFilter">
+      	<implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorIndexingFilter" class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorIndexingFilter"/>
+   	</extension>
+   	<extension id="ir.co.bayan.simorq.zal.extractor.nutch.parser" name="Extractor XML/HTML Parser"
+      point="org.apache.nutch.parse.Parser">
+    	<implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorParser" class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorParser">
+    		<parameter name="contentType" value="*"/>
+
+		<parameter name="contentType" value="text/html" />
+		<parameter name="contentType" value="application/xhtml+xml" />
+
+		<parameter name="contentType" value="text/xml" />
+		<parameter name="contentType" value="application/rss+xml" />
+         	<parameter name="contentType" value="application/atom+xml" />
+
+    	</implementation>
+   	</extension>
+   	
+
+</plugin>

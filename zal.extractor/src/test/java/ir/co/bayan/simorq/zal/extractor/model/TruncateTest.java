@@ -28,7 +28,7 @@ public class TruncateTest {
 	public void testExtract() throws Exception {
 		Function extractor = mock(Function.class);
 		when(extractor.extract(null, null)).thenReturn((List) Arrays.asList("", "a", "aa", "aaa"));
-		truncate.args = Arrays.asList(extractor);
+		truncate.setArgs(Arrays.asList(extractor));
 		truncate.setMax(2);
 
 		List<?> res = truncate.extract(null, null);

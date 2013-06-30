@@ -2,6 +2,8 @@ package ir.co.bayan.simorq.zal.extractor.model;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElementRef;
 
 /**
@@ -11,6 +13,7 @@ import javax.xml.bind.annotation.XmlElementRef;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public abstract class Function implements Extractor {
 
 	@XmlElementRef

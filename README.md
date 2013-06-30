@@ -12,14 +12,16 @@ This enables to have different docuements for different pages each with their ow
 Next, one can instruct solr to search over these fields with appropriate boosts, which results to better search experience for end users.
 
 Extractor consists of a parser plugin, an html parser filter, and an indexer filter. You can use extractor in two modes:
-1. Use extractor to extract additional fields along side the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to standard html parser as a parser filter. So html parser first parses the content, extract its fields and outlinks and then passes the content to the extractor parser filter. This filter, parse the content again and add some additional fields.
-2. Use extractor as a standalone parser. In this mode, extractor is responsible for the whole parsing including extracting title, outlinks, ... You can use extractor to parse both xml and html files.
+
+1. Use extractor to extract additional fields inaddition of the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to the standard html parser as a parser filter. So html parser first parses the content, extracts its fields and outlinks, and then passes the content to the extractor parser filter. Extractor filter, parses the content again and adds some additional fields to parse metadata. Later, the extractor indexer filter reads this parse metadata and adds the corresponding fields to solr documents. 
+
+2. Use extractor as a standalone parser. In this mode, extractor is responsible for the whole parsing process including the extraction of title, outlinks, ... You can use extractor to parse both xml and html files. The available index filters in the nutch has little use, since standard fields are not available any more. 
 
 ### Setup
 
 1) Copy plugins/extractor to your nutch's plugins directory.
 
-2) Enable this plugin by adding its name to plugin.includes property in the nutch-site.xml (inside nutch conf directory). If you use mode 2, you can disable other parser/indexer plugins e.g. you can use this:
+2) Enable extractor plugin by adding its name to plugin.includes property in the nutch-site.xml (inside nutch conf directory). If you use mode 2, you can disable other parser/indexer plugins e.g. you can use this:
 
 ```xml
 <property>
@@ -37,14 +39,13 @@ Extractor consists of a parser plugin, an html parser filter, and an indexer fil
 </aliases>
 ```
 
-Next, if you want the extractor parse all content types, add it to the mimeType with name="*":
+Next, if you want the extractor to parse all content types, add it to the mimeType with name="*":
 
 ```xml
 <mimeType name="*">
 	<plugin id="extractor" />
 	<plugin id="parse-tika" />
 </mimeType>
-
 ```
 
 Or if you want to use it for specific content types, add its name to the corresponding mimeTypes:
@@ -60,10 +61,9 @@ Or if you want to use it for specific content types, add its name to the corresp
 	<plugin id="parse-tika" />
 	<plugin id="feed" />
 </mimeType>
-
 ```
 
-4) Add your extractors.xml to nutch conf directory. e.g a simple extractors.xml is look like this:
+4) Add your extractors.xml to nutch conf directory. A simple extractors.xml is look like this:
 
 ```xml
 <config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
@@ -71,7 +71,7 @@ Or if you want to use it for specific content types, add its name to the corresp
 		<field name="title" />
 	</fields>
 	<documents>
-		<document url="^http://.+?\.google\.com">
+		<document url="^http://.+?\.google\.com" engine="css">
 			<extract-to field="title">
 				<text>
 					<expr value="head > title" />

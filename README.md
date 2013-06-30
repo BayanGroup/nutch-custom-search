@@ -9,14 +9,17 @@ Extractor
 Extractor helps to extract different parts of an html/xml page using xpath expressioins or css selectors. 
 The extracted parts are copied into the specified fields of documents.
 This enables to have different docuements for different pages each with their own fields.
-Next, one can tune solr to search over these fields with appropriate boosts, which results to better search experience for end users.
+Next, one can instruct solr to search over these fields with appropriate boosts, which results to better search experience for end users.
 
-Extractor consists of a parser plugin, an html parser filter, and an indexer filter.
+Extractor consists of a parser plugin, an html parser filter, and an indexer filter. You can use extractor in two modes:
+1. Use extractor to extract additional fields along side the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to standard html parser as a parser filter. So html parser first parses the content, extract its fields and outlinks and then passes the content to the extractor parser filter. This filter, parse the content again and add some additional fields.
+2. Use extractor as a standalone parser. In this mode, extractor is responsible for the whole parsing including extracting title, outlinks, ... You can use extractor to parse both xml and html files.
 
 ### Setup
 
 1) Copy plugins/extractor to your nutch's plugins directory.
-2) Enable this plugin by adding its name to plugin.includes property in the nutch-site.xml (inside nutch conf directory). You can disable other parser/indexer plugins since extractor already contains both a parser and an indexer. e.g. you can use this:
+
+2) Enable this plugin by adding its name to plugin.includes property in the nutch-site.xml (inside nutch conf directory). If you use mode 2, you can disable other parser/indexer plugins e.g. you can use this:
 
 ```xml
 <property>
@@ -25,7 +28,7 @@ Extractor consists of a parser plugin, an html parser filter, and an indexer fil
 </property>
 ```
 
-3) Introduce the extractor parser to nutch by modifiying the parse-plugins.xml (inside nutch conf directory). First, add its alias in the aliases section:
+3) If you use mode 2, you should introduce the extractor parser to nutch by modifiying the parse-plugins.xml (inside nutch conf directory). First, add its alias in the aliases section:
 
 ```xml
 <aliases>
@@ -63,9 +66,7 @@ Or if you want to use it for specific content types, add its name to the corresp
 4) Add your extractors.xml to nutch conf directory. e.g a simple extractors.xml is look like this:
 
 ```xml
-<?xml version="1.0" encoding="UTF-8"?>
-
-<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir extractors.xsd">
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
 	<fields>
 		<field name="title" />
 	</fields>

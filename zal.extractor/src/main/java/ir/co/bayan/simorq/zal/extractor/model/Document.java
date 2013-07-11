@@ -1,7 +1,7 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc;
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +47,9 @@ public class Document extends Fragment {
 
 	@XmlAttribute
 	private String engine;
+
+	@XmlAttribute
+	private boolean update = false;
 
 	/**
 	 * @return the url
@@ -128,6 +131,13 @@ public class Document extends Fragment {
 	}
 
 	/**
+	 * @return the update
+	 */
+	public boolean isUpdate() {
+		return update;
+	}
+
+	/**
 	 * Tries to find engine from document hierarchy
 	 */
 	public String getInheritedEngine() {
@@ -142,12 +152,13 @@ public class Document extends Fragment {
 		return getEngine(document.getInherits());
 	}
 
-	public List<ExtractedDoc> extract(ExtractContext context) throws Exception {
+	public List<ExtractedDoc> extract(EvaluationContext context) throws Exception {
 		List<ExtractedDoc> res = new ArrayList<>();
 
 		for (Object root : getRoots(context.getRoot(), context)) {
 			ExtractedDoc mainDoc = new ExtractedDoc();
-			mainDoc.addField(Fragment.URL_FIELD, context.getUrl().toString());
+			mainDoc.addField(Fragment.URL_FIELD, context.getContent().getUrl().toString());
+			mainDoc.setUpdate(update);
 			res.add(mainDoc);
 			extract(this, mainDoc, res, root, context);
 		}
@@ -156,7 +167,7 @@ public class Document extends Fragment {
 	}
 
 	private void extract(Document document, ExtractedDoc mainDoc, List<ExtractedDoc> extractedDocs, Object root,
-			ExtractContext context) throws Exception {
+			EvaluationContext context) throws Exception {
 		Document parent = document.getInherits();
 		if (parent != null) {
 			extract(parent, mainDoc, extractedDocs, root, context);

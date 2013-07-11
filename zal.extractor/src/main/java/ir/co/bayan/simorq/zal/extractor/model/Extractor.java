@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.List;
 
@@ -15,6 +15,6 @@ public interface Extractor {
 	/**
 	 * Extracts related data from the part of document represented by root.
 	 */
-	List<?> extract(Object root, ExtractContext context) throws Exception;
+	List<?> extract(Object root, EvaluationContext context) throws Exception;
 
 }

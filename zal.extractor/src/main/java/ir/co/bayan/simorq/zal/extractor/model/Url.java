@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,8 +17,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Url extends Function {
 
 	@Override
-	public List<?> extract(Object root, ExtractContext context) throws Exception {
-		return Arrays.asList(context.getUrl());
+	public List<?> extract(Object root, EvaluationContext context) throws Exception {
+		return Arrays.asList(context.getContent().getUrl());
 	}
 
 	@Override

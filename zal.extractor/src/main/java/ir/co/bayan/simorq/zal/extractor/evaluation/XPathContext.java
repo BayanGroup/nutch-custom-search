@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.evaluation;
 
-import java.net.URL;
+import ir.co.bayan.simorq.zal.extractor.core.Content;
 
 import javax.xml.namespace.NamespaceContext;
 
@@ -12,13 +12,13 @@ import org.w3c.dom.Element;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class XPathContext extends ExtractContext {
+public class XPathContext extends EvaluationContext {
 
 	private final NamespaceContext nsContext;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public XPathContext(Evaluator<XPathContext> engine, URL url, Element root, NamespaceContext nsContext) {
-		super((Evaluator) engine, url);
+	public XPathContext(Evaluator<XPathContext> engine, Content content, Element root, NamespaceContext nsContext) {
+		super((Evaluator) engine, content);
 		this.root = root;
 		this.nsContext = nsContext;
 	}

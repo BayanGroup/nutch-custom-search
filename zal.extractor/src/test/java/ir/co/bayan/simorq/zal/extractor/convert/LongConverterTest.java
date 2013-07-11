@@ -1,7 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.convert;
 
 import static org.junit.Assert.*;
-import ir.co.bayan.simorq.zal.extractor.convert.LongConverter;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,6 +34,11 @@ public class LongConverterTest {
 	public void testConvertWithError() {
 		assertEquals(LongConverter.DEFAULT_VALUE, converter.convert("1.2"));
 		assertEquals(LongConverter.DEFAULT_VALUE, converter.convert("12y"));
+	}
+
+	@Test
+	public void testPerisan() {
+		assertEquals(1381L, converter.convert("۱۳۸۱"));
 	}
 
 }

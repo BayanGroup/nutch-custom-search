@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<plugin id="extractor" name="Apache Nutch XML/HTML Parser/Indexing Filter" version="1.6" provider-name="nutch.org">
+<plugin id="extractor" name="Extractor based XML/HTML Parser/Indexing Filter" version="1.6" provider-name="bayan.ir">
 
    	<runtime>
       	<library name="extractor.jar">

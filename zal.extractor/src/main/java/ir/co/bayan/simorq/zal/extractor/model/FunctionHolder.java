@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class FunctionHolder implements Extractor {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<String> extract(Object root, ExtractContext context) throws Exception {
+	public List<String> extract(Object root, EvaluationContext context) throws Exception {
 		return (List<String>) value.extract(root, context);
 	}
 

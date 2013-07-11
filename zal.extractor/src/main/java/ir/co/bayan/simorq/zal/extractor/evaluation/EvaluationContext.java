@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.evaluation;
 
-import java.net.URL;
+import ir.co.bayan.simorq.zal.extractor.core.Content;
 
 /**
  * ExtractContext contains all information necessary for evaluation of extract expressions.
@@ -8,29 +8,29 @@ import java.net.URL;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public abstract class ExtractContext {
+public abstract class EvaluationContext {
 
-	protected URL url;
+	protected Content content;
 	protected Object root;
-	protected final Evaluator<ExtractContext> evaluator;
+	protected final Evaluator<EvaluationContext> evaluator;
 
-	public ExtractContext(Evaluator<ExtractContext> evaluator, URL url) {
+	public EvaluationContext(Evaluator<EvaluationContext> evaluator, Content content) {
 		this.evaluator = evaluator;
-		this.url = url;
+		this.content = content;
 	}
 
 	/**
 	 * @return the engine
 	 */
-	public Evaluator<ExtractContext> getEvaluator() {
+	public Evaluator<EvaluationContext> getEvaluator() {
 		return evaluator;
 	}
 
 	/**
-	 * @return the url
+	 * @return the content
 	 */
-	public URL getUrl() {
-		return url;
+	public Content getContent() {
+		return content;
 	}
 
 	public void setRoot(Object root) {

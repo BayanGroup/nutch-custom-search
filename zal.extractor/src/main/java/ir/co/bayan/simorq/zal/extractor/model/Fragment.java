@@ -1,12 +1,13 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc;
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
 /**
@@ -25,15 +26,15 @@ public class Fragment extends Rooted {
 	private List<ExtractTo> extractTos = new ArrayList<>();
 
 	@XmlElementWrapper(name = "outlinks")
-	@XmlElement(name = "link")
-	private List<Link> outlinks;
+	@XmlElementRef
+	private List<Function> outlinks;
 
 	public List<ExtractTo> getExtractTos() {
 		return extractTos;
 	}
 
 	@Override
-	public List<ExtractedDoc> extract(Object root, ExtractContext context) throws Exception {
+	public List<ExtractedDoc> extract(Object root, EvaluationContext context) throws Exception {
 		List<ExtractedDoc> docs = new ArrayList<>();
 
 		for (Object subRoot : getRoots(root, context)) {
@@ -49,7 +50,7 @@ public class Fragment extends Rooted {
 		return docs;
 	}
 
-	protected void extractFields(Object subRoot, ExtractContext context, ExtractedDoc extractedDoc) throws Exception {
+	protected void extractFields(Object subRoot, EvaluationContext context, ExtractedDoc extractedDoc) throws Exception {
 		for (ExtractTo extractTo : extractTos) {
 			Field field = extractTo.getField();
 			if (field != null) {
@@ -64,21 +65,21 @@ public class Fragment extends Rooted {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void extractOutlinks(Object root, ExtractContext context, ExtractedDoc extractedDoc) throws Exception {
+	protected void extractOutlinks(Object root, EvaluationContext context, ExtractedDoc extractedDoc) throws Exception {
 		if (outlinks != null) {
-			for (Link link : outlinks) {
-				extractedDoc.getOutlinks().addAll((List) link.extract(root, context));
+			for (Function linkFunction : outlinks) {
+				extractedDoc.getOutlinks().addAll((List) linkFunction.extract(root, context));
 			}
 		}
 	}
 
-	protected void insertSpecialFields(ExtractContext context, ExtractedDoc extractedDoc) {
+	protected void insertSpecialFields(EvaluationContext context, ExtractedDoc extractedDoc) {
 		String url = extractedDoc.getFields().get(URL_FIELD);
 		if (url != null)
 			extractedDoc.setUrl(url);
 		else
 			throw new RuntimeException("Url field for a document or fragment can not be null. Current url: "
-					+ context.getUrl());
+					+ context.getContent().getUrl());
 
 		String title = extractedDoc.getFields().get(TITLE_FIELD);
 		if (title != null)
@@ -108,7 +109,7 @@ public class Fragment extends Rooted {
 	/**
 	 * @return the outlinks
 	 */
-	public List<Link> getOutlinks() {
+	public List<Function> getOutlinks() {
 		return outlinks;
 	}
 

@@ -1,7 +1,7 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc.LinkData;
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -16,7 +17,8 @@ import org.apache.commons.lang3.StringUtils;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class Link extends Rooted {
+@XmlRootElement
+public class Link extends Function {
 
 	@XmlElement(name = "href", required = true)
 	private FunctionHolder href;
@@ -24,17 +26,10 @@ public class Link extends Rooted {
 	@XmlElement(name = "anchor", required = true)
 	private FunctionHolder anchor;
 
-	@Override
-	public List<?> extract(Object root, ExtractContext context) throws Exception {
-		List<LinkData> res = new ArrayList<>();
-		for (Object subRoot : getRoots(root, context)) {
-			addLinks(subRoot, context, res);
-		}
-		return res;
-	}
-
 	@SuppressWarnings("unchecked")
-	private void addLinks(Object root, ExtractContext context, List<LinkData> res) throws Exception {
+	@Override
+	public List<?> extract(Object root, EvaluationContext context) throws Exception {
+		List<LinkData> res = new ArrayList<>();
 		List<String> hrefs = href.extract(root, context);
 		List<String> anchors = anchor == null ? Collections.EMPTY_LIST : anchor.extract(root, context);
 		Iterator<String> anchorI = anchors.iterator();
@@ -46,6 +41,7 @@ public class Link extends Rooted {
 				res.add(link);
 			}
 		}
+		return res;
 	}
 
 	@Override

@@ -1,11 +1,12 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc.LinkData;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +22,6 @@ public class ExtractorCssTest {
 
 	private static ExtractEngine extractEngine;
 	private static byte[] testPageContent;
-	private static String encoding = "UTF-8";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -35,8 +35,8 @@ public class ExtractorCssTest {
 
 	@Test
 	public void testValues() throws Exception {
-		List<ExtractedDoc> extractedDocs = extractEngine.extract("http://some.blog.ir", testPageContent, encoding,
-				"text/html");
+		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("t1", result.get("f1"));
@@ -48,8 +48,8 @@ public class ExtractorCssTest {
 
 	@Test
 	public void testSub() throws Exception {
-		List<ExtractedDoc> extractedDocs = extractEngine.extract("http://some.blog.ir", testPageContent, encoding,
-				"text/html");
+		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("2-t", result.get("f6"));
@@ -58,8 +58,8 @@ public class ExtractorCssTest {
 
 	@Test
 	public void testSelect() throws Exception {
-		List<ExtractedDoc> extractedDocs = extractEngine.extract("http://some.blog.ir", testPageContent, encoding,
-				"text/html");
+		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("a b", result.get("f7"));
@@ -70,8 +70,8 @@ public class ExtractorCssTest {
 
 	@Test
 	public void testInheritence() throws Exception {
-		List<ExtractedDoc> extractedDocs = extractEngine.extract("http://some.blog.ir2", testPageContent, encoding,
-				"text/html");
+		Content content = new Content(new URL("http://some.blog.ir2"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("t1", result.get("f1"));
@@ -80,8 +80,8 @@ public class ExtractorCssTest {
 
 	@Test
 	public void testType() throws Exception {
-		List<ExtractedDoc> extractedDocs = extractEngine.extract("http://some.blog.ir2", testPageContent, encoding,
-				"text/html");
+		Content content = new Content(new URL("http://some.blog.ir2"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 		Map<String, String> result = extractedDocs.get(0).getFields();
 
 		assertEquals("world!", result.get("f12"));
@@ -89,8 +89,8 @@ public class ExtractorCssTest {
 
 	@Test
 	public void testMultiDoc() throws Exception {
-		List<ExtractedDoc> extractedDocs = extractEngine.extract("http://some.blog.ir3", testPageContent, encoding,
-				"text/html");
+		Content content = new Content(new URL("http://some.blog.ir3"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 		assertEquals(3, extractedDocs.size());
 
 		assertEquals("a", extractedDocs.get(1).getFields().get("content"));
@@ -102,8 +102,8 @@ public class ExtractorCssTest {
 
 	@Test
 	public void testOutlinks() throws Exception {
-		List<ExtractedDoc> extractedDocs = extractEngine.extract("http://some.blog.ir4", testPageContent, encoding,
-				"text/html");
+		Content content = new Content(new URL("http://some.blog.ir4"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 		List<LinkData> outlinks = extractedDocs.get(0).getOutlinks();
 		assertEquals(2, outlinks.size());
 		assertEquals("http://1", outlinks.get(0).getUrl());

@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +25,7 @@ public abstract class Rooted implements Extractor {
 		return root;
 	}
 
-	protected List<?> getRoots(Object rootObj, ExtractContext context) throws Exception {
+	protected List<?> getRoots(Object rootObj, EvaluationContext context) throws Exception {
 		if (root == null)
 			return Arrays.asList(rootObj);
 		return context.getEvaluator().evaluate(rootObj, context, root);

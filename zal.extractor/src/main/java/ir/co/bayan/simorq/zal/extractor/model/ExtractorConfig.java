@@ -1,7 +1,5 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import ir.co.bayan.simorq.zal.extractor.core.ExtractEngine;
-
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
@@ -35,7 +33,7 @@ public class ExtractorConfig {
 	private boolean omitNonMatching = true;
 
 	@XmlAttribute
-	private String defaultEngine = ExtractEngine.CSS_ENGINE;
+	private String defaultEngine = "css";
 
 	@XmlElementWrapper(name = "types")
 	@XmlElement(name = "type")
@@ -81,7 +79,8 @@ public class ExtractorConfig {
 		JAXBContext context = JAXBContext.newInstance(ExtractorConfig.class, Document.class, ExtractTo.class,
 				Filter.class, Fragment.class, Field.class, Function.class, Constant.class, TypeDef.class, Text.class,
 				Attribute.class, Concat.class, Expr.class, Replace.class, Truncate.class, Trim.class, Url.class,
-				First.class, Last.class, Size.class, Matches.class, Link.class, FunctionHolder.class, Resolve.class);
+				First.class, Last.class, Size.class, Matches.class, Link.class, FunctionHolder.class, Resolve.class,
+				ForEach.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 
 		Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(

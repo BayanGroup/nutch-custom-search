@@ -1,9 +1,9 @@
 package ir.co.bayan.simorq.zal.extractor.evaluation;
 
+import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractUtil;
 
 import java.io.ByteArrayInputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,10 +39,14 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 	private final DocumentBuilder builder;
 	private final XPathFactory xPathFactory;
 
-	public XPathEvaluator() throws ParserConfigurationException {
+	public XPathEvaluator() {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setNamespaceAware(true);
-		builder = factory.newDocumentBuilder();
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			throw new RuntimeException(e);
+		}
 		xPathFactory = XPathFactory.newInstance();
 	}
 
@@ -118,26 +122,31 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 	}
 
 	@Override
-	public XPathContext createContext(String url, byte[] content, String encoding, String contentType) throws Exception {
-		InputSource is = new InputSource(new ByteArrayInputStream(content));
-		is.setEncoding(encoding);
+	public XPathContext createContext(Content content) throws Exception {
+		InputSource is = new InputSource(new ByteArrayInputStream(content.getData()));
+		is.setEncoding(content.getEncoding());
 		Element root = null;
-		if (ExtractUtil.isHtml(contentType)) {
+		if (ExtractUtil.isHtml(content.getType())) {
 			DOMParser parser = new DOMParser();
-			parser.setProperty("http://cyberneko.org/html/properties/default-encoding", encoding);
+			parser.setProperty("http://cyberneko.org/html/properties/default-encoding", content.getEncoding());
 			parser.setFeature("http://cyberneko.org/html/features/scanner/ignore-specified-charset", true);
 			parser.setFeature("http://cyberneko.org/html/features/balance-tags/ignore-outside-content", false);
 			parser.parse(is);
 			root = parser.getDocument().getDocumentElement();
-		} else if (ExtractUtil.isXml(contentType)) {
+		} else if (ExtractUtil.isXml(content.getType())) {
 			root = builder.parse(is).getDocumentElement();
 		}
 		if (root != null) {
 			NamespaceContext nsContext = getNamespaceContext(root);
-			return new XPathContext(this, new URL(url), root, nsContext);
+			return new XPathContext(this, content, root, nsContext);
 		}
 		throw new RuntimeException("Only html or xml is valid in XPathEngine but the given content type is "
-				+ contentType);
+				+ content.getType());
+	}
+
+	@Override
+	public String getName() {
+		return "xpath";
 	}
 
 }

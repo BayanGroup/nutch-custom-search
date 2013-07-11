@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.convert;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -29,7 +29,7 @@ public class DateTimeConverterTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(2013, 3 - 1, 9, 20, 10, 5);
 		Calendar calendar2 = Calendar.getInstance();
-		calendar2.setTime((Date) converter.convert("09/03/2013 20:10:5"));
+		calendar2.setTime((Date) converter.convert("2013-03-09T20:10:5"));
 		calendar.set(Calendar.MILLISECOND, calendar2.get(Calendar.MILLISECOND));
 		assertEquals(calendar2.getTime(), calendar.getTime());
 

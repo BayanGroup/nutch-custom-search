@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +26,7 @@ public class Constant extends Function {
 	}
 
 	@Override
-	public List<?> extract(Object root, ExtractContext context) {
+	public List<?> extract(Object root, EvaluationContext context) {
 		return Arrays.asList(value);
 	}
 

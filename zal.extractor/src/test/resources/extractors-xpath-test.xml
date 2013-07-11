@@ -73,7 +73,7 @@
 				</extract-to>
 			</fragment>
 		</document>
-		<document id="d3" url="^http://.+?\.blog.ir25" root="//books/category[@name]">
+		<document id="d3" url="^http://.+?\.blog.ir25" root="//books/category[@name]" update="true">
 			<extract-to field="url">
 				<text>
 					<expr value="./@name" />
@@ -87,20 +87,22 @@
 		</document>
 		<document url="^http://.+?\.blog.ir3">
 			<outlinks>
-				<link root="//category[@name='c2']">
-					<href>
-						<resolve>
-							<attribute name="title">
+				<for-each root="//category[@name='c2']"> 
+					<link>
+						<href>
+							<resolve>
+								<attribute name="title">
+									<expr value="./book" />
+								</attribute>
+							</resolve>
+						</href>
+						<anchor>
+							<text>
 								<expr value="./book" />
-							</attribute>
-						</resolve>
-					</href>
-					<anchor>
-						<text>
-							<expr value="./book" />
-						</text>
-					</anchor>
-				</link>
+							</text>
+						</anchor>
+					</link>
+				</for-each>
 				<link>
 					<href>
 						<concat delimiter="/">

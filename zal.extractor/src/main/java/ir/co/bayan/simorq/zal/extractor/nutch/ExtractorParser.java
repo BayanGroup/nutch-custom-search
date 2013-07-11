@@ -6,11 +6,13 @@ import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.nutch.metadata.Metadata;
+import org.apache.nutch.metadata.Nutch;
 import org.apache.nutch.parse.ParseData;
 import org.apache.nutch.parse.ParseResult;
 import org.apache.nutch.parse.ParseStatus;
@@ -60,14 +62,15 @@ public class ExtractorParser implements Parser {
 	public ParseResult getParse(Content content) {
 		ParseResult parseResult = new ParseResult(content.getUrl());
 		try {
-			List<ExtractedDoc> docs = extractEngine.extract(content.getUrl(), content.getContent(),
-					getEncoding(content), content.getContentType());
+			List<ExtractedDoc> docs = extractEngine.extract(new ir.co.bayan.simorq.zal.extractor.core.Content(new URL(
+					content.getUrl()), content.getContent(), getEncoding(content), content.getContentType()));
 			if (docs != null) {
 				for (ExtractedDoc doc : docs) {
 					LOGGER.info(doc.toString());
 					ParseText parseText = new ParseText(doc.getText());
 					ParseData parseData = getParseData(content, doc);
 					parseResult.put(doc.getUrl(), parseText, parseData);
+					parseData.getContentMeta().set(Nutch.FETCH_TIME_KEY, "0");
 				}
 			}
 		} catch (Exception e) {
@@ -91,6 +94,8 @@ public class ExtractorParser implements Parser {
 			parseMeta.add(entry.getKey(), entry.getValue());
 		}
 		parseMeta.add(ExtractorIndexingFilter.MATCHED_DOC, "true");
+		if (doc.isUpdate())
+			parseMeta.add(ExtractorIndexingFilter.UPDATE_DOC, "true");
 
 		return new ParseData(ParseStatus.STATUS_SUCCESS, doc.getTitle(), doc.getOutlinksAsArray(),
 				content.getMetadata(), parseMeta);

@@ -36,6 +36,7 @@ public class PersianDateConverter implements Converter {
 			int month = PerisanConvertUtils.convertMonth(parts[1]);
 			int day = PerisanConvertUtils.convertDay(parts[2]);
 			Calendar calendar = Calendar.getInstance();
+			// FIXME find an appropriate converter
 			calendar.set(year + 600, month, day);
 			return calendar.getTime();
 		} catch (Exception e) {

@@ -8,7 +8,7 @@
 		<field name="f1" type="hello"/>
 	</fields>
 	<documents>
-		<document url="^http://.+?\.blog.ir">
+		<document url="^http://.+?\.blog.ir" update="true">
 			<extract-to field="f1">
 				<constant value="t1" />
 			</extract-to>

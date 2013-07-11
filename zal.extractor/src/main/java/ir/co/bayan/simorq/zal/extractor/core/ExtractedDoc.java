@@ -52,6 +52,7 @@ public class ExtractedDoc {
 	private String title;
 	private List<LinkData> outlinks = new ArrayList<>();
 	private String text;
+	private boolean update;
 
 	/**
 	 * @return the fields
@@ -122,6 +123,21 @@ public class ExtractedDoc {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the update
+	 */
+	public boolean isUpdate() {
+		return update;
+	}
+
+	/**
+	 * @param update
+	 *            the update to set
+	 */
+	public void setUpdate(boolean update) {
+		this.update = update;
 	}
 
 	public Outlink[] getOutlinksAsArray() throws MalformedURLException {

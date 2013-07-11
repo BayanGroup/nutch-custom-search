@@ -6,7 +6,6 @@
 		<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
 		<type name="date" converter="ir.co.bayan.simorq.zal.extractor.convert.DateConverter" />
 		<type name="persian_date" converter="ir.co.bayan.simorq.zal.extractor.convert.PersianDateConverter"/>
-		<type name="persian_long" converter="ir.co.bayan.simorq.zal.extractor.convert.PersianLongConverter"/>
 	</types>
 	<fields>
 		<field name="post-title" />
@@ -26,16 +25,18 @@
 	<documents>
 		<document id="blog-ir-post-page">
 			<outlinks>
-				<link root="a">
-					<href>
-						<attribute name="href">
-							<expr value="." />
-						</attribute>
-					</href>
-					<anchor>
-						<text><expr value="."/></text>
-					</anchor>
-				</link>
+				<for-each root="a">
+					<link >
+						<href>
+							<attribute name="href">
+								<expr value="." />
+							</attribute>
+						</href>
+						<anchor>
+							<text><expr value="."/></text>
+						</anchor>
+					</link>
+				</for-each>
 			</outlinks>
 			<extract-to field="post-title">
 				<concat>
@@ -61,7 +62,7 @@
 				</text>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css">
+		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css" update="true">
 			<extract-to field="post-date" >
 				<replace pattern="(.+?)T(.+)" substitution="$1">
 					<attribute name="content">

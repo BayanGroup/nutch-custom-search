@@ -25,7 +25,7 @@ public class ExtractorConfigurationTest {
 
 	@Test
 	public void test() {
-		assertEquals(4, extractorConfig.getTypes().size());
+		assertEquals(3, extractorConfig.getTypes().size());
 		assertEquals(13, extractorConfig.getFields().size());
 		assertEquals(5, extractorConfig.getDocuments().size());
 		assertNotNull(extractorConfig.getDocuments().get(0).getExtractTos().get(0).getField());
@@ -35,5 +35,6 @@ public class ExtractorConfigurationTest {
 		assertEquals(1, func.getArgs().size());
 		assertTrue(func.getArgs().get(0) instanceof Replace);
 		assertNotNull(extractorConfig.getDocuments().get(0).getOutlinks().get(0));
+		assertTrue(extractorConfig.getDocuments().get(1).isUpdate());
 	}
 }

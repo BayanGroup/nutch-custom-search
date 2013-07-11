@@ -1,6 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class Expr extends Function {
 	}
 
 	@Override
-	public List<?> extract(Object root, ExtractContext context) throws Exception {
+	public List<?> extract(Object root, EvaluationContext context) throws Exception {
 		return context.getEvaluator().evaluate(root, context, value);
 	}
 

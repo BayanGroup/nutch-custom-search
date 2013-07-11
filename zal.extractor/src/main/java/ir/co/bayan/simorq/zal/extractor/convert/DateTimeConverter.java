@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Interprets canonical representation of date time specified at http://www.w3.org/TR/xmlschema-2/#dateTime
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
@@ -19,7 +21,7 @@ public class DateTimeConverter implements Converter {
 	@Override
 	public Object convert(String value) {
 		try {
-			return DateUtils.parseDate(value, "dd/MM/yyyy HH:mm:ss");
+			return DateUtils.parseDate(value, "yyyy-MM-dd'T'HH:mm:ss");
 		} catch (ParseException e) {
 			LOGGER.warn("", e);
 			return DEFAULT_VALUE;

@@ -125,20 +125,22 @@
 		
 		<document url="^http://.+?\.blog.ir4">
 			<outlinks>
-				<link root="a.outlink">
-					<href>
-						<resolve>
-							<attribute name="href">
+				<for-each root="a.outlink">
+					<link>
+						<href>
+							<resolve>
+								<attribute name="href">
+									<expr value="." />
+								</attribute>
+							</resolve>
+						</href>
+						<anchor>
+							<text>
 								<expr value="." />
-							</attribute>
-						</resolve>
-					</href>
-					<anchor>
-						<text>
-							<expr value="." />
-						</text>
-					</anchor>
-				</link>
+							</text>
+						</anchor>
+					</link>
+				</for-each>
 			</outlinks>
 		</document>
 	</documents>

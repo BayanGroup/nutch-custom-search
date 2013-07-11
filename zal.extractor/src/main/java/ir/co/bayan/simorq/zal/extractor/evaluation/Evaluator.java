@@ -1,15 +1,18 @@
 package ir.co.bayan.simorq.zal.extractor.evaluation;
 
+import ir.co.bayan.simorq.zal.extractor.core.Content;
+
 import java.util.List;
 
 /**
- * Evaluates a given expression in a way that it can extract its attributes or texts later. Evaluator operates on a
- * context that created itself and can hold evaluation specific data.
+ * Evaluates expressions from the specified content. This is usually done by parsing the provided content. Evaluator can
+ * extract attributes or texts from the result of its evaluation later. Evaluator operates on a context that created
+ * itself and can hold evaluation specific data.
  * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public interface Evaluator<C extends ExtractContext> {
+public interface Evaluator<C extends EvaluationContext> {
 
 	/**
 	 * Evaluates the given expression.
@@ -30,6 +33,11 @@ public interface Evaluator<C extends ExtractContext> {
 	/**
 	 * Creates a context for evaluation. This context will be passed in the subsequent calls.
 	 */
-	C createContext(String url, byte[] content, String encoding, String contentType) throws Exception;
+	C createContext(Content content) throws Exception;
+
+	/**
+	 * Returns this engine name
+	 */
+	String getName();
 
 }

@@ -7,25 +7,24 @@
 		<type name="date" converter="ir.co.bayan.simorq.zal.extractor.convert.DateConverter" />
 		<type name="date-time" converter="ir.co.bayan.simorq.zal.extractor.convert.DateTimeConverter" />
 		<type name="persian-date" converter="ir.co.bayan.simorq.zal.extractor.convert.PersianDateConverter"/>
-		<type name="persian-long" converter="ir.co.bayan.simorq.zal.extractor.convert.PersianLongConverter"/>
 	</types>
 	<fields>
 		<field name="post-title" />
 		<field name="post-blog-title" />
 		<field name="post-body" />
-		<field name="post-author" />
-		<field name="post-date" type="date-time"/>
 		<field name="post-comments" />
 		<field name="post-comments-num" type="long" />
-		<field name="post-keywords" />
 		<field name="post-categories" />
 		
 		<field name="blog-title" />
 		<field name="blog-sub-title" />
 		<field name="blog-desc" />
-		<field name="blog-author" />
-		<field name="blog-keywords" />
+		<field name="blog-total-visits" type="long"/>
 		
+		<field name="keywords" />
+		<field name="description" />
+		<field name="modification-date" type="date-time"/>
+		<field name="author" />
 		<field name="document-type" />
 		<field name="csi" />
 		<field name="url"/>
@@ -38,7 +37,28 @@
 				<constant value="1"/>
 			</extract-to>
 		</document>
-		<document id="blog-ir-post-page" inherits="blog-ir">
+		<document id="blog-ir-page" inherits="blog-ir">
+			<extract-to field="title">
+				<text>
+					<expr value="title" />
+				</text>
+			</extract-to>
+			<extract-to field="blog-total-visits">
+				<text>
+					<expr value="#value_VIEW_STAT_TOTAL"/>
+				</text>
+			</extract-to>
+			<extract-to field="author">
+				<trim>
+					<text>
+						<first>
+							<expr value="span.author, span.author2"/>
+						</first>
+					</text>
+				</trim>
+			</extract-to>
+		</document>
+		<document id="blog-ir-post-page" inherits="blog-ir-page">
 			<extract-to field="post-title">
 				<trim>
 					<replace pattern="(.+?) :: (.+)" substitution="$2">
@@ -63,13 +83,11 @@
 				</text>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css">
-			<extract-to field="post-date" >
-				<replace pattern="(.+?)-(.+?)-(.+?)T(.+)" substitution="$3/$2/$1 $4">
-					<attribute name="content">
-						<expr value="meta[name=date]"/>
-					</attribute>
-				</replace>
+		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css" update="false">
+			<extract-to field="modification-date" >
+				<attribute name="content">
+					<expr value="meta[name=date]"/>
+				</attribute>
 			</extract-to>
 			<extract-to field="post-comments">
 				<concat>
@@ -83,7 +101,7 @@
 					</replace>
 				</concat>
 			</extract-to>
-			<extract-to field="post-keywords">
+			<extract-to field="keywords">
 				<trim>
 					<text>
 						<expr value=".keywords_post h3"/>
@@ -99,8 +117,9 @@
 				<constant value="Custom-Page"/>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/?" inherits="blog-ir">
+		<document url="^http://.+?\.blog.ir/?" inherits="blog-ir-page">
 			<outlinks>
+				<!-- 
 				<link>
 					<href>
 						<concat delimiter="">
@@ -108,7 +127,7 @@
 							<constant value="rss/" />
 						</concat>
 					</href>
-				</link>
+				</link> -->
 				<link>
 					<href>
 						<concat delimiter="">
@@ -135,16 +154,7 @@
 					<expr value=".blog_description h4"/>
 				</text>
 			</extract-to>
-			<extract-to field="blog-author">
-				<trim>
-					<text>
-						<first>
-							<expr value="span.author, span.author2"/>
-						</first>
-					</text>
-				</trim>
-			</extract-to>
-			<extract-to field="blog-keywords">
+			<extract-to field="keywords">
 				<trim>
 					<text>
 						<expr value=".tagcloud a h3, .tagcloud h3 a"/>
@@ -157,32 +167,34 @@
 		</document>
 		<document url="^http://.+?\.blog.ir/sitemap.xml" engine="xpath">
 			<outlinks>
-				<link root="dns:url">
-					<href>
-						<text>
-							<expr value="./dns:loc" />
-						</text>
-					</href>
-					<anchor>
-						<text>
-							<expr value="./blog:dloc" />
-						</text>
-					</anchor>
-				</link>
+				<for-each root="dns:url"> 
+					<link>
+						<href>
+							<text>
+								<expr value="./dns:loc" />
+							</text>
+						</href>
+						<anchor>
+							<text>
+								<expr value="./blog:dloc" />
+							</text>
+						</anchor>
+					</link>
+				</for-each>
 			</outlinks>			
 		</document>
-		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath" root="//item" inherits="blog-ir">
+		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath" root="//item" inherits="blog-ir" update="true">
 			<extract-to field="url">
 				<text>
 					<expr value="./link" />
 				</text>
 			</extract-to>
-			<extract-to field="post-author">
+			<extract-to field="author">
 				<text>
 					<expr value="./dc:creator" />
 				</text>
 			</extract-to>
-			<extract-to field="post-keywords">
+			<extract-to field="keywords">
 				<trim>
 					<text>
 						<expr value="./category" />
@@ -195,7 +207,7 @@
 				</text>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/category/.*" engine="css" root=".post" inherits="blog-ir">
+		<document url="^http://.+?\.blog.ir/category/.*" engine="css" root=".post" inherits="blog-ir" update="true">
 			<extract-to field="url">
 				<resolve>
 					<attribute name="href">

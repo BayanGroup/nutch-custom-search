@@ -5,6 +5,7 @@ import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -42,8 +43,10 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 			DocumentFragment documentFragment) {
 		try {
 			String encoding = getEncoding(content, parseResult);
-			List<ExtractedDoc> extractedDocs = extractEngine.extract(content.getUrl(), content.getContent(), encoding,
-					content.getContentType());
+			List<ExtractedDoc> extractedDocs = extractEngine.extract(
+
+			new ir.co.bayan.simorq.zal.extractor.core.Content(new URL(content.getUrl()), content.getContent(),
+					encoding, content.getContentType()));
 			if (extractedDocs != null) {
 				for (ExtractedDoc doc : extractedDocs) {
 					addExtractedDocToParseResult(content, parseResult, doc);

@@ -4,6 +4,8 @@ import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 import ir.co.bayan.simorq.zal.extractor.model.Field;
 import ir.co.bayan.simorq.zal.extractor.model.TypeDef;
 
+import java.util.HashMap;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.nutch.crawl.CrawlDatum;
@@ -24,7 +26,9 @@ import org.slf4j.LoggerFactory;
 public class ExtractorIndexingFilter implements IndexingFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExtractorIndexingFilter.class);
+
 	public static final String MATCHED_DOC = "matched-doc";
+	public static final String UPDATE_DOC = "update-doc";
 
 	private Configuration configuration;
 	private ExtractorConfig extractorConfig;
@@ -54,6 +58,10 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 		Metadata metadata = parse.getData().getParseMeta();
 		if ("true".equals(metadata.get(MATCHED_DOC))) {
 			addFieldsToDoc(doc, metadata);
+			if ("true".equals(metadata.get(UPDATE_DOC))) {
+				// Passing a map will activate partial update process of solr
+				doc.add("updateIndicator", new HashMap<>());
+			}
 			return doc;
 		} else if (extractorConfig.isOmitNonMatching()) {
 			return null;

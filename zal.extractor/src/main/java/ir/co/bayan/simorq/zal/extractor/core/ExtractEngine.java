@@ -1,8 +1,9 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
 import ir.co.bayan.simorq.zal.extractor.evaluation.CssEvaluator;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 import ir.co.bayan.simorq.zal.extractor.evaluation.Evaluator;
-import ir.co.bayan.simorq.zal.extractor.evaluation.ExtractContext;
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluatorFactory;
 import ir.co.bayan.simorq.zal.extractor.evaluation.XPathEvaluator;
 import ir.co.bayan.simorq.zal.extractor.model.Document;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
@@ -27,12 +28,8 @@ import org.apache.commons.lang3.Validate;
  */
 public class ExtractEngine {
 
-	public static final String XPATH_ENGINE = "xpath";
-	public static final String CSS_ENGINE = "css";
-
 	private final ExtractorConfig extractorConfig;
 	private final Map<String, Document> docById;
-	private final Map<String, Evaluator<? extends ExtractContext>> evaluators;
 
 	public ExtractEngine(ExtractorConfig extractorConfig) throws Exception {
 		Validate.notNull(extractorConfig);
@@ -45,9 +42,20 @@ public class ExtractEngine {
 			}
 		}
 
-		evaluators = new HashMap<>();
-		evaluators.put(CSS_ENGINE, new CssEvaluator());
-		evaluators.put(XPATH_ENGINE, new XPathEvaluator());
+		// Validation: Checks that engine is not changed along the hierarchy of documents
+		for (Document doc : extractorConfig.getDocuments()) {
+			// All parents should either declare the same engine or no engine
+			checkParentEngine(deriveEngineName(doc), doc.getInherits());
+		}
+
+	}
+
+	private void checkParentEngine(String docEngine, Document parent) {
+		if (parent == null)
+			return;
+		Validate.isTrue(StringUtils.isEmpty(parent.getEngine()) || parent.getEngine().equals(docEngine),
+				"Engine can not be changed along the hierarchy: " + parent.getId());
+		checkParentEngine(docEngine, parent.getInherits());
 	}
 
 	/**
@@ -57,30 +65,33 @@ public class ExtractEngine {
 	 * @return a map of field names to the extracted value for that field according to the last last extract-to rule
 	 *         that matches the field name. If no document matches the given url, null will be returned.
 	 */
-	public List<ExtractedDoc> extract(String url, byte[] content, String encoding, String contentType) throws Exception {
-		Validate.notNull(url);
+	public List<ExtractedDoc> extract(Content content) throws Exception {
 		Validate.notNull(content);
 
 		// 1. Decide on which document matches the url and contentType
-		Document document = findMatchingDoc(url, contentType);
+		Document document = findMatchingDoc(content);
 		if (document == null) {
 			return null;
 		}
 
 		// 2. Select an engine for parsing the document
-		String engine = StringUtils.defaultIfEmpty(document.getInheritedEngine(), extractorConfig.getDefaultEngine());
-		Evaluator<? extends ExtractContext> evalEngine = evaluators.get(engine);
+		String engine = deriveEngineName(document);
+		Evaluator<? extends EvaluationContext> evalEngine = EvaluatorFactory.getInstance().getEvaluator(engine);
 		if (evalEngine == null)
 			throw new IllegalArgumentException("No engine found with the name " + engine);
 
 		// 3. Parse the document and start the extraction process
-		ExtractContext context = evalEngine.createContext(url, content, encoding, contentType);
+		EvaluationContext context = evalEngine.createContext(content);
 		return document.extract(context);
 	}
 
-	private Document findMatchingDoc(String url, String contentType) throws Exception {
+	private String deriveEngineName(Document document) {
+		return StringUtils.defaultIfEmpty(document.getInheritedEngine(), extractorConfig.getDefaultEngine());
+	}
+
+	private Document findMatchingDoc(Content content) throws Exception {
 		for (Document doc : extractorConfig.getDocuments()) {
-			if (doc.matches(url, contentType))
+			if (doc.matches(content.getUrl().toString(), content.getType()))
 				return doc;
 		}
 		return null;

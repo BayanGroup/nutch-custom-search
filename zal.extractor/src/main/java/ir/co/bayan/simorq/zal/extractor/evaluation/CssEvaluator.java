@@ -1,9 +1,9 @@
 package ir.co.bayan.simorq.zal.extractor.evaluation;
 
+import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractUtil;
 
 import java.io.ByteArrayInputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,12 +20,14 @@ import org.jsoup.nodes.Element;
 public class CssEvaluator implements Evaluator<CssContext> {
 
 	@Override
-	public CssContext createContext(String url, byte[] content, String encoding, String contentType) throws Exception {
-		if (ExtractUtil.isHtml(contentType)) {
-			org.jsoup.nodes.Document parsedDoc = Jsoup.parse(new ByteArrayInputStream(content), encoding, url);
-			return new CssContext(this, new URL(url), parsedDoc);
+	public CssContext createContext(Content content) throws Exception {
+		if (ExtractUtil.isHtml(content.getType())) {
+			org.jsoup.nodes.Document parsedDoc = Jsoup.parse(new ByteArrayInputStream(content.getData()),
+					content.getEncoding(), content.getUrl().toString());
+			return new CssContext(this, content, parsedDoc);
 		}
-		throw new RuntimeException("Only html is accepted in CssEngine but the given content type is " + contentType);
+		throw new RuntimeException("Only html is accepted in CssEngine but the given content type is "
+				+ content.getType());
 	}
 
 	@Override
@@ -56,5 +58,10 @@ public class CssEvaluator implements Evaluator<CssContext> {
 			texts.add(element.text());
 		}
 		return texts;
+	}
+
+	@Override
+	public String getName() {
+		return "css";
 	}
 }

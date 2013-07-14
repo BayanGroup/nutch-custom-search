@@ -91,3 +91,37 @@ You can define a different name for this file by defining extractor.file propert
 </property>
 ```
 
+### Configuration
+
+The main configuration file is extractors.xml. This file has three sections:
+
+1. types: you can define your required types and their corresponding converters here. This section is optional.
+2. fields: contains all fields that extracted data should be put into them. These fields should be define in the solrschema.xml file too to be recongnizable by solr. Each field have an optional type which is one of the types defined in the types section.
+3. documents: contains one or several documents. For each web page that you want to extract its content into fields you should need to define a document. A document matches agains certain urls (which are specified using regex expression) and consits of a set of extract-to rules. An extract-to rule extract a value from the content and put the extracted value into a field which is one of the fields defined in the fields section. The value of field is extracted by means of functions. 
+
+Here is a very simple extractors.xml file containing all of the above sections:
+
+```xml
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+        <types>
+                <type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
+        </types>
+        <fields>
+		<field name="num-gadgets" type="long" />
+	</fields>
+	<documents>
+		<document url="^http://.+?\.google\.com" engine="css">
+			<extract-to field="num-gadgets">
+				<text>
+					<expr value="li.gbt" />
+				</text>
+			</extract-to>
+		</document>
+	</documents>
+</config>
+```
+
+The purpose of this file is to extract the number of itmes in the topmost bar of google web page.
+In this file, we have one type named long with a converter. This converter is used to convert the extracted value (a string) to desired type.
+Also we have a field named "num-gadgets" with type long which is going to hold the number of items.
+In the documents section, we defined a document.

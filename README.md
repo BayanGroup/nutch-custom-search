@@ -107,21 +107,21 @@ Here is a very simple extractors.xml file containing all of the above sections:
                 <type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
         </types>
         <fields>
-		<field name="num-gadgets" type="long" />
+		<field name="num-items" type="long" />
 	</fields>
 	<documents>
 		<document url="^http://.+?\.google\.com" engine="css">
-			<extract-to field="num-gadgets">
-				<text>
+			<extract-to field="num-items">
+				<size>
 					<expr value="li.gbt" />
-				</text>
+				</size>
 			</extract-to>
 		</document>
 	</documents>
 </config>
 ```
 
-The purpose of this file is to extract the number of itmes in the topmost bar of google web page.
+The purpose of this file is to extract the number of itmes in the topmost bar of google web page and put it in a field with name num-items.
 In this file, we have one type named long with a converter. This converter is used to convert the extracted value (a string) to desired type.
-Also we have a field named "num-gadgets" with type long which is going to hold the number of items.
+Also we have a field named "num-items".
 In the documents section, we defined a document.

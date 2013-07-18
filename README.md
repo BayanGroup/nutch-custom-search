@@ -109,11 +109,11 @@ Here is a very simple extractors.xml file containing all of the above sections:
 
 ```xml
 <config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
-        <types>
-                <type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
-        </types>
-        <fields>
-		<field name="num-items" type="long" />
+	<types>
+		<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
+	</types>
+	<fields>
+		field name="num-items" type="long" />
 	</fields>
 	<documents>
 		<document url="^http://.+?\.google\.com" engine="css">
@@ -133,4 +133,5 @@ Also we have a field named "num-items".
 In the documents section, we defined a document wich accepts all resoruces with url ending with .google.com. The document specifies that its content should be parsed using css engine.
 This document has only one extract-to rule which consists of two nested functions size and expr. 
 The expr function returens a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
-The size function, returnes the number of its argument which here is the list of elements that satsify li.gbt expression.
+The size function, returnes the number of its argument which here is the list of elements that satisfy li.gbt expression.
+This extracted value is copied into field named "num-items".

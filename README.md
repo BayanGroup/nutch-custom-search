@@ -113,7 +113,7 @@ Here is a very simple extractors.xml file containing all of the above sections:
 		<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
 	</types>
 	<fields>
-		field name="num-items" type="long" />
+		<field name="num-items" type="long" />
 	</fields>
 	<documents>
 		<document url="^http://.+?\.google\.com" engine="css">
@@ -135,3 +135,28 @@ This document has only one extract-to rule which consists of two nested function
 The expr function returens a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
 The size function, returnes the number of its argument which here is the list of elements that satisfy li.gbt expression.
 This extracted value is copied into field named "num-items".
+
+### Functions
+
+The following table lists available functions which can be used in extract-to rules. 
+
+Function name | Input | Output | Description
+------------- | ----- | ------ | -----------
+attribute | | | Extracts the value of attribute with specified name from input objects.
+concat | | | Concats its inputs by the provided delimiter.
+constant | | |
+expr | | | Evaluates an expression using current engine.
+first | | |
+for-each | | |  Iterates through its children with the given root as the new root.
+last | | |
+link | | |
+replace | | | Replaces its input using the provided regex pattern by the provided substitution.
+resolve | | | Resolves a possible relative url to absolute one based on the current url in the context.
+size | | |
+text | | | Returns the text content of its input.
+trancate | | | Trancates a string if its size is greater than max.
+trim | | | Trims a string.
+url | | | Returns the current url in the context.
+
+
+

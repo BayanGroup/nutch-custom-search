@@ -97,12 +97,12 @@ The main configuration file is extractors.xml. This file has three sections:
 
 1. types: you can define your required types and their corresponding converters here. This section is optional.
 2. fields: contains all fields that extracted data should be put into them. These fields should be define in the solrschema.xml file too to be recongnizable by solr. Each field have an optional type which is one of the types defined in the types section.
-3. documents: contains one or several documents. For each web page that you want to extract its content into fields you need to define a document. When a resource (e.g. a web page) with a url and some content is fetched by nutch, 
-the extractor looks for a docuemnt that matches the resoruce url. Each docuement declares its accepting urls by means of regex expressions. If multiple matching documents are fround by extractor, the first one will be choosen. 
-Then, the contnet of resource is parsed using an engine. Currently the are three engines avaialbe: 
-css (which parses the content using jsoup library).
-xpath (which uses the standard JAXP infrastrucutre)
-txt (suitable for line oriented processing of text files)
+3. documents: contains one or several documents. For each resource (e.g. web page) that you want to extract its content into fields you need to define a document. When a resource with a specific url and some content is fetched by nutch, 
+the extractor looks for a docuemnt that matches the resoruce url. Each docuement declares its accepting urls by means of regex expressions. If multiple matching documents are fround by extractor, the first one will be used. 
+Then, the contnet of the resource is parsed using an engine that specified by the dccument (or using default engine if no engine specified). Currently there are three engines avaialbe: 
+css (which parses the content using jsoup library and is able to answer css selectors expressions), 
+xpath (which uses the standard JAXP infrastrucutre and is able to answer xpath expressions),
+txt (suitable for line oriented processing of text files). 
 Each document consits of a set of extract-to rules. An extract-to rule extract a value from the content and put the extracted value into a field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions. 
 
 Here is a very simple extractors.xml file containing all of the above sections:
@@ -130,4 +130,7 @@ Here is a very simple extractors.xml file containing all of the above sections:
 The purpose of this file is to extract the number of itmes in the topmost bar of google web page and put it in a field with name num-items.
 In this file, we have one type named long with a converter. This converter is used to convert the extracted value (a string) to desired type.
 Also we have a field named "num-items".
-In the documents section, we defined a document.
+In the documents section, we defined a document wich accepts all resoruces with url ending with .google.com. The document specifies that its content should be parsed using css engine.
+This document has only one extract-to rule which consists of two nested functions size and expr. 
+The expr function returens a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
+The size function, returnes the number of its argument which here is the list of elements that satsify li.gbt expression.

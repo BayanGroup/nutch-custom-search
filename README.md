@@ -104,6 +104,7 @@ css (which parses the content using jsoup library and is able to answer css sele
 xpath (which uses the standard JAXP infrastrucutre and is able to answer xpath expressions),
 txt (suitable for line oriented processing of text files). 
 Each document consits of a set of extract-to rules. An extract-to rule extract a value from the content and put the extracted value into a field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions. 
+Each document may specifiy a outlinks section that tells extractor how outlinks should be extracted from the current content. 
 
 Here is a very simple extractors.xml file containing all of the above sections:
 
@@ -119,7 +120,7 @@ Here is a very simple extractors.xml file containing all of the above sections:
 		<document url="^http://.+?\.google\.com" engine="css">
 			<extract-to field="num-items">
 				<size>
-					<expr value="li.gbt" />
+					<expr value="li .gbt" />
 				</size>
 			</extract-to>
 		</document>
@@ -139,24 +140,25 @@ This extracted value is copied into field named "num-items".
 ### Functions
 
 The following table lists available functions which can be used in extract-to rules. 
+All functions output a list of objects and takes as input a list of objects. Hence they can be nested (chained) to use output of one function as an input of another function.
 
-Function name | Input | Output | Description
-------------- | ----- | ------ | -----------
-attribute | | | Extracts the value of attribute with specified name from input objects.
-concat | | | Concats its inputs by the provided delimiter.
-constant | | |
-expr | | | Evaluates an expression using current engine.
-first | | |
-for-each | | |  Iterates through its children with the given root as the new root.
-last | | |
-link | | |
-replace | | | Replaces its input using the provided regex pattern by the provided substitution.
-resolve | | | Resolves a possible relative url to absolute one based on the current url in the context.
-size | | |
-text | | | Returns the text content of its input.
-trancate | | | Trancates a string if its size is greater than max.
-trim | | | Trims a string.
-url | | | Returns the current url in the context.
+Function name | Description
+------------- | -----------
+attribute | Extracts the value of attribute with specified name from input objects.
+concat | Concats its inputs by the provided delimiter.
+constant | Always returns a fixed constant.
+expr | Evaluates an expression using the current engine and returnes the list of result objects. The evaluation is done in the scope of current root. By default all document is the current root unless it is changed using for-each.
+first | Returns the first object in the list of its argument.
+for-each |  Iterates through its children with the given root as the new root.
+last | Returns the last object in the list of its argument.
+link  | Retunes a set of links with href and anchors.
+replace | Replaces its input using the provided regex pattern by the provided substitution.
+resolve | Resolves a possible relative url to absolute one based on the current url in the context.
+size | Returns the number of objects in its argument (which is a list).
+text  | Returns the text content of its input.
+trancate | Trancates a string if its size is greater than max.
+trim | Trims a string.
+url | Returns the current url in the context.
 
 
 

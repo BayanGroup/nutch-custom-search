@@ -1,6 +1,8 @@
 <xs:schema attributeFormDefault="unqualified"
 	elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://bayan.ir" xmlns="http://bayan.ir">
+	
+	<xs:include schemaLocation="functions.xsd" />
 
 	<xs:complexType name="typeType">
 		<xs:attribute type="xs:ID" name="name" use="required" />
@@ -10,191 +12,6 @@
 	<xs:complexType name="fieldType">
 		<xs:attribute type="xs:ID" name="name" use="required" />
 		<xs:attribute type="xs:IDREF" name="type" use="optional" />
-	</xs:complexType>
-	
-	<xs:group name="functions">
-		<xs:choice>
-			<xs:element name="expr" type="exprType"/>
-			<xs:element name="constant" type="constantType"/>
-			<xs:element name="concat" type="concatType" />
-			<xs:element name="replace" type="replaceType" />
-			<xs:element name="trim" type="trimType" />
-			<xs:element name="trancate" type="trancateType" />
-			<xs:element name="text" type="textType" />
-			<xs:element name="attribute" type="attributeType" />
-			<xs:element name="first" type="firstType" />
-			<xs:element name="last" type="lastType" />
-			<xs:element name="size" type="sizeType" />
-			<xs:element name="url" type="urlType" />
-			<xs:element name="resolve" type="resolveType" />
-			<xs:element name="link" type="linkType" />
-			<xs:element name="for-each" type="forEachType" />
-		</xs:choice>
-	</xs:group>
-	
-	<xs:complexType name="functionType">
-		<xs:sequence>
-			<xs:group ref="functions" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
-	
-	<xs:complexType name="singleFunctionType">
-		<xs:sequence>
-			<xs:group ref="functions" minOccurs="1" maxOccurs="1"/>
-		</xs:sequence>
-	</xs:complexType>
-	
-	<xs:complexType name="exprType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Evaluates an expression using current engine.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:attribute name="value" use="required">
-			<xs:annotation>
-			<xs:documentation source="description">
-				The expression which is understandable by current engine.
-			</xs:documentation>
-		</xs:annotation>
-		</xs:attribute>
-	</xs:complexType>
-	
-	<xs:complexType name="constantType">
-		<xs:attribute name="value" use="required"/>
-	</xs:complexType>
-	
-	<xs:complexType name="concatType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Concats its inputs by the provided delimiter.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="functionType">
-				<xs:attribute name="delimiter" default=" "/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="replaceType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Replaces its input using the provided regex pattern by the provided substitution.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-				<xs:attribute name="pattern" use="required" />
-				<xs:attribute name="substitution" use="required" />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="trancateType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Trancates a string if its size is greater than max.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-				<xs:attribute name="max" type="xs:integer" use="required" />
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="trimType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Trims a string.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="textType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Returns the text content of its input.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="attributeType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Extracts the value of attribute with specified name from underling elements.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-				<xs:attribute name="name" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="firstType">
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="lastType">
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="sizeType">
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="urlType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Returns the current url in the context.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:simpleContent>
-			<xs:extension base="xs:string"></xs:extension>
-		</xs:simpleContent>
-	</xs:complexType>
-	
-	<xs:complexType name="resolveType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				 Resolves a possible relative url to absolute one based on the current url in the context.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="forEachType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				 Iterates through its children with the given root as the new root.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-				<xs:attribute name="root" type="xs:string" use="required"/>
-			</xs:extension>
-		</xs:complexContent>
 	</xs:complexType>
 	
 	<xs:complexType name="extractToType">
@@ -211,13 +28,6 @@
 			<xs:element name="extract-to" type="extractToType" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="root" type="xs:string"/>
-	</xs:complexType>
-	
-	<xs:complexType name="linkType">
-		<xs:all>
-			<xs:element name="href" type="singleFunctionType" minOccurs="1"/>
-			<xs:element name="anchor" type="singleFunctionType" minOccurs="0"/>
-		</xs:all>
 	</xs:complexType>
 	
 	<xs:complexType name="outlinksType">

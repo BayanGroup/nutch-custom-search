@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Always returns a fixed constant.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */

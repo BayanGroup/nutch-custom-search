@@ -6,6 +6,7 @@ import ir.co.bayan.simorq.zal.extractor.model.TypeDef;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
 import org.apache.nutch.crawl.CrawlDatum;
@@ -74,14 +75,16 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 		for (Field field : extractorConfig.getFields()) {
 			String name = field.getName();
 			for (String value : metadata.getValues(name)) {
-				Object finalValue = value;
-				TypeDef type = field.getType();
-				if (type != null) {
-					if (type.getConverterInstance() != null) {
-						finalValue = type.getConverterInstance().convert(value);
+				if (!StringUtils.isEmpty(value)) {
+					Object finalValue = value;
+					TypeDef type = field.getType();
+					if (type != null) {
+						if (type.getConverterInstance() != null) {
+							finalValue = type.getConverterInstance().convert(value);
+						}
 					}
+					doc.add(name, finalValue);
 				}
-				doc.add(name, finalValue);
 			}
 		}
 	}

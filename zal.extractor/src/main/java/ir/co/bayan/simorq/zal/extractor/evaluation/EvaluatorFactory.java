@@ -29,6 +29,7 @@ public class EvaluatorFactory {
 		evaluators = new HashMap<>();
 		addEvaluator(new CssEvaluator());
 		addEvaluator(new XPathEvaluator());
+		addEvaluator(new TextEvaluator());
 	}
 
 	public Evaluator<? extends EvaluationContext> getEvaluator(String name) {

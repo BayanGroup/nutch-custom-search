@@ -18,8 +18,7 @@ public class XPathContext extends EvaluationContext {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public XPathContext(Evaluator<XPathContext> engine, Content content, Element root, NamespaceContext nsContext) {
-		super((Evaluator) engine, content);
-		this.root = root;
+		super((Evaluator) engine, content, root);
 		this.nsContext = nsContext;
 	}
 

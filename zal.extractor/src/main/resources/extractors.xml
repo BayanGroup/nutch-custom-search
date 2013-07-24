@@ -221,5 +221,18 @@
 				</replace>
 			</extract-to>
 		</document>
+		<document url="http://blog.ir/changes" engine="css">
+			<outlinks>
+				<for-each root=".post">
+					<link>
+						<href>
+							<attribute name="href">
+								<expr value="a" />
+							</attribute>
+						</href>
+					</link>
+				</for-each>	
+			</outlinks>				
+		</document>
 	</documents>
 </config>

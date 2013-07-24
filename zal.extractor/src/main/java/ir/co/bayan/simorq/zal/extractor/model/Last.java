@@ -10,6 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.Validate;
 
 /**
+ * Returns the last object in the list of its argument.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */

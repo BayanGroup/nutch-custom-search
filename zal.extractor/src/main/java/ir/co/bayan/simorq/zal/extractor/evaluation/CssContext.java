@@ -14,8 +14,7 @@ public class CssContext extends EvaluationContext {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public CssContext(Evaluator<CssContext> engine, Content content, Element root) {
-		super((Evaluator) engine, content);
-		this.root = root;
+		super((Evaluator) engine, content, root);
 	}
 
 	/**

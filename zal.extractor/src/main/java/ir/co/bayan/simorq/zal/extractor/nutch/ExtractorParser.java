@@ -66,7 +66,8 @@ public class ExtractorParser implements Parser {
 					content.getUrl()), content.getContent(), getEncoding(content), content.getContentType()));
 			if (docs != null) {
 				for (ExtractedDoc doc : docs) {
-					LOGGER.info(doc.toString());
+					if (LOGGER.isDebugEnabled())
+						LOGGER.debug(doc.toString());
 					ParseText parseText = new ParseText(doc.getText());
 					ParseData parseData = getParseData(content, doc);
 					parseResult.put(doc.getUrl(), parseText, parseData);

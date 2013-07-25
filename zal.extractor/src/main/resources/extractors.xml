@@ -183,6 +183,7 @@
 				</for-each>
 			</outlinks>			
 		</document>
+		<!-- 
 		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath" root="//item" inherits="blog-ir" update="true">
 			<extract-to field="url">
 				<text>
@@ -234,5 +235,6 @@
 				</for-each>	
 			</outlinks>				
 		</document>
+		 -->
 	</documents>
 </config>

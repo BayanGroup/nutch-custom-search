@@ -18,7 +18,7 @@ public class Url extends Function {
 
 	@Override
 	public List<?> extract(Object root, EvaluationContext context) throws Exception {
-		return Arrays.asList(context.getContent().getUrl());
+		return Arrays.asList(context.getContent().getUrl().toString());
 	}
 
 	@Override

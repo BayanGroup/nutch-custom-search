@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ $# -ne 4 ] 
+then
+    echo "continuous_crawl <seedDir> <crawlDir> <solrURL> <sleep>"
+    exit -1
+fi
+
+
+SEEDDIR="$1"
+CRAWL_PATH="$2"
+SOLRURL="$3"
+SLEEP="$4"
+
+while [ "1" = "1" ]; do
+	echo checking ....
+	./nutch/bin/crawl $SEEDDIR $CRAWL_PATH $SOLRURL 1
+	
+	#If no change is detected sleep for a while
+	rc=$?
+	if [ $rc -ne 0 ]
+	then
+		echo "Sleep for $SLEEP"
+		sleep $SLEEP
+	fi
+done
+
+exit 0
+

@@ -21,8 +21,8 @@ public class First extends Function {
 	@Override
 	public List<?> extract(Object root, EvaluationContext context) throws Exception {
 		Validate.isTrue(args != null && args.size() == 1, "Only one arg should be specified");
-		List<?> res = args.get(0).extract(root, context);
-		return Arrays.asList(res.get(0));
+		List<?> list = args.get(0).extract(root, context);
+		return list.size() > 0 ? Arrays.asList(list.get(0)) : list;
 	}
 
 	@Override

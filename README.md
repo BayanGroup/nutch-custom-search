@@ -160,6 +160,7 @@ truncate | Truncates a string if its size is greater than max.
 trim | Trims a string.
 url | Returns the current url in the context.
 fetch | Fetches a content from the given url and evaluates it with the specified engine.
+field-value | Returns the extracted value of the given field.
 
 
 

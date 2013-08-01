@@ -9,7 +9,7 @@
 			<xs:element name="concat" type="concatType" />
 			<xs:element name="replace" type="replaceType" />
 			<xs:element name="trim" type="trimType" />
-			<xs:element name="trancate" type="trancateType" />
+			<xs:element name="truncate" type="truncateType" />
 			<xs:element name="text" type="textType" />
 			<xs:element name="attribute" type="attributeType" />
 			<xs:element name="first" type="firstType" />
@@ -19,6 +19,7 @@
 			<xs:element name="resolve" type="resolveType" />
 			<xs:element name="link" type="linkType" />
 			<xs:element name="for-each" type="forEachType" />
+			<xs:element name="fetch" type="fetchType" />
 		</xs:choice>
 	</xs:group>
 	
@@ -80,10 +81,10 @@
 		</xs:complexContent>
 	</xs:complexType>
 	
-	<xs:complexType name="trancateType">
+	<xs:complexType name="truncateType">
 		<xs:annotation>
 			<xs:documentation source="description">
-				Trancates a string if its size is greater than max.
+				Truncates a string if its size is greater than max.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -192,6 +193,32 @@
 			<xs:element name="href" type="singleFunctionType" minOccurs="1"/>
 			<xs:element name="anchor" type="singleFunctionType" minOccurs="0"/>
 		</xs:all>
+	</xs:complexType>
+	
+	<xs:complexType name="fetchType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Fetches a content from the given url and evaluates it with the specified engine. If checkModified is set (default), the evaluation is only done if the resource is changed since the last fetch time.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="parameters" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="parameter" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="name" use="required"/>
+								<xs:attribute name="value" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:group ref="functions" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="url" type="xs:string" use="required"/>
+		<xs:attribute name="engine" type="xs:string" use="required"/>
+		<xs:attribute name="checkModified" type="xs:boolean" use="optional" default="true"/>
 	</xs:complexType>
 	
 </xs:schema>

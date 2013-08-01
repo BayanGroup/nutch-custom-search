@@ -26,18 +26,23 @@
 		<field name="modification-date" type="date-time"/>
 		<field name="author" />
 		<field name="document-type" />
-		<field name="csi" />
+		<field name="csi" type="long"/>
 		<field name="url"/>
 		<field name="title" />
 		<field name="content" />
+		<field name="domain" />
+		<field name="sub-domain" />
 	</fields>
 	<documents>
 		<document id="blog-ir">
 			<extract-to field="csi">
-				<constant value="1"/>
+				<constant value="1479467467723760090"/>
+			</extract-to>
+			<extract-to field="domain">
+				<constant value="blog.ir"/>
 			</extract-to>
 		</document>
-		<document id="blog-ir-page" inherits="blog-ir">
+		<document id="blog-ir-page" inherits="blog-ir" engine="css">
 			<extract-to field="title">
 				<text>
 					<expr value="title" />
@@ -56,6 +61,11 @@
 						</first>
 					</text>
 				</trim>
+			</extract-to>
+			<extract-to field="sub-domain">
+				<replace pattern="^http://(.+?\.blog.ir).*" substitution="$1">
+					<url/>
+				</replace>
 			</extract-to>
 		</document>
 		<document id="blog-ir-post-page" inherits="blog-ir-page">
@@ -109,12 +119,12 @@
 				</trim>
 			</extract-to>
 			<extract-to field="document-type">
-				<constant value="Post"/>
+				<constant value="post"/>
 			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/page/.+" inherits="blog-ir-post-page">
 			<extract-to field="document-type">
-				<constant value="Custom-Page"/>
+				<constant value="page"/>
 			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/?" inherits="blog-ir-page">
@@ -162,7 +172,7 @@
 				</trim>
 			</extract-to>
 			<extract-to field="document-type">
-				<constant value="First-Page"/>
+				<constant value="blog"/>
 			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/sitemap.xml" engine="xpath">
@@ -181,7 +191,20 @@
 						</anchor>
 					</link>
 				</for-each>
-			</outlinks>			
+			</outlinks>
+			<extract-to field="document-type">
+				<constant value="sitemap"/>
+			</extract-to>			
+		</document>
+		<document url="^http://.+?\.blog.ir/category/.*" inherits="blog-ir-page" engine="css">
+			<extract-to field="document-type">
+				<constant value="category"/>
+			</extract-to>
+		</document>
+		<document url="^http://.+?\.blog.ir/tag/.*" inherits="blog-ir-page" engine="css">
+			<extract-to field="document-type">
+				<constant value="tag"/>
+			</extract-to>
 		</document>
 		<!-- 
 		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath" root="//item" inherits="blog-ir" update="true">
@@ -206,20 +229,6 @@
 				<text>
 					<expr value="./slash:comments"/>
 				</text>
-			</extract-to>
-		</document>
-		<document url="^http://.+?\.blog.ir/category/.*" engine="css" root=".post" inherits="blog-ir" update="true">
-			<extract-to field="url">
-				<resolve>
-					<attribute name="href">
-						<expr value=".title a" />
-					</attribute>
-				</resolve>
-			</extract-to>
-			<extract-to field="post-categories">
-				<replace substitution="^http://.+?\.blog.ir/category/(.+?)/?" pattern="$1">
-					<url />
-				</replace>
 			</extract-to>
 		</document>
 		<document url="http://blog.ir/changes" engine="css">

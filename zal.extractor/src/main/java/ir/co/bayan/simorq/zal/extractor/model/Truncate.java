@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Trancates a string if its size is greater than max.
+ * Truncates a string if its size is greater than max.
  * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 

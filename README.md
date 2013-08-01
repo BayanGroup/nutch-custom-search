@@ -148,6 +148,8 @@ attribute | Extracts the value of attribute with specified name from input objec
 concat | Concats its inputs by the provided delimiter.
 constant | Always returns a fixed constant.
 expr | Evaluates an expression using the current engine and returnes the list of result objects. The evaluation is done in the scope of current root. By default all document is the current root unless it is changed using for-each.
+fetch | Fetches a content from the given url and evaluates it with the specified engine.
+field-value | Returns the extracted value of the given field.
 first | Returns the first object in the list of its argument.
 for-each |  Iterates through its children with the given root as the new root.
 last | Returns the last object in the list of its argument.
@@ -159,8 +161,7 @@ text  | Returns the text content of its input.
 truncate | Truncates a string if its size is greater than max.
 trim | Trims a string.
 url | Returns the current url in the context.
-fetch | Fetches a content from the given url and evaluates it with the specified engine.
-field-value | Returns the extracted value of the given field.
+
 
 
 

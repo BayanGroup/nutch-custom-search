@@ -48,11 +48,6 @@
 					<expr value="title" />
 				</text>
 			</extract-to>
-			<extract-to field="blog-total-visits">
-				<text>
-					<expr value="#value_VIEW_STAT_TOTAL"/>
-				</text>
-			</extract-to>
 			<extract-to field="author">
 				<trim>
 					<text>
@@ -118,11 +113,20 @@
 					</text>
 				</trim>
 			</extract-to>
+			<extract-to field="content">
+				<concat>
+					<field-value field="post-body" />
+					<field-value field="post-comments" />
+				</concat>
+			</extract-to>
 			<extract-to field="document-type">
 				<constant value="post"/>
 			</extract-to>
 		</document>
 		<document url="^http://.+?\.blog.ir/page/.+" inherits="blog-ir-post-page">
+			<extract-to field="content">
+				<field-value field="post-body" />
+			</extract-to>
 			<extract-to field="document-type">
 				<constant value="page"/>
 			</extract-to>
@@ -163,6 +167,12 @@
 				<text>
 					<expr value=".blog_description h4"/>
 				</text>
+			</extract-to>
+			<extract-to field="description">
+				<concat>
+					<field-value field="blog-sub-title" />
+					<field-value field="blog-desc" />
+				</concat>
 			</extract-to>
 			<extract-to field="keywords">
 				<trim>

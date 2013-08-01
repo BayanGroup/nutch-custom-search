@@ -97,6 +97,12 @@
 					</last>
 				</text>
 			</extract-to>
+			<extract-to field="content">
+				<concat>
+					<field-value field="f1" />
+					<field-value field="f2" />
+				</concat>
+			</extract-to>
 		</document>
 		
 		<document url="^http://.+?\.blog.ir2" inherits="base">

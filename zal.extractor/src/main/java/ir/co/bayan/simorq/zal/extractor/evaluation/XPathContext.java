@@ -26,8 +26,8 @@ public class XPathContext extends EvaluationContext {
 	 * @return the root
 	 */
 	@Override
-	public Element getRoot() {
-		return (Element) root;
+	public Element getMainRoot() {
+		return (Element) mainRoot;
 	}
 
 	/**

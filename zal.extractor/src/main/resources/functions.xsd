@@ -20,6 +20,7 @@
 			<xs:element name="link" type="linkType" />
 			<xs:element name="for-each" type="forEachType" />
 			<xs:element name="fetch" type="fetchType" />
+			<xs:element name="field-value" type="fieldValueType" />
 		</xs:choice>
 	</xs:group>
 	
@@ -219,6 +220,15 @@
 		<xs:attribute name="url" type="xs:string" use="required"/>
 		<xs:attribute name="engine" type="xs:string" use="required"/>
 		<xs:attribute name="checkModified" type="xs:boolean" use="optional" default="true"/>
+	</xs:complexType>
+	
+	<xs:complexType name="fieldValueType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Returns the extracted value of the given field.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="field" use="required" type="xs:IDREF"/>
 	</xs:complexType>
 	
 </xs:schema>

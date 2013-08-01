@@ -155,8 +155,9 @@ public class Document extends Fragment {
 	public List<ExtractedDoc> extract(EvaluationContext context) throws Exception {
 		List<ExtractedDoc> res = new ArrayList<>();
 
-		for (Object root : getRoots(context.getRoot(), context)) {
+		for (Object root : getRoots(context.getMainRoot(), context)) {
 			ExtractedDoc mainDoc = new ExtractedDoc();
+			context.setCurrentDoc(mainDoc);
 			mainDoc.addField(Fragment.URL_FIELD, context.getContent().getUrl().toString());
 			mainDoc.setUpdate(update);
 			res.add(mainDoc);
@@ -179,7 +180,7 @@ public class Document extends Fragment {
 
 		if (document.getFragments() != null) {
 			for (Fragment fragment : document.getFragments()) {
-				extractedDocs.addAll(fragment.extract(context.getRoot(), context));
+				extractedDocs.addAll(fragment.extract(context.getMainRoot(), context));
 			}
 		}
 

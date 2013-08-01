@@ -39,6 +39,7 @@ public class Fragment extends Rooted {
 
 		for (Object subRoot : getRoots(root, context)) {
 			ExtractedDoc extractedDoc = new ExtractedDoc();
+			context.setCurrentDoc(extractedDoc);
 
 			extractFields(subRoot, context, extractedDoc);
 			insertSpecialFields(context, extractedDoc);

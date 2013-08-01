@@ -164,7 +164,7 @@ public class Fetch extends Function {
 		EvaluationContext newContext = evaluator.createContext(content);
 
 		for (Function arg : args) {
-			res.addAll(arg.extract(newContext.getRoot(), newContext));
+			res.addAll(arg.extract(newContext.getMainRoot(), newContext));
 		}
 
 		if (checkModified) {

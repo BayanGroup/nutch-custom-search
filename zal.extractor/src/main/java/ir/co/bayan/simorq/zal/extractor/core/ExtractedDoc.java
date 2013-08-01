@@ -61,6 +61,10 @@ public class ExtractedDoc {
 		return fields;
 	}
 
+	public String getField(String name) {
+		return fields.get(name);
+	}
+
 	public void addField(String name, String value) {
 		fields.put(name, value);
 	}

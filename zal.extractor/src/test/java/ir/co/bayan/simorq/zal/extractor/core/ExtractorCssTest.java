@@ -110,4 +110,14 @@ public class ExtractorCssTest {
 		assertEquals("a", outlinks.get(0).getAnchor());
 		assertEquals("http://some.blog.ir4/2", outlinks.get(1).getUrl());
 	}
+
+	@Test
+	public void testCopy() throws Exception {
+		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
+
+		Map<String, String> result = extractedDocs.get(0).getFields();
+
+		assertEquals("t1 t2", result.get("content"));
+	}
 }

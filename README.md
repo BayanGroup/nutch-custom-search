@@ -156,7 +156,7 @@ replace | Replaces its input using the provided regex pattern by the provided su
 resolve | Resolves a possible relative url to absolute one based on the current url in the context.
 size | Returns the number of objects in its argument (which is a list).
 text  | Returns the text content of its input.
-trancate | Trancates a string if its size is greater than max.
+truncate | Truncates a string if its size is greater than max.
 trim | Trims a string.
 url | Returns the current url in the context.
 fetch | Fetches a content from the given url and evaluates it with the specified engine.

@@ -27,7 +27,7 @@
 		<field name="content" />
 	</fields>
 	<documents>
-		<document id="base" url="^http://.+?\.blog.ir">
+		<document id="base" url="^http://.+?\.blog.ir$">
 			<extract-to field="f1">
 				<constant value="t1"/>
 			</extract-to>
@@ -105,7 +105,7 @@
 			</extract-to>
 		</document>
 		
-		<document url="^http://.+?\.blog.ir2" inherits="base">
+		<document url="^http://.+?\.blog.ir2$" inherits="base">
 			<extract-to field="f11">
 				<constant value="t1" />
 			</extract-to>
@@ -114,7 +114,7 @@
 			</extract-to>
 		</document>
 		
-		<document url="^http://.+?\.blog.ir3">
+		<document url="^http://.+?\.blog.ir3$">
 			<fragment root=".doc">
 				<extract-to field="url">
 					<attribute name="href">
@@ -129,7 +129,7 @@
 			</fragment>
 		</document>
 		
-		<document url="^http://.+?\.blog.ir4">
+		<document url="^http://.+?\.blog.ir4$">
 			<outlinks>
 				<for-each root="a.outlink">
 					<link>

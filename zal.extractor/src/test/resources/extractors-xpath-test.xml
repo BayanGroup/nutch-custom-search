@@ -28,7 +28,7 @@
 		<field name="content" />
 	</fields>
 	<documents>
-		<document id="d1" url="^http://.+?\.blog.ir">
+		<document id="d1" url="^http://.+?\.blog.ir$">
 			<extract-to field="f1">
 				<text>
 					<expr value="//book[@title='b1']" />
@@ -59,7 +59,7 @@
 				</replace>
 			</extract-to>
 		</document>
-		<document id="d2" url="^http://.+?\.blog.ir2">
+		<document id="d2" url="^http://.+?\.blog.ir2$">
 			<fragment root="//books/category[@name]">
 				<extract-to field="url">
 					<text>
@@ -73,7 +73,7 @@
 				</extract-to>
 			</fragment>
 		</document>
-		<document id="d3" url="^http://.+?\.blog.ir25" root="//books/category[@name]" update="true">
+		<document id="d3" url="^http://.+?\.blog.ir25$" root="//books/category[@name]" update="true">
 			<extract-to field="url">
 				<text>
 					<expr value="./@name" />
@@ -85,7 +85,7 @@
 				</text>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir3">
+		<document url="^http://.+?\.blog.ir3$">
 			<outlinks>
 				<for-each root="//category[@name='c2']"> 
 					<link>

@@ -34,7 +34,14 @@
 		<field name="sub-domain" />
 	</fields>
 	<documents>
-		<document id="blog-ir">
+		<document id="common" engine="css">
+			<extract-to field="title">
+				<text>
+					<expr value="title" />
+				</text>
+			</extract-to>
+		</document>
+		<document id="blog-ir" inherits="common">
 			<extract-to field="csi">
 				<constant value="1479467467723760090"/>
 			</extract-to>
@@ -43,16 +50,11 @@
 			</extract-to>
 		</document>
 		<document id="blog-ir-page" inherits="blog-ir" engine="css">
-			<extract-to field="title">
-				<text>
-					<expr value="title" />
-				</text>
-			</extract-to>
 			<extract-to field="author">
 				<trim>
 					<text>
 						<first>
-							<expr value="span.author, span.author2"/>
+							<expr value=".author, .author2, .author3"/>
 						</first>
 					</text>
 				</trim>
@@ -84,11 +86,22 @@
 			</extract-to>
 			<extract-to field="post-body">
 				<text>
-					<expr value=".post .body .cnt"/>
+					<expr value=".post .body"/>
 				</text>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/((\d{4}/\d{2})|post)/.+" inherits="blog-ir-post-page" engine="css" update="false">
+		<document url="blog.ir/((\d{4}/\d{2})|post)" inherits="blog-ir-post-page" engine="css" update="false">
+			<outlinks>
+				<link>
+					<href>
+						<resolve>
+							<attribute name="href">
+								<expr value=".post a[rel!=nofollow]"/>
+							</attribute>
+						</resolve>
+					</href>
+				</link>
+			</outlinks>
 			<extract-to field="modification-date" >
 				<attribute name="content">
 					<expr value="meta[name=date]"/>
@@ -97,7 +110,7 @@
 			<extract-to field="post-comments">
 				<concat>
 					<text>
-						<expr value=".post_comments .body_cmt .cnt span.cnt_l"/>
+						<expr value=".post_comments .body_cmt"/>
 					</text>
 					<replace pattern="^(پاسخ:)?(.*)" substitution="$2">
 						<text>
@@ -109,7 +122,7 @@
 			<extract-to field="keywords">
 				<trim>
 					<text>
-						<expr value=".keywords_post h3"/>
+						<expr value=".keywords_post"/>
 					</text>
 				</trim>
 			</extract-to>
@@ -123,7 +136,7 @@
 				<constant value="post"/>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/page/.+" inherits="blog-ir-post-page">
+		<document url="blog.ir/page" inherits="blog-ir-post-page">
 			<extract-to field="content">
 				<field-value field="post-body" />
 			</extract-to>
@@ -131,7 +144,7 @@
 				<constant value="page"/>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/?" inherits="blog-ir-page">
+		<document url="blog.ir/?$" inherits="blog-ir-page">
 			<outlinks>
 				<!-- 
 				<link>
@@ -150,6 +163,15 @@
 						</concat>
 					</href>
 				</link>
+				<link>
+					<href>
+						<resolve>
+							<attribute name="href">
+								<expr value="a[rel!=nofollow]"/>
+							</attribute>
+						</resolve>
+					</href>
+				</link>
 			</outlinks>
 			<extract-to field="blog-title">
 				<trim>
@@ -160,12 +182,12 @@
 			</extract-to>
 			<extract-to field="blog-sub-title">
 				<text>
-					<expr value="div.desc h2"/>
+					<expr value=".title_desc .desc"/>
 				</text>
 			</extract-to>
 			<extract-to field="blog-desc">
 				<text>
-					<expr value=".blog_description h4"/>
+					<expr value=".blog_description"/>
 				</text>
 			</extract-to>
 			<extract-to field="description">
@@ -177,7 +199,7 @@
 			<extract-to field="keywords">
 				<trim>
 					<text>
-						<expr value=".tagcloud a h3, .tagcloud h3 a"/>
+						<expr value=".tagcloud"/>
 					</text>
 				</trim>
 			</extract-to>
@@ -185,7 +207,7 @@
 				<constant value="blog"/>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/sitemap.xml" engine="xpath">
+		<document url="blog.ir/sitemap.xml" engine="xpath">
 			<outlinks>
 				<for-each root="dns:url"> 
 					<link>
@@ -206,18 +228,18 @@
 				<constant value="sitemap"/>
 			</extract-to>			
 		</document>
-		<document url="^http://.+?\.blog.ir/category/.*" inherits="blog-ir-page" engine="css">
+		<document url="blog.ir/category" inherits="blog-ir-page" engine="css">
 			<extract-to field="document-type">
 				<constant value="category"/>
 			</extract-to>
 		</document>
-		<document url="^http://.+?\.blog.ir/tag/.*" inherits="blog-ir-page" engine="css">
+		<document url="blog.ir/tag" inherits="blog-ir-page" engine="css">
 			<extract-to field="document-type">
 				<constant value="tag"/>
 			</extract-to>
 		</document>
 		<!-- 
-		<document url="^http://.+?\.blog.ir/rss.*" engine="xpath" root="//item" inherits="blog-ir" update="true">
+		<document url="blog.ir/rss" engine="xpath" root="//item" inherits="blog-ir" update="true">
 			<extract-to field="url">
 				<text>
 					<expr value="./link" />

@@ -189,10 +189,10 @@ public class Document extends Fragment {
 	public boolean matches(String url, String contentType) {
 		boolean matches = false;
 		if (urlPattern != null) {
-			matches = urlPattern.matcher(url).matches();
+			matches = urlPattern.matcher(url).find();
 		}
 		if (!matches && contentTypePattern != null) {
-			matches = contentTypePattern.matcher(contentType).matches();
+			matches = contentTypePattern.matcher(contentType).find();
 		}
 		return matches;
 	}

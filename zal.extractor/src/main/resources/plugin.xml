@@ -27,6 +27,13 @@
     		<parameter name="contentType" value="*"/>
     	</implementation>
    	</extension>
+   	<extension id="ir.co.bayan.simorq.zal.extractor.nutch.scoring"
+              name="Extractor Scoring"
+              point="org.apache.nutch.scoring.ScoringFilter">
+      <implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorScoringFilter"
+                      class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorScoringFilter" />
+   </extension>
+   	
    	
 
 </plugin>

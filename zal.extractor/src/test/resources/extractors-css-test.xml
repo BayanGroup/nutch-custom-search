@@ -25,6 +25,9 @@
 		
 		<field name="url" />
 		<field name="content" />
+		
+		<field name="multi" multi="true"/>
+		<field name="no-multi" multi="false"/>
 	</fields>
 	<documents>
 		<document id="base" url="^http://.+?\.blog.ir$">
@@ -102,6 +105,20 @@
 					<field-value field="f1" />
 					<field-value field="f2" />
 				</concat>
+			</extract-to>
+			
+			<extract-to field="multi">
+				<constant value="v1"/>
+			</extract-to>
+			<extract-to field="multi">
+				<constant value="v2"/>
+			</extract-to>
+			
+			<extract-to field="no-multi">
+				<constant value="v1"/>
+			</extract-to>
+			<extract-to field="no-multi">
+				<constant value="v2"/>
 			</extract-to>
 		</document>
 		

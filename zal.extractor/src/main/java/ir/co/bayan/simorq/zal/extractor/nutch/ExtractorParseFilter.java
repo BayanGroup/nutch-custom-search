@@ -82,8 +82,15 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 		// Indicates that this document is matched with one of urls defined in the config.
 		// This will be used in ParseMetadataIndexingFilter to decide whether exclude document or not
 		parseMetadata.add(ExtractorIndexingFilter.MATCHED_DOC, "true");
-		for (Entry<String, String> entry : doc.getFields().entrySet()) {
-			parseMetadata.add(entry.getKey(), entry.getValue());
+		for (Entry<String, Object> entry : doc.getFields().entrySet()) {
+			Object value = entry.getValue();
+			// Check if it is a multi value
+			if (value instanceof List) {
+				for (Object valueItem : (List<?>) value) {
+					parseMetadata.add(entry.getKey(), valueItem.toString());
+				}
+			} else
+				parseMetadata.add(entry.getKey(), value.toString());
 		}
 	}
 

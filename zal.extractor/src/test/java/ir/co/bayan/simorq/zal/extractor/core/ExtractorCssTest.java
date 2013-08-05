@@ -37,7 +37,7 @@ public class ExtractorCssTest {
 	public void testValues() throws Exception {
 		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
 		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
-		Map<String, String> result = extractedDocs.get(0).getFields();
+		Map<String, Object> result = extractedDocs.get(0).getFields();
 
 		assertEquals("t1", result.get("f1"));
 		assertEquals("t2", result.get("f2"));
@@ -50,7 +50,7 @@ public class ExtractorCssTest {
 	public void testSub() throws Exception {
 		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
 		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
-		Map<String, String> result = extractedDocs.get(0).getFields();
+		Map<String, Object> result = extractedDocs.get(0).getFields();
 
 		assertEquals("2-t", result.get("f6"));
 		assertEquals("2012-12-19", result.get("f6.1"));
@@ -60,7 +60,7 @@ public class ExtractorCssTest {
 	public void testSelect() throws Exception {
 		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
 		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
-		Map<String, String> result = extractedDocs.get(0).getFields();
+		Map<String, Object> result = extractedDocs.get(0).getFields();
 
 		assertEquals("a b", result.get("f7"));
 		assertEquals("a", result.get("f8"));
@@ -72,7 +72,7 @@ public class ExtractorCssTest {
 	public void testInheritence() throws Exception {
 		Content content = new Content(new URL("http://some.blog.ir2"), testPageContent, "UTF-8", "text/html");
 		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
-		Map<String, String> result = extractedDocs.get(0).getFields();
+		Map<String, Object> result = extractedDocs.get(0).getFields();
 
 		assertEquals("t1", result.get("f1"));
 		assertEquals("t1", result.get("f11"));
@@ -82,9 +82,24 @@ public class ExtractorCssTest {
 	public void testType() throws Exception {
 		Content content = new Content(new URL("http://some.blog.ir2"), testPageContent, "UTF-8", "text/html");
 		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
-		Map<String, String> result = extractedDocs.get(0).getFields();
+		Map<String, Object> result = extractedDocs.get(0).getFields();
 
 		assertEquals("world!", result.get("f12"));
+	}
+
+	@Test
+	public void testMultiValues() throws Exception {
+		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
+		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
+		Map<String, Object> result = extractedDocs.get(0).getFields();
+
+		Object multi = result.get("multi");
+		assertTrue(multi instanceof List);
+		assertEquals("v1", ((List<?>) multi).get(0));
+		assertEquals("v2", ((List<?>) multi).get(1));
+
+		multi = result.get("no-multi");
+		assertEquals("v2", multi);
 	}
 
 	@Test
@@ -116,7 +131,7 @@ public class ExtractorCssTest {
 		Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
 		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 
-		Map<String, String> result = extractedDocs.get(0).getFields();
+		Map<String, Object> result = extractedDocs.get(0).getFields();
 
 		assertEquals("t1 t2", result.get("content"));
 	}

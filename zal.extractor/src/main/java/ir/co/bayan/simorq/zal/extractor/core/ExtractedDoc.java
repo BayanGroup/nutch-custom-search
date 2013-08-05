@@ -47,7 +47,7 @@ public class ExtractedDoc {
 
 	}
 
-	private final Map<String, String> fields = new HashMap<String, String>();
+	private final Map<String, Object> fields = new HashMap<>();
 	private String url;
 	private String title;
 	private List<LinkData> outlinks = new ArrayList<>();
@@ -57,15 +57,15 @@ public class ExtractedDoc {
 	/**
 	 * @return the fields
 	 */
-	public Map<String, String> getFields() {
+	public Map<String, Object> getFields() {
 		return fields;
 	}
 
-	public String getField(String name) {
+	public Object getField(String name) {
 		return fields.get(name);
 	}
 
-	public void addField(String name, String value) {
+	public void addField(String name, Object value) {
 		fields.put(name, value);
 	}
 

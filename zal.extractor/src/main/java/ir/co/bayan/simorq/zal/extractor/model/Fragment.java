@@ -51,16 +51,25 @@ public class Fragment extends Rooted {
 		return docs;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void extractFields(Object subRoot, EvaluationContext context, ExtractedDoc extractedDoc) throws Exception {
 		for (ExtractTo extractTo : extractTos) {
-			Field field = extractTo.getField();
-			if (field != null) {
-				List<String> res = extractTo.extract(subRoot, context);
-				if (res != null) {
-					StringBuilder fieldValue = new StringBuilder();
-					join(fieldValue, res);
+			List<String> res = extractTo.extract(subRoot, context);
+			if (res != null) {
+				Field field = extractTo.getField();
+				StringBuilder fieldValue = new StringBuilder();
+				join(fieldValue, res);
+				if (field.isMulti()) {
+					Object values = extractedDoc.getField(field.getName());
+					if (values != null) {
+						((List<String>) values).add(fieldValue.toString());
+					} else {
+						List<String> fieldValueList = new ArrayList<>();
+						fieldValueList.add(fieldValue.toString());
+						extractedDoc.addField(field.getName(), fieldValueList);
+					}
+				} else
 					extractedDoc.addField(field.getName(), fieldValue.toString());
-				}
 			}
 		}
 	}
@@ -75,22 +84,22 @@ public class Fragment extends Rooted {
 	}
 
 	protected void insertSpecialFields(EvaluationContext context, ExtractedDoc extractedDoc) {
-		String url = extractedDoc.getFields().get(URL_FIELD);
+		Object url = extractedDoc.getFields().get(URL_FIELD);
 		if (url != null)
-			extractedDoc.setUrl(url);
+			extractedDoc.setUrl(url.toString());
 		else
 			throw new RuntimeException("Url field for a document or fragment can not be null. Current url: "
 					+ context.getContent().getUrl());
 
-		String title = extractedDoc.getFields().get(TITLE_FIELD);
+		Object title = extractedDoc.getFields().get(TITLE_FIELD);
 		if (title != null)
-			extractedDoc.setTitle(title);
+			extractedDoc.setTitle(title.toString());
 		else
-			extractedDoc.setTitle(url);
+			extractedDoc.setTitle(url.toString());
 
-		String text = extractedDoc.getFields().get(TEXT_FIELD);
+		Object text = extractedDoc.getFields().get(TEXT_FIELD);
 		if (text != null) {
-			extractedDoc.setText(text);
+			extractedDoc.setText(text.toString());
 		} else
 			extractedDoc.setText("");
 	}

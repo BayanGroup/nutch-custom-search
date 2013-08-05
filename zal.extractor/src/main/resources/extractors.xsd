@@ -12,6 +12,7 @@
 	<xs:complexType name="fieldType">
 		<xs:attribute type="xs:ID" name="name" use="required" />
 		<xs:attribute type="xs:IDREF" name="type" use="optional" />
+		<xs:attribute type="xs:boolean" name="multi" use="optional" default="false"/>
 	</xs:complexType>
 	
 	<xs:complexType name="extractToType">

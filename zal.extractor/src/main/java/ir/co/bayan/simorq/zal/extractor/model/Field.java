@@ -18,6 +18,9 @@ public class Field {
 	@XmlAttribute(name = "type")
 	private TypeDef type;
 
+	@XmlAttribute
+	private boolean multi = false;
+
 	/**
 	 * @return the name
 	 */
@@ -27,6 +30,13 @@ public class Field {
 
 	public TypeDef getType() {
 		return type;
+	}
+
+	/**
+	 * @return the multi
+	 */
+	public boolean isMulti() {
+		return multi;
 	}
 
 	@Override

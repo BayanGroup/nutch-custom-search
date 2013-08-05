@@ -31,8 +31,7 @@
 		<field name="url"/>
 		<field name="title" />
 		<field name="content" />
-		<field name="domain" />
-		<field name="sub-domain" />
+		<field name="site" multi="true" />
 		<field name="boost" type="float" />
 	</fields>
 	<documents>
@@ -42,13 +41,20 @@
 					<expr value="title" />
 				</text>
 			</extract-to>
+			<extract-to field="site">
+				<replace pattern="^.+?://(.+?\.)(.+?)/.*" substitution="$2">
+					<url/>
+				</replace>
+			</extract-to>
+			<extract-to field="site">
+				<replace pattern="^.+?://(.+?)/.*" substitution="$1">
+					<url/>
+				</replace>
+			</extract-to>
 		</document>
 		<document id="blog-ir" inherits="common">
 			<extract-to field="csi">
 				<constant value="1479467467723760090"/>
-			</extract-to>
-			<extract-to field="domain">
-				<constant value="blog.ir"/>
 			</extract-to>
 			<extract-to field="boost">
 				<constant value="1.0"/>
@@ -63,11 +69,6 @@
 						</first>
 					</text>
 				</trim>
-			</extract-to>
-			<extract-to field="sub-domain">
-				<replace pattern="^http://(.+?\.blog.ir).*" substitution="$1">
-					<url/>
-				</replace>
 			</extract-to>
 		</document>
 		<document id="blog-ir-post-page" inherits="blog-ir-page">
@@ -171,11 +172,21 @@
 			</extract-to>			
 		</document>
 		<document url="blog.ir/category" inherits="blog-ir-page" engine="css">
+			<extract-to field="content">
+				<text>
+					<expr value=".post"/>
+				</text>
+			</extract-to>
 			<extract-to field="document-type">
 				<constant value="category"/>
 			</extract-to>
 		</document>
 		<document url="blog.ir/tag" inherits="blog-ir-page" engine="css">
+			<extract-to field="content">
+				<text>
+					<expr value=".post"/>
+				</text>
+			</extract-to>
 			<extract-to field="document-type">
 				<constant value="tag"/>
 			</extract-to>
@@ -224,6 +235,11 @@
 			<extract-to field="blog-desc">
 				<text>
 					<expr value=".blog_description"/>
+				</text>
+			</extract-to>
+			<extract-to field="content">
+				<text>
+					<expr value="body"/>
 				</text>
 			</extract-to>
 			<extract-to field="description">

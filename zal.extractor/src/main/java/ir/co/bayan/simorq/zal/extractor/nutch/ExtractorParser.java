@@ -91,8 +91,15 @@ public class ExtractorParser implements Parser {
 
 	private ParseData getParseData(Content content, ExtractedDoc doc) throws MalformedURLException {
 		Metadata parseMeta = new Metadata();
-		for (Entry<String, String> entry : doc.getFields().entrySet()) {
-			parseMeta.add(entry.getKey(), entry.getValue());
+		for (Entry<String, Object> entry : doc.getFields().entrySet()) {
+			Object value = entry.getValue();
+			// Check if it is a multi value
+			if (value instanceof List) {
+				for (Object valueItem : (List<?>) value) {
+					parseMeta.add(entry.getKey(), valueItem.toString());
+				}
+			} else
+				parseMeta.add(entry.getKey(), value.toString());
 		}
 		parseMeta.add(ExtractorIndexingFilter.MATCHED_DOC, "true");
 		if (doc.isUpdate())

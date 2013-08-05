@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlIDREF;
 public class ExtractTo extends FunctionHolder {
 
 	@XmlIDREF
-	@XmlAttribute
+	@XmlAttribute(required = true)
 	private Field field;
 
 	public Field getField() {

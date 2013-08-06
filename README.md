@@ -147,6 +147,7 @@ Function name | Description
 attribute | Extracts the value of attribute with specified name from input objects.
 concat | Concats its inputs by the provided delimiter.
 constant | Always returns a fixed constant.
+decode | Decodes the given url string.
 expr | Evaluates an expression using the current engine and returnes the list of result objects. The evaluation is done in the scope of current root. By default all document is the current root unless it is changed using for-each.
 fetch | Fetches a content from the given url and evaluates it with the specified engine.
 field-value | Returns the extracted value of the given field.

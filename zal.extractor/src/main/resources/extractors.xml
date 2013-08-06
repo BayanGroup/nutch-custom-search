@@ -29,6 +29,7 @@
 		<field name="document-type" />
 		<field name="csi" type="long"/>
 		<field name="url"/>
+		<field name="display-url" />
 		<field name="title" />
 		<field name="content" />
 		<field name="site" multi="true" />
@@ -36,10 +37,19 @@
 	</fields>
 	<documents>
 		<document id="common" engine="css">
+			<extract-to field="display-url">
+				<decode>
+					<url />
+				</decode>
+			</extract-to>
 			<extract-to field="title">
-				<text>
-					<expr value="title" />
-				</text>
+				<truncate max="100">
+					<text>
+						<first>
+							<expr value="title" />
+						</first>
+					</text>
+				</truncate>
 			</extract-to>
 			<extract-to field="site">
 				<replace pattern="^.+?://(.+?\.)(.+?)/.*" substitution="$2">

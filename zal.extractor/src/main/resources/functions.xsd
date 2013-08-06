@@ -21,6 +21,7 @@
 			<xs:element name="for-each" type="forEachType" />
 			<xs:element name="fetch" type="fetchType" />
 			<xs:element name="field-value" type="fieldValueType" />
+			<xs:element name="decode" type="decodeType" />
 		</xs:choice>
 	</xs:group>
 	
@@ -168,6 +169,18 @@
 		<xs:annotation>
 			<xs:documentation source="description">
 				 Resolves a possible relative url to absolute one based on the current url in the context.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="decodeType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Decodes the given url string.
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>

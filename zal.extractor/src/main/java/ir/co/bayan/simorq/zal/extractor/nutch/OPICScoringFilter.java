@@ -36,6 +36,7 @@ import org.apache.nutch.scoring.ScoringFilter;
 import org.apache.nutch.scoring.ScoringFilterException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 // Slf4j Logging imports
 
 /**
@@ -90,6 +91,7 @@ public class OPICScoringFilter implements ScoringFilter {
 	}
 
 	/** Increase the score by a sum of inlinked scores. */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void updateDbScore(Text url, CrawlDatum old, CrawlDatum datum, List inlinked) throws ScoringFilterException {
 		float adjust = 0.0f;

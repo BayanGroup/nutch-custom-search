@@ -26,7 +26,7 @@
 		<field name="description" />
 		<field name="modification-date" type="date-time"/>
 		<field name="author" />
-		<field name="document-type" />
+		<field name="document-type" multi="true" />
 		<field name="csi" type="long"/>
 		<field name="url"/>
 		<field name="display-url" />
@@ -43,7 +43,7 @@
 				</decode>
 			</extract-to>
 			<extract-to field="title">
-				<truncate max="100">
+				<truncate max="100" append=" ...">
 					<text>
 						<first>
 							<expr value="title" />
@@ -151,6 +151,9 @@
 			<extract-to field="document-type">
 				<constant value="post"/>
 			</extract-to>
+			<extract-to field="document-type">
+				<constant value="blog"/>
+			</extract-to>
 		</document>
 		<document url="blog.ir/page" inherits="blog-ir-post-page">
 			<extract-to field="content">
@@ -158,6 +161,9 @@
 			</extract-to>
 			<extract-to field="document-type">
 				<constant value="page"/>
+			</extract-to>
+			<extract-to field="document-type">
+				<constant value="blog"/>
 			</extract-to>
 		</document>
 		<document url="blog.ir/sitemap.xml" engine="xpath">
@@ -179,6 +185,9 @@
 			</outlinks>
 			<extract-to field="document-type">
 				<constant value="sitemap"/>
+			</extract-to>
+			<extract-to field="document-type">
+				<constant value="blog"/>
 			</extract-to>			
 		</document>
 		<document url="blog.ir/category" inherits="blog-ir-page" engine="css">
@@ -190,6 +199,9 @@
 			<extract-to field="document-type">
 				<constant value="category"/>
 			</extract-to>
+			<extract-to field="document-type">
+				<constant value="blog"/>
+			</extract-to>
 		</document>
 		<document url="blog.ir/tag" inherits="blog-ir-page" engine="css">
 			<extract-to field="content">
@@ -199,6 +211,9 @@
 			</extract-to>
 			<extract-to field="document-type">
 				<constant value="tag"/>
+			</extract-to>
+			<extract-to field="document-type">
+				<constant value="blog"/>
 			</extract-to>
 		</document>
 		<document url="blog.ir/?$" inherits="blog-ir-page">
@@ -264,6 +279,9 @@
 						<expr value=".tagcloud"/>
 					</text>
 				</trim>
+			</extract-to>
+			<extract-to field="document-type">
+				<constant value="home"/>
 			</extract-to>
 			<extract-to field="document-type">
 				<constant value="blog"/>

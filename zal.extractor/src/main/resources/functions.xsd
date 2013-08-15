@@ -86,12 +86,13 @@
 	<xs:complexType name="truncateType">
 		<xs:annotation>
 			<xs:documentation source="description">
-				Truncates a string if its size is greater than max.
+				Truncates a string if its size is greater than max. In this case, it appends, the specified append string to the result
 			</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="singleFunctionType">
 				<xs:attribute name="max" type="xs:integer" use="required" />
+				<xs:attribute name="append" type="xs:string" use="optional" />
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

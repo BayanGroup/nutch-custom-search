@@ -10,7 +10,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.commons.lang3.Validate;
 
 /**
- * Truncates a string if its size is greater than max.
+ * Truncates a string if its size is greater than max. In this case, it appends, the specified append string to the
+ * result
  * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
@@ -20,6 +21,9 @@ public class Truncate extends Function {
 
 	@XmlAttribute
 	private int max;
+
+	@XmlAttribute
+	private String append;
 
 	/**
 	 * @return the max
@@ -36,6 +40,21 @@ public class Truncate extends Function {
 		this.max = max;
 	}
 
+	/**
+	 * @return the append
+	 */
+	public String getAppend() {
+		return append;
+	}
+
+	/**
+	 * @param append
+	 *            the append to set
+	 */
+	public void setAppend(String append) {
+		this.append = append;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<?> extract(Object root, EvaluationContext context) throws Exception {
@@ -45,6 +64,8 @@ public class Truncate extends Function {
 			String item = res.get(i);
 			if (item != null && item.length() > max) {
 				item = item.substring(0, max);
+				if (append != null)
+					item = item + append;
 				res.set(i, item);
 			}
 		}

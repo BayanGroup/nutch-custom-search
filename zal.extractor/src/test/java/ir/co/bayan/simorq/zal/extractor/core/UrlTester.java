@@ -16,6 +16,7 @@ import java.util.List;
  * 
  */
 public class UrlTester {
+
 	public static void main(String[] args) {
 		try {
 			testUrl("http://ashpazi.blog.ir/tag/%D8%BA%D8%B0%D8%A7%DB%8C%20%D8%B3%D9%86%D8%AA%DB%8C");

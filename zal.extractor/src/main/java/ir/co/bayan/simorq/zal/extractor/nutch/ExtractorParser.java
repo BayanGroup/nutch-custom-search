@@ -34,7 +34,6 @@ public class ExtractorParser implements Parser {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExtractorParser.class);
 
 	private Configuration conf;
-	private ExtractEngine extractEngine;
 	private String defaultEncoding;
 
 	@Override
@@ -47,23 +46,20 @@ public class ExtractorParser implements Parser {
 		this.conf = configuration;
 		defaultEncoding = configuration.get("parser.character.encoding.default", "UTF-8");
 		try {
-			initConf();
+			ExtractEngine.getInstance().setConf(ExtractorConfig.readConfig(conf));
 		} catch (Exception e) {
 			LOGGER.error("", e);
 		}
 
 	}
 
-	private void initConf() throws Exception {
-		extractEngine = new ExtractEngine(ExtractorConfig.readConfig(conf));
-	}
-
 	@Override
 	public ParseResult getParse(Content content) {
 		ParseResult parseResult = new ParseResult(content.getUrl());
 		try {
-			List<ExtractedDoc> docs = extractEngine.extract(new ir.co.bayan.simorq.zal.extractor.core.Content(new URL(
-					content.getUrl()), content.getContent(), getEncoding(content), content.getContentType()));
+			List<ExtractedDoc> docs = ExtractEngine.getInstance().extract(
+					new ir.co.bayan.simorq.zal.extractor.core.Content(new URL(content.getUrl()), content.getContent(),
+							getEncoding(content), content.getContentType()));
 			if (docs != null) {
 				for (ExtractedDoc doc : docs) {
 					if (LOGGER.isDebugEnabled())

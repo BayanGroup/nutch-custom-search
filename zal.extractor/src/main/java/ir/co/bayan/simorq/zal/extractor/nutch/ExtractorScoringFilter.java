@@ -9,6 +9,8 @@ import org.apache.nutch.parse.Parse;
 import org.apache.nutch.scoring.ScoringFilterException;
 
 /**
+ * This scoring filter, adjust the indexer score (aka boost) from "boost" field in the document, if any.
+ * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */

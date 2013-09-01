@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 // Slf4j Logging imports
 
 /**
+ * This file is just included for inheritance and no changes are made to it.
+ * 
  * This plugin implements a variant of an Online Page Importance Computation (OPIC) score, described in this paper: <a
  * href="http://www2003.org/cdrom/papers/refereed/p007/p7-abiteboul.html"/> Abiteboul, Serge and Preda, Mihai and
  * Cobena, Gregory (2003), Adaptive On-Line Page Importance Computation </a>.

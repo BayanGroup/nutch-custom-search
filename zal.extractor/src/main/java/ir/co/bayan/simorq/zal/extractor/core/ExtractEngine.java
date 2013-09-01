@@ -18,7 +18,7 @@ import org.apache.commons.lang3.Validate;
 /**
  * Extracts parts of an HTML or XML file based on the defined extract rules in the provided config file. Note that
  * although the configuration file has the types section, this class does not perform any type specific actions such as
- * type conversions. This class is thread-safe.
+ * type conversions. This class is thread-safe and you can configure it only once.
  * 
  * @see XPathEvaluator
  * @see CssEvaluator
@@ -28,11 +28,32 @@ import org.apache.commons.lang3.Validate;
  */
 public class ExtractEngine {
 
-	private final ExtractorConfig extractorConfig;
-	private final Map<String, Document> docById;
+	private ExtractorConfig extractorConfig;
+	private Map<String, Document> docById;
+
+	private static ExtractEngine instance;
+
+	/**
+	 * @return the instance
+	 */
+	public static ExtractEngine getInstance() {
+		if (instance == null)
+			instance = new ExtractEngine();
+		return instance;
+	}
+
+	public ExtractEngine() {
+	}
 
 	public ExtractEngine(ExtractorConfig extractorConfig) throws Exception {
+		setConf(extractorConfig);
+	}
+
+	public void setConf(ExtractorConfig extractorConfig) throws Exception {
 		Validate.notNull(extractorConfig);
+		// One time configuration
+		if (this.extractorConfig != null)
+			return;
 
 		this.extractorConfig = extractorConfig;
 		docById = new HashMap<>(extractorConfig.getDocuments().size() * 2 + 1);
@@ -69,7 +90,7 @@ public class ExtractEngine {
 		Validate.notNull(content);
 
 		// 1. Decide on which document matches the url and contentType
-		Document document = findMatchingDoc(content);
+		Document document = findMatchingDoc(content.getUrl().toString(), content.getType());
 		if (document == null) {
 			return null;
 		}
@@ -89,9 +110,9 @@ public class ExtractEngine {
 		return StringUtils.defaultIfEmpty(document.getInheritedEngine(), extractorConfig.getDefaultEngine());
 	}
 
-	private Document findMatchingDoc(Content content) throws Exception {
+	public Document findMatchingDoc(String url, String contentType) {
 		for (Document doc : extractorConfig.getDocuments()) {
-			if (doc.matches(content.getUrl().toString(), content.getType()))
+			if (doc.matches(url, contentType))
 				return doc;
 		}
 		return null;

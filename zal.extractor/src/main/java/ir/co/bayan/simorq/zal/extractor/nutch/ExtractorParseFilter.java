@@ -35,7 +35,6 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExtractorParseFilter.class);
 
 	private Configuration configuration;
-	private ExtractEngine extractEngine;
 	private String defaultEncoding;
 
 	@Override
@@ -43,10 +42,10 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 			DocumentFragment documentFragment) {
 		try {
 			String encoding = getEncoding(content, parseResult);
-			List<ExtractedDoc> extractedDocs = extractEngine.extract(
+			List<ExtractedDoc> extractedDocs = ExtractEngine.getInstance().extract(
 
-			new ir.co.bayan.simorq.zal.extractor.core.Content(new URL(content.getUrl()), content.getContent(),
-					encoding, content.getContentType()));
+					new ir.co.bayan.simorq.zal.extractor.core.Content(new URL(content.getUrl()), content.getContent(),
+							encoding, content.getContentType()));
 			if (extractedDocs != null) {
 				for (ExtractedDoc doc : extractedDocs) {
 					addExtractedDocToParseResult(content, parseResult, doc);
@@ -104,15 +103,11 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 		this.configuration = configuration;
 		defaultEncoding = configuration.get("parser.character.encoding.default", "UTF-8");
 		try {
-			initConf();
+			ExtractEngine.getInstance().setConf(ExtractorConfig.readConfig(configuration));
 		} catch (Exception e) {
 			LOGGER.error("", e);
 		}
 
-	}
-
-	private void initConf() throws Exception {
-		extractEngine = new ExtractEngine(ExtractorConfig.readConfig(configuration));
 	}
 
 }

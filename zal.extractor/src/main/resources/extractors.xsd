@@ -55,6 +55,8 @@
 		<xs:attribute name="engine" type="xs:string" use="optional" default="css"/>
 		<xs:attribute name="root" type="xs:string"/>
 		<xs:attribute name="update" type="xs:boolean" default="false"/>
+		<xs:attribute name="every" type="xs:string" use="optional" />
+		<xs:attribute name="adaptive" type="xs:boolean" use="optional" default="true"/>
 	</xs:complexType>
 
 	<xs:element name="config">

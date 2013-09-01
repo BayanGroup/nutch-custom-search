@@ -51,6 +51,12 @@ public class Document extends Fragment {
 	@XmlAttribute
 	private boolean update = false;
 
+	private String every;
+	private Integer everyInMiliSecond;
+
+	@XmlAttribute
+	private boolean adaptive = true;
+
 	/**
 	 * @return the url
 	 */
@@ -138,10 +144,72 @@ public class Document extends Fragment {
 	}
 
 	/**
+	 * @return the every
+	 */
+	public String getEvery() {
+		return every;
+	}
+
+	/**
+	 * @param every
+	 *            the fetch schedule
+	 */
+	@XmlAttribute
+	public void setEvery(String every) {
+		this.every = every;
+		computeEveryInMiliSecond();
+	}
+
+	private void computeEveryInMiliSecond() {
+		String every = getInheritedEvery();
+		if (every == null)
+			return;
+		char unit = every.charAt(every.length() - 1);
+		int amount = Integer.valueOf(every.substring(0, every.length() - 1));
+		switch (unit) {
+		case 'm':
+			everyInMiliSecond = amount * 60 * 1000;
+			break;
+		case 'h':
+			everyInMiliSecond = amount * 60 * 60 * 1000;
+			break;
+		case 'd':
+			everyInMiliSecond = amount * 24 * 60 * 60 * 1000;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown unit in " + every);
+		}
+	}
+
+	public Integer getEveryInMiliSecond() {
+		return everyInMiliSecond;
+	}
+
+	public String getInheritedEvery() {
+		return getEvery(this);
+	}
+
+	private String getEvery(Document document) {
+		if (document == null)
+			return null;
+		if (!StringUtils.isEmpty(document.getEvery())) {
+			return document.getEvery();
+		}
+		return getEvery(document.getInherits());
+	}
+
+	/**
 	 * Tries to find engine from document hierarchy
 	 */
 	public String getInheritedEngine() {
 		return getEngine(this);
+	}
+
+	/**
+	 * @return the adaptive
+	 */
+	public boolean isAdaptive() {
+		return adaptive;
 	}
 
 	private String getEngine(Document document) {

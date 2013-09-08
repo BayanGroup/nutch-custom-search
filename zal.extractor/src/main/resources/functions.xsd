@@ -93,6 +93,7 @@
 			<xs:extension base="singleFunctionType">
 				<xs:attribute name="max" type="xs:integer" use="required" />
 				<xs:attribute name="append" type="xs:string" use="optional" />
+				<xs:attribute name="breakOnWhitespaces" type="xs:boolean" use="optional" default="false"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

@@ -44,7 +44,7 @@
 				</decode>
 			</extract-to>
 			<extract-to field="title">
-				<truncate max="100" append=" ...">
+				<truncate max="100" append="..." breakOnWhitespaces="true">
 					<text>
 						<first>
 							<expr value="title" />

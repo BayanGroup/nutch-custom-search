@@ -16,6 +16,10 @@ import org.apache.commons.lang3.Validate;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
+/**
+ * @author Taha Ghasemi <taha.ghasemi@gmail.com>
+ * 
+ */
 @XmlRootElement
 public class Truncate extends Function {
 
@@ -24,6 +28,12 @@ public class Truncate extends Function {
 
 	@XmlAttribute
 	private String append;
+
+	/**
+	 * Indicates whether this function should only break the given item on whitespace characters
+	 */
+	@XmlAttribute
+	private boolean breakOnWhitespaces = false;
 
 	/**
 	 * @return the max
@@ -55,6 +65,21 @@ public class Truncate extends Function {
 		this.append = append;
 	}
 
+	/**
+	 * @return the breakOnWhitespaces
+	 */
+	public boolean isBreakOnWhitespaces() {
+		return breakOnWhitespaces;
+	}
+
+	/**
+	 * @param breakOnWhitespaces
+	 *            the breakOnWhitespaces to set
+	 */
+	public void setBreakOnWhitespaces(boolean breakOnWhitespaces) {
+		this.breakOnWhitespaces = breakOnWhitespaces;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<?> extract(Object root, EvaluationContext context) throws Exception {
@@ -63,7 +88,12 @@ public class Truncate extends Function {
 		for (int i = 0; i < res.size(); i++) {
 			String item = res.get(i);
 			if (item != null && item.length() > max) {
-				item = item.substring(0, max);
+				int last = max - 1;
+				if (breakOnWhitespaces)
+					while (last >= 0 && !Character.isWhitespace(item.charAt(last))) {
+						last--;
+					}
+				item = item.substring(0, last + 1);
 				if (append != null)
 					item = item + append;
 				res.set(i, item);

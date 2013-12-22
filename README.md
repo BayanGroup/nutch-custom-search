@@ -1,25 +1,26 @@
 nutch-custom-search
 ===================
 
-The goal of this project is to develope plugins/extentions for nutch to make it a perfect tool for building custom search solutions for dirrerent sites.
+The goal of this project is to develope plugins/extentions for nutch to make it a perfect tool for building custom search solutions for dirrerent sites. 
+The project is an open-source project with Apache License Version 2.0.
 
 Extractor
 ---------
 
 Extractor helps to extract different parts of an html/xml page using xpath expressioins or css selectors. 
 The extracted parts are copied into the specified fields of documents.
-This enables to have different docuements for different pages each with their own fields.
-Next, one can instruct solr to search over these fields with appropriate boosts, which results to better search experience for end users.
+This enables to have different docuements for different types of pages each with their own fields.
+Next, one can instruct solr to search over these fields with appropriate boosts, which results to a better search experience for end users.
 
 Extractor consists of a parser plugin, an html parser filter, and an indexer filter. You can use extractor in two modes:
 
 1. Use extractor to extract additional fields inaddition of the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to the standard html parser as a parser filter. So html parser first parses the content, extracts its fields and outlinks, and then passes the content to the extractor parser filter. Extractor filter, parses the content again and adds some additional fields to parse metadata. Later, the extractor indexer filter reads this parse metadata and adds the corresponding fields to solr documents. 
 
-2. Use extractor as a standalone parser. In this mode, extractor is responsible for the whole parsing process including the extraction of title, outlinks, ... You can use extractor to parse both xml and html files. The available index filters in the nutch has little use, since standard fields are not available any more. 
+2. Use extractor as a standalone parser. In this mode, extractor is responsible for the whole parsing process including the extraction of title, outlinks, .... In this mode, you can use extractor to parse both xml and html files. The available index filters in the nutch has little use, since standard fields are not available any more. 
 
 ### Setup
 
-1) Copy plugins/extractor to your nutch's plugins directory.
+1) Copy plugins/extractor to your nutch's plugins directory. Note that the jar is built with java 7, so if you are using a lower version of java, you should compile it yourself by downloading the zal.extractor project and built it with maven.
 
 2) Enable extractor plugin by adding its name to plugin.includes property in the nutch-site.xml (inside nutch conf directory). If you use mode 2, you can disable other parser/indexer plugins e.g. you can use this:
 
@@ -128,10 +129,10 @@ Here is a very simple extractors.xml file containing all of the above sections:
 </config>
 ```
 
-The purpose of this file is to extract the number of itmes in the topmost bar of google web page and put it in a field with name num-items.
+The purpose of this file is to extract the number of items in the topmost bar of the google homepage and put it in a field named num-items.
 In this file, we have one type named long with a converter. This converter is used to convert the extracted value (a string) to desired type.
 Also we have a field named "num-items".
-In the documents section, we defined a document wich accepts all resoruces with url ending with .google.com. The document specifies that its content should be parsed using css engine.
+In the documents section, we defined a document which accepts all resoruces with url ending with .google.com. The document specifies that its content should be parsed using css engine.
 This document has only one extract-to rule which consists of two nested functions size and expr. 
 The expr function returens a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
 The size function, returnes the number of its argument which here is the list of elements that satisfy li.gbt expression.

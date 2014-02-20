@@ -104,7 +104,7 @@ css (which parses the content using jsoup library and is able to answer css sele
 xpath (which uses the standard JAXP infrastrucutre and is able to answer xpath expressions),
 txt (suitable for line oriented processing of text files). 
 Each document consits of a set of extract-to rules. An extract-to rule extracts a value from the content and put the extracted value into its defined field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions. 
-Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Also each document can have an id and other documents can inherit its fields by specifying its id in their inherits attribute.
+
 
 Here is a sample extractors.xml file containing all of the above sections:
 
@@ -140,8 +140,10 @@ Here is a sample extractors.xml file containing all of the above sections:
 
 The purpose of this file is to extract the number of items in the topmost bar of the google homepage and put it in a field named num-items. We also extract the concatenation of their names into the field named all-items. 
 In this file, we have one type named long with a converter. This converter is used to convert the extracted value (a string) to the desired type.
-Also we have a field named "num-items" of type long and a field named "all-items" of type string.
+
+In the fields section, we have a field named "num-items" of type long and a field named "all-items" of type string.
 In the documents section, we defined a document which accepts all resoruces with url ending with .google.com. Since the extractor uses the partial regex matching we could write this as "google\.com/?$" too. The document specifies that its content should be parsed using the css engine.
+
 This document has two extract-to rules. The first rule consists of two nested functions size and expr. 
 The "expr" function returens a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
 The size function, returnes the number of its argument which here is the list of elements that satisfy li.gbt expression.
@@ -174,6 +176,86 @@ truncate | Truncates a string if its size is greater than max.
 trim | Trims a string.
 url | Returns the current url in the context.
 
+### Documents
 
+Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are three samples:
 
+```xml
+<document url=".">
+	<outlinks>
+		<link>
+			<href>
+				<concat delimiter="">
+					<url />
+					<constant value="sitemap.xml" />
+				</concat>
+			</href>
+		</link>
+	</outlinks>
+</document>
+```
 
+```xml
+<document url="." engine="css">
+	<outlinks>
+		<link>
+			<href>
+				<resolve>
+					<attribute name="href">
+						<expr value="a[rel!=nofollow]"/>
+					</attribute>
+				</resolve>
+			</href>
+		</link>
+	</outlinks>
+</document>
+```
+
+```xml
+<document url="sitemap.xml" engine="xpath">
+	<outlinks>
+		<for-each root="dns:url"> 
+			<link>
+				<href>
+					<text>
+						<expr value="./dns:loc" />
+					</text>
+				</href>
+				<anchor>
+					<text>
+						<expr value="./blog:dloc" />
+					</text>
+				</anchor>
+			</link>
+		</for-each>
+	</outlinks>
+</document>
+```
+
+Note that "dns" is reserved word which stands for "default xml name space".
+
+Also each document can have an id and other documents can inherit its fields by specifying its id in their inherits attribute. For example:
+
+```xml
+<document id="base" engine="css">
+	<extract-to field="display-url">
+		<decode>
+			<url />
+		</decode>
+	</extract-to>
+	<extract-to field="subdomain">
+		<replace pattern="^[^:]+://([^:/]+)(:([0-9]+))?/.*" substitution="$1">
+			<url/>
+		</replace>
+	</extract-to>
+</document
+<document url="." inherits="base">
+	<extract-to field="modification-date" >
+		<attribute name="content">
+			<expr value="meta[name=date]"/>
+		</attribute>
+	</extract-to>	
+</document>
+```
+
+Note that the evaluation engine can not be change along the inheritance hierarchy. 

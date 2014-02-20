@@ -146,8 +146,8 @@ In the documents section, we defined a document which accepts all resoruces with
 
 This document has two extract-to rules. The first rule consists of two nested functions size and expr. 
 The "expr" function returens a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
-The size function, returnes the number of its argument which here is the list of elements that satisfy li.gbt expression.
-This extracted value is copied into field named "num-items".
+The size function, returnes the number of items in its argument which here is the list of elements that satisfy li.gbt expression.
+This extracted value is copied into a field named "num-items".
 In the second rule, we first extract the text value of all li.gbt span.gbts nodes, then concat them with comma as the seperator and then limit their size to have less than 100 charcters. 
 
 ### Functions
@@ -232,7 +232,7 @@ Each document may specifiy an outlinks section that tells extractor how outlinks
 </document>
 ```
 
-Note that "dns" is reserved word which stands for "default xml name space".
+Note that "dns" is a reserved word which stands for "default xml name space".
 
 Also each document can have an id and other documents can inherit its fields by specifying its id in their inherits attribute. For example:
 
@@ -248,8 +248,8 @@ Also each document can have an id and other documents can inherit its fields by 
 			<url/>
 		</replace>
 	</extract-to>
-</document
-<document url="." inherits="base">
+</document>
+<document id="common" url="." inherits="base">
 	<extract-to field="modification-date" >
 		<attribute name="content">
 			<expr value="meta[name=date]"/>
@@ -258,4 +258,4 @@ Also each document can have an id and other documents can inherit its fields by 
 </document>
 ```
 
-Note that the evaluation engine can not be change along the inheritance hierarchy. 
+The inheritence chain can be of any length but note that the evaluation engine can not be changed along the inheritance hierarchy. 

@@ -4,6 +4,8 @@ nutch-custom-search
 The goal of this project is to develope plugins/extentions for Nutch to make it a perfect tool for building custom search solutions. 
 The project is an open-source project released under Apache License Version 2.0.
 
+Note: This project is tested with nutch 1.7 (nutch 2.X is not supported yet).
+
 Extractor
 ---------
 

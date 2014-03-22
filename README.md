@@ -15,7 +15,7 @@ The extracted parts are copied into one or several fields.
 
 Extractor consists of a parser plugin, an html parser filter, and an indexer filter. You can use extractor in two modes:
 
-1. Use extractor to extract additional fields inaddition of the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to the standard html parser as a parser filter. Html parser first parses the content, extracts its fields and outlinks, and then passes the content to the extractor parser filter. Extractor, parses the content again and adds some additional fields to the parse metadata. Later, the extractor indexer filter reads this parse metadata and adds the corresponding fields to solr documents. 
+1. Use extractor to extract additional fields inaddition of the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to the standard html parser as a parser filter. Html parser first parses the content, extracts its fields and outlinks, and then passes the content to the extractor parser filter. Extractor, parses the content again and adds some additional fields to the parse metadata. Later, the extractor indexer filter reads this parse metadata and adds the corresponding fields to solr documents.
 
 2. Use extractor as a standalone parser. In this mode, extractor is responsible for the whole parsing process including the extraction of title, outlinks, .... In this mode, you can use extractor to parse both xml and html files. 
 
@@ -147,23 +147,24 @@ In the fields section, we have a field named "num-items" of type long and a fiel
 In the documents section, we defined a document which accepts all resoruces with url ending with .google.com. Since the extractor uses the partial regex matching we could write this as "google\.com/?$" too. The document specifies that its content should be parsed using the css engine.
 
 This document has two extract-to rules. The first rule consists of two nested functions size and expr. 
-The "expr" function returens a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
-The size function, returnes the number of items in its argument which here is the list of elements that satisfy li.gbt expression.
+The "expr" function returns a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
+The size function, returns the number of items in its argument which here is the list of elements that satisfy li.gbt expression.
 This extracted value is copied into a field named "num-items".
 In the second rule, we first extract the text value of all li.gbt span.gbts nodes, then concat them with comma as the seperator and then limit their size to have less than 100 charcters. 
 
 ### Functions
 
-The following table lists available functions which can be used in extract-to rules. 
-All functions output a list of objects and takes as input a list of objects. Hence they can be nested (chained) to use output of one function as an input of another function.
+The following table lists the available functions which can be used in the extract-to rules. You can find their descriptions and attributes in the schema file.
+
+All functions output a list of objects and takes as input a list of objects. Hence they can be nested (chained) to use output of one function as an input of another function. Note that when Extractor wants to compute the value of an extract-to rule, it first calls the chain of functions and then the returned list first concatenated (with space as the separator char) and then, after a possible conversion, this value will be copied to the field.
 
 Function name | Description
 ------------- | -----------
-attribute | Extracts the value of attribute with specified name from input objects.
+attribute | Extracts the value of attribute with the specified name from the input elements.
 concat | Concats its inputs by the provided delimiter.
 constant | Always returns a fixed constant.
 decode | Decodes the given url string.
-expr | Evaluates an expression using the current engine and returnes the list of result objects. The evaluation is done in the scope of current root. By default all document is the current root unless it is changed using for-each.
+expr | Evaluates an expression using the current engine and returnes the list of result elements. The evaluation is done in the scope of current root. By default the document elemen is the root unless it is changed using for-each.
 fetch | Fetches a content from the given url and evaluates it with the specified engine.
 field-value | Returns the extracted value of the given field.
 first | Returns the first object in the list of its argument.
@@ -173,10 +174,29 @@ link  | Retunes a set of links with href and anchors.
 replace | Replaces its input using the provided regex pattern by the provided substitution.
 resolve | Resolves a possible relative url to absolute one based on the current url in the context.
 size | Returns the number of objects in its argument (which is a list).
-text  | Returns the text content of its input.
+text  | Returns the text content of its input elements.
 truncate | Truncates a string if its size is greater than max.
 trim | Trims a string.
-url | Returns the current url in the context.
+url | Returns the current url (the url of matched resource) in the context.
+
+### Types
+The following types are avaialbe out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
+
+```xml
+<types>
+	<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
+	<type name="float" converter="ir.co.bayan.simorq.zal.extractor.convert.FloatConverter" />
+	<type name="date" converter="ir.co.bayan.simorq.zal.extractor.convert.DateConverter" />
+	<type name="date-time" converter="ir.co.bayan.simorq.zal.extractor.convert.DateTimeConverter" />
+</types>
+```
+
+Type | Description
+------------- | -----------
+long | converts string to long
+float | converts string to float
+date-time | converts a string in the yyyy-MM-dd'T'HH:mm:ss format to a date
+date | converts a string in the dd/MM/yyyy format to a date
 
 ### Documents
 
@@ -247,14 +267,14 @@ Also each document can have an id and other documents can inherit its fields by 
 	</extract-to>
 	<extract-to field="subdomain">
 		<replace pattern="^[^:]+://([^:/]+)(:([0-9]+))?/.*" substitution="$1">
-			<url/>
+			<url />
 		</replace>
 	</extract-to>
 </document>
 <document id="common" url="." inherits="base">
 	<extract-to field="modification-date" >
 		<attribute name="content">
-			<expr value="meta[name=date]"/>
+			<expr value="meta[name=date]" />
 		</attribute>
 	</extract-to>	
 </document>

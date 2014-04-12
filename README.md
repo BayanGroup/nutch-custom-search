@@ -23,7 +23,9 @@ Extractor consists of a parser plugin, an html parser filter, and an indexer fil
 
 1) Copy plugins/extractor to your nutch's plugins directory. Note that the jar is built with java 7, so if you are using a lower version of java, you should compile it yourself by downloading the zal.extractor project and built it using maven.
 
-2) Enable extractor plugin by adding its name to the plugin.includes property in the nutch-site.xml (inside nutch conf directory). If you are useing mode 2, you can disable other parser/indexer plugins e.g. you can use something like this:
+2) Enable extractor plugin by adding its name to the plugin.includes property in the nutch-site.xml (inside nutch conf directory). 
+
+If you are using mode 2, you can disable other parser/indexer plugins, if you don't need them. For instance, you can use something like this:
 
 ```xml
 <property>
@@ -98,7 +100,7 @@ You can define a different name for this file by defining extractor.file propert
 The main configuration file is extractors.xml. This file has three sections:
 
 1. types: you can define your required types and their corresponding converters here. This section is optional.
-2. fields: contains all the fields that the extracted parts should be put into them. These fields should be define in the solrschema.xml file too to be recongnizable by solr. Each field has an optional type which is one of the types defined in the types section.
+2. fields: contains all the fields that the extracted parts should be put into them. These fields should be define in the solrschema.xml file too to be recongnizable by solr. Each field has a name and an optional type which is one of the types defined in the types section. If no type is specified, the field is considered as of type string.
 3. documents: contains one or several documents. For each resource (e.g. a web page) that you want to extract its content into the fields, you need to define a document. Each docuement declares its accepting urls by means of regex expressions. When a resource with a specific url and some content is fetched by nutch, 
 the extractor looks for a docuemnt that its url matches the resoruce url. If multiple matching documents are fround, the first one will be used. 
 Then, the contnet of the resource is parsed using an engine that specified by the dccument (or using the default engine if no engine is specified). Currently there are three engines avaialbe: 
@@ -107,11 +109,15 @@ xpath (which uses the standard JAXP infrastrucutre and is able to answer xpath e
 txt (suitable for line oriented processing of text files). 
 Each document consits of a set of extract-to rules. An extract-to rule extracts a value from the content and put the extracted value into its defined field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions. 
 
+The root element of extractors.xml must be named "config" and define the namesapce "http://bayan.ir" as the defualt namesapce. This element has the following optional attributes:
+1. omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is true.
+2. defaultEngine: the default engine for parsing resource contents if it is not defined by document (or any of its ancesstors). Default value is css.
+
 
 Here is a sample extractors.xml file containing all of the above sections:
 
 ```xml
-<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd" omitNonMatching="false">
 	<types>
 		<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
 	</types>
@@ -156,7 +162,7 @@ In the second rule, we first extract the text value of all li.gbt span.gbts node
 
 The following table lists the available functions which can be used in the extract-to rules. You can find their descriptions and attributes in the schema file.
 
-All functions output a list of objects and takes as input a list of objects. Hence they can be nested (chained) to use output of one function as an input of another function. Note that when Extractor wants to compute the value of an extract-to rule, it first calls the chain of functions and then the returned list first concatenated (with space as the separator char) and then, after a possible conversion, this value will be copied to the field.
+All functions output a list of objects and take as input a list of objects. Hence they can be nested (chained) to use output of one function as an input of another function. Note that when Extractor wants to compute the value of an extract-to rule, it first calls the chain of functions and then the returned list first concatenated (with space as the separator char) and then, after a possible conversion, if this value is not null or empty, it will be copied to the field.
 
 Function name | Description
 ------------- | -----------

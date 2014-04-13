@@ -110,6 +110,7 @@ txt (suitable for line oriented processing of text files).
 Each document consits of a set of extract-to rules. An extract-to rule extracts a value from the content and put the extracted value into its defined field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions. 
 
 The root element of extractors.xml must be named "config" and define the namesapce "http://bayan.ir" as the defualt namesapce. This element has the following optional attributes:
+
 1. omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is true.
 2. defaultEngine: the default engine for parsing resource contents if it is not defined by document (or any of its ancesstors). Default value is css.
 
@@ -204,6 +205,17 @@ float | converts string to float
 date-time | converts a string in the yyyy-MM-dd'T'HH:mm:ss format to a date
 date | converts a string in the dd/MM/yyyy format to a date
 
+### Fields
+
+There are three implict fields that you might use them without needing to be defined:
+
+1. url: the url of current document. This is mandantory and defaults to the matched resource url.
+2. title: the title of current document. If not specified, the url will be used as the title.
+3. content: the html content of this document which can be used by nutch plugins.
+
+For each field, you can set its "multi" attribute to true which enables multiple values to be defined for this field.
+
+
 ### Documents
 
 Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are three samples:
@@ -262,7 +274,7 @@ Each document may specifiy an outlinks section that tells extractor how outlinks
 
 Note that "dns" is a reserved word which stands for "default xml name space".
 
-Also each document can have an id and other documents can inherit its fields by specifying its id in their inherits attribute. For example:
+Also each document can have an id and other documents can inherit its fields and outlinks by specifying its id in their inherits attribute. For example:
 
 ```xml
 <document id="base" engine="css">
@@ -287,3 +299,26 @@ Also each document can have an id and other documents can inherit its fields by 
 ```
 
 The inheritence chain can be of any length but note that the evaluation engine can not be changed along the inheritance hierarchy. 
+
+There is an option to extract several documents from one given resource. To enable this, you can specify a root for your document or define one or several fragments inside your docuemtn each with a root. The root must be an expression in terms of the current engine, that specifies the new root for evaluation. e.g.
+
+```xml
+<document url="test.html" engine="css">
+	<fragment root=".doc">
+		<extract-to field="url">
+			<first>
+				<attribute name="href">
+				 	<expr value="a"/>
+				 </attribute>
+			</first>
+		</extract-to>
+		<extract-to field="content">
+			<text>
+				<expr value="a" />
+			</text>
+		</extract-to>
+	</fragment>
+</document>
+```
+
+In the above example, for each html element with css class "doc", one document will be created. The url of this document is extracted from the first href inside this element.

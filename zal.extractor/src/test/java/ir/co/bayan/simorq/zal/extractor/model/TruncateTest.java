@@ -45,7 +45,7 @@ public class TruncateTest {
 		when(extractor.extract(null, null)).thenReturn((List) Arrays.asList("", "aaa", "aaaaa", "aaaaaa", "aaa aaa"));
 		truncate.setArgs(Arrays.asList(extractor));
 		truncate.setMax(5);
-		truncate.setBreakOnWhitespaces(false);
+		truncate.setBreakOnWhitespaces(true);
 
 		List<?> res = truncate.extract(null, null);
 		assertEquals("", res.get(0));

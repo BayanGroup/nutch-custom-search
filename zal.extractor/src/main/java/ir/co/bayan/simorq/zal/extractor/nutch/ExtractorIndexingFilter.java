@@ -54,8 +54,12 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 	}
 
 	@Override
-	public NutchDocument filter(NutchDocument doc, Parse parse, Text text, CrawlDatum crawlDatum, Inlinks inlinks)
+	public NutchDocument filter(NutchDocument doc, Parse parse, Text url, CrawlDatum crawlDatum, Inlinks inlinks)
 			throws IndexingException {
+		LOGGER.info("Indexing: " + url);
+		if (parse == null || parse.getData() == null || parse.getData().getParseMeta() == null)
+			return doc;
+
 		Metadata metadata = parse.getData().getParseMeta();
 		if ("true".equals(metadata.get(MATCHED_DOC))) {
 			addFieldsToDoc(doc, metadata);

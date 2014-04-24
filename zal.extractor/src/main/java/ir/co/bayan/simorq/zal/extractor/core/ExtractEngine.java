@@ -14,6 +14,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Extracts parts of an HTML or XML file based on the defined extract rules in the provided config file. Note that
@@ -27,6 +29,8 @@ import org.apache.commons.lang3.Validate;
  * 
  */
 public class ExtractEngine {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ExtractEngine.class);
 
 	private ExtractorConfig extractorConfig;
 	private Map<String, Document> docById;
@@ -91,6 +95,10 @@ public class ExtractEngine {
 
 		// 1. Decide on which document matches the url and contentType
 		Document document = findMatchingDoc(content.getUrl().toString(), content.getType());
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("Matched document with url={} and contentType={} is {}", content.getUrl().toString(),
+					content.getType());
+		}
 		if (document == null) {
 			return null;
 		}

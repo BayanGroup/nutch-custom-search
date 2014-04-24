@@ -55,6 +55,7 @@ public class ExtractorParser implements Parser {
 
 	@Override
 	public ParseResult getParse(Content content) {
+		LOGGER.info("Parsing: " + content.getUrl());
 		ParseResult parseResult = new ParseResult(content.getUrl());
 		try {
 			List<ExtractedDoc> docs = ExtractEngine.getInstance().extract(
@@ -63,7 +64,7 @@ public class ExtractorParser implements Parser {
 			if (docs != null) {
 				for (ExtractedDoc doc : docs) {
 					if (LOGGER.isDebugEnabled())
-						LOGGER.debug(doc.toString());
+						LOGGER.debug("Parsed document: " + doc.toString());
 					ParseText parseText = new ParseText(doc.getText());
 					ParseData parseData = getParseData(content, doc);
 					parseResult.put(doc.getUrl(), parseText, parseData);

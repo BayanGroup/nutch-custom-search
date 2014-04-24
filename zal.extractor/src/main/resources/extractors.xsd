@@ -62,7 +62,7 @@
 	<xs:element name="config">
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element name="types">
+				<xs:element name="types" minOccurs="0">
 					<xs:complexType>
 						<xs:sequence>
 							<xs:element name="type" maxOccurs="unbounded" minOccurs="0" type="typeType" />

@@ -56,12 +56,12 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 	@Override
 	public NutchDocument filter(NutchDocument doc, Parse parse, Text url, CrawlDatum crawlDatum, Inlinks inlinks)
 			throws IndexingException {
-		LOGGER.info("Indexing: " + url);
 		if (parse == null || parse.getData() == null || parse.getData().getParseMeta() == null)
 			return doc;
 
 		Metadata metadata = parse.getData().getParseMeta();
 		if ("true".equals(metadata.get(MATCHED_DOC))) {
+			LOGGER.info("Indexing: " + url);
 			addFieldsToDoc(doc, metadata);
 			if ("true".equals(metadata.get(UPDATE_DOC))) {
 				// Passing a map will activate partial update process of solr
@@ -69,6 +69,8 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 			}
 			return doc;
 		} else if (extractorConfig.isOmitNonMatching()) {
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("Omiting: " + url);
 			return null;
 		} else {
 			return doc;

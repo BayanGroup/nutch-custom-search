@@ -111,7 +111,7 @@ Each document consits of a set of extract-to rules. An extract-to rule extracts 
 
 The root element of extractors.xml must be named "config" and define the namesapce "http://bayan.ir" as the defualt namesapce. This element has the following optional attributes:
 
-1. omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is true.
+1. omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is false.
 2. defaultEngine: the default engine for parsing resource contents if it is not defined by document (or any of its ancesstors). Default value is css.
 
 

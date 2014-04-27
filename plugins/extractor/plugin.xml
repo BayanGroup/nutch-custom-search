@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<plugin id="extractor" name="Nutch XML/HTML Parser/Indexing Filter" version="1.6" provider-name="bayan.ir">
+<plugin id="extractor" name="Extractor based XML/HTML Parser/Indexing Filter" version="1.6" provider-name="bayan.ir">
 
    	<runtime>
       	<library name="extractor.jar">
@@ -15,10 +15,9 @@
       	<import plugin="nutch-extensionpoints"/>
    	</requires>
 
-	<!--
    	<extension id="ir.co.bayan.simorq.zal.extractor.nutch.parseFilter" name="Extractor XML/HTML Parser filter" point="org.apache.nutch.parse.HtmlParseFilter">
       	<implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorParseFilter" class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorParseFilter" />
-   	</extension> -->
+   	</extension>
    	<extension id="ir.co.bayan.simorq.zal.extractor.nutch.indexingFilter" name="Extractor Indexing Filter" point="org.apache.nutch.indexer.IndexingFilter">
       	<implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorIndexingFilter" class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorIndexingFilter"/>
    	</extension>
@@ -26,16 +25,22 @@
       point="org.apache.nutch.parse.Parser">
     	<implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorParser" class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorParser">
     		<parameter name="contentType" value="*"/>
-
-		<parameter name="contentType" value="text/html" />
-		<parameter name="contentType" value="application/xhtml+xml" />
-
-		<parameter name="contentType" value="text/xml" />
-		<parameter name="contentType" value="application/rss+xml" />
-         	<parameter name="contentType" value="application/atom+xml" />
-
     	</implementation>
    	</extension>
+   	<extension id="ir.co.bayan.simorq.zal.extractor.nutch.scoring"
+              name="Extractor Scoring"
+              point="org.apache.nutch.scoring.ScoringFilter">
+      <implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorScoringFilter"
+                      class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorScoringFilter" />
+   </extension>
+   
+   <extension id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorUrlFilter"
+              name="Extractor URL Filter"
+              point="org.apache.nutch.net.URLFilter">
+      <implementation id="ExtractorUrlFilter"
+                      class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorUrlFilter"/>
+   </extension>
+   	
    	
 
 </plugin>

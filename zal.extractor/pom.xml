@@ -72,7 +72,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>extractor</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -82,6 +81,42 @@
 					<source>1.7</source>
 					<target>1.7</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix></classpathPrefix>
+							<mainClass>ir.co.bayan.simorq.zal.extractor.util.UrlTester</mainClass>
+						</manifest>
+						<manifestEntries>
+			                <Class-Path>. hadoop-core.jar</Class-Path>
+			            </manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<descriptors>
+						<descriptor>assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>assembly</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

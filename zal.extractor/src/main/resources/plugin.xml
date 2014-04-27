@@ -3,11 +3,11 @@
 <plugin id="extractor" name="Extractor based XML/HTML Parser/Indexing Filter" version="1.6" provider-name="bayan.ir">
 
    	<runtime>
-      	<library name="extractor.jar">
+      	<library name="zal.extractor-0.0.1-SNAPSHOT.jar">
          	<export name="*"/>
       	</library>
-      	<library name="commons-lang3.jar"/>
-      	<library name="jsoup.jar"/>
+      	<library name="commons-lang3-3.1.jar"/>
+      	<library name="jsoup-1.6.3.jar"/>
       	<library name="slf4j-api-1.7.5.jar"/>
    	</runtime>
 

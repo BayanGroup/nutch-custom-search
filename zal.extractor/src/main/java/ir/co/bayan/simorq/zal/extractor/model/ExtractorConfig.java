@@ -30,7 +30,7 @@ public class ExtractorConfig {
 	private static final String DEFATUL_CONFIG_FILE = "extractors.xml";
 
 	@XmlAttribute
-	private boolean omitNonMatching = true;
+	private boolean omitNonMatching = false;
 
 	@XmlAttribute
 	private String defaultEngine = "css";

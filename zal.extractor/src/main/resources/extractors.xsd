@@ -84,7 +84,7 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:sequence>
-			<xs:attribute name="omitNonMatching" type="xs:boolean" default="true"/>
+			<xs:attribute name="omitNonMatching" type="xs:boolean" default="false"/>
 			<xs:attribute name="defaultEngine" type="xs:string" default="css"/>
 		</xs:complexType>
 	</xs:element>

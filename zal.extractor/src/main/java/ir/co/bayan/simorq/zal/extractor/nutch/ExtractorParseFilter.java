@@ -40,7 +40,7 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 	@Override
 	public ParseResult filter(Content content, ParseResult parseResult, HTMLMetaTags metaTags,
 			DocumentFragment documentFragment) {
-		LOGGER.info("Parsing: " + content.getUrl());
+		LOGGER.debug("Parsing: " + content.getUrl());
 		try {
 			String encoding = getEncoding(content, parseResult);
 			List<ExtractedDoc> extractedDocs = ExtractEngine.getInstance().extract(

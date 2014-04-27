@@ -97,7 +97,7 @@ public class ExtractEngine {
 		Document document = findMatchingDoc(content.getUrl().toString(), content.getType());
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("Matched document with url={} and contentType={} is {}", content.getUrl().toString(),
-					content.getType());
+					content.getType(), document);
 		}
 		if (document == null) {
 			return null;

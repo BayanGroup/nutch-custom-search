@@ -61,7 +61,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 
 		Metadata metadata = parse.getData().getParseMeta();
 		if ("true".equals(metadata.get(MATCHED_DOC))) {
-			LOGGER.info("Indexing: " + url);
+			LOGGER.debug("Indexing: " + url);
 			addFieldsToDoc(doc, metadata);
 			if ("true".equals(metadata.get(UPDATE_DOC))) {
 				// Passing a map will activate partial update process of solr

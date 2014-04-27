@@ -1,0 +1,27 @@
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd" omitNonMatching="false">
+    <types>
+        <type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
+    </types>
+    <fields>
+        <field name="num-items" type="long" />
+        <field name="all-items" />
+    </fields>
+    <documents>
+        <document url="^http://.+?\.google\.com/?$" engine="css">
+            <extract-to field="num-items">
+                <size>
+                    <expr value=".gb1" />
+                </size>
+            </extract-to>
+            <extract-to field="all-items">
+                <truncate max="100">
+                    <concat delimiter=",">
+                        <text>
+                            <expr value=".gb1" />
+                        </text>
+                    </concat>
+                </truncate>
+            </extract-to>
+        </document>
+    </documents>
+</config>

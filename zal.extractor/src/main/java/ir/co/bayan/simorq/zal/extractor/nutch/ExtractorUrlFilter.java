@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 public class ExtractorUrlFilter implements URLFilter {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExtractorUrlFilter.class);
+	private boolean enable;
 
 	@Override
 	public Configuration getConf() {
@@ -26,7 +27,9 @@ public class ExtractorUrlFilter implements URLFilter {
 	@Override
 	public void setConf(Configuration conf) {
 		try {
-			ExtractEngine.getInstance().setConf(ExtractorConfig.readConfig(conf));
+			ExtractorConfig config = ExtractorConfig.readConfig(conf);
+			ExtractEngine.getInstance().setConf(config);
+			enable = config.isFilterNonMatching();
 		} catch (Exception e) {
 			LOGGER.error("Exception occured", e);
 		}
@@ -34,7 +37,8 @@ public class ExtractorUrlFilter implements URLFilter {
 
 	@Override
 	public String filter(String urlString) {
-		return ExtractEngine.getInstance().findMatchingDoc(urlString, null) == null ? null : urlString;
+		if (enable)
+			return ExtractEngine.getInstance().findMatchingDoc(urlString, null) == null ? null : urlString;
+		return urlString;
 	}
-
 }

@@ -33,6 +33,9 @@ public class ExtractorConfig {
 	private boolean omitNonMatching = false;
 
 	@XmlAttribute
+	private boolean filterNonMatching = false;
+
+	@XmlAttribute
 	private String defaultEngine = "css";
 
 	@XmlElementWrapper(name = "types")
@@ -64,6 +67,13 @@ public class ExtractorConfig {
 
 	public boolean isOmitNonMatching() {
 		return omitNonMatching;
+	}
+
+	/**
+	 * @return the filterNonMatching
+	 */
+	public boolean isFilterNonMatching() {
+		return filterNonMatching;
 	}
 
 	/**

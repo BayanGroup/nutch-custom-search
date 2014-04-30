@@ -35,7 +35,7 @@
       <implementation id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorScoringFilter"
                       class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorScoringFilter" />
    </extension>
-   -->
+   
    
    <extension id="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorUrlFilter"
               name="Extractor URL Filter"
@@ -43,7 +43,7 @@
       <implementation id="ExtractorUrlFilter"
                       class="ir.co.bayan.simorq.zal.extractor.nutch.ExtractorUrlFilter"/>
    </extension>
-   	
+   -->
    	
 
 </plugin>

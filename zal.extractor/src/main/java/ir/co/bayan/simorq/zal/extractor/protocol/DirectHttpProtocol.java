@@ -4,6 +4,7 @@ import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractUtil;
 import ir.co.bayan.simorq.zal.extractor.protocol.ProtocolException.ProtocolErrorCode;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -110,20 +111,27 @@ public class DirectHttpProtocol implements Protocol {
 		Validate.notNull(url);
 		Validate.notNull(parameters);
 
+		InputStream is = null;
 		try {
 			HttpURLConnection connection = getConnection(url, parameters);
-			try (InputStream is = getInputStream(connection, parameters)) {
-				byte[] data = IOUtils.toByteArray(is);
+			is = getInputStream(connection, parameters);
+			byte[] data = IOUtils.toByteArray(is);
 
-				String contentType = connection.getContentType();
-				String encoding = EncodingDetector.parseCharacterEncoding(contentType);
-				if (StringUtils.isEmpty(encoding))
-					encoding = ExtractUtil.sniffCharacterEncoding(data);
+			String contentType = connection.getContentType();
+			String encoding = EncodingDetector.parseCharacterEncoding(contentType);
+			if (StringUtils.isEmpty(encoding))
+				encoding = ExtractUtil.sniffCharacterEncoding(data);
 
-				return new Content(url, data, encoding, MimeUtil.cleanMimeType(contentType));
-			}
+			return new Content(url, new ByteArrayInputStream(data), encoding, MimeUtil.cleanMimeType(contentType));
 		} catch (IOException e) {
 			throw new ProtocolException(ProtocolErrorCode.UNREACHABLE, e);
+		} finally {
+			if (is != null)
+				try {
+					is.close();
+				} catch (IOException e) {
+					LOGGER.error("Exception occured", e);
+				}
 		}
 	}
 
@@ -172,8 +180,14 @@ public class DirectHttpProtocol implements Protocol {
 			String params = (String) parameters.get(PARAM_PARAMETERS);
 			if (params != null) {
 				connection.setDoOutput(true);
-				try (DataOutputStream dos = new DataOutputStream(connection.getOutputStream())) {
+				DataOutputStream dos = null;
+				try {
+					dos = new DataOutputStream(connection.getOutputStream());
 					dos.writeBytes(params);
+				} catch (IOException e) {
+					throw e;
+				} finally {
+					dos.close();
 				}
 			}
 		}
@@ -186,26 +200,20 @@ public class DirectHttpProtocol implements Protocol {
 		connection.connect();
 		InputStream is = connection.getInputStream();
 
-		try {
-			int code = connection.getResponseCode();
-			if (code != HttpURLConnection.HTTP_OK) {
-				ProtocolErrorCode errorCode = deriveErrorCode(code);
-				throw new ProtocolException(errorCode);
-			}
-
-			String encoding = connection.getContentEncoding();
-			if ("gzip".equals(encoding) || "x-gzip".equals(encoding))
-				return new GZIPInputStream(is);
-			else if ("deflate".equals(encoding)) {
-				Inflater inflater = new Inflater(true);
-				return new InflaterInputStream(is, inflater);
-			}
-			return is;
-		} catch (Exception e) {
-			// In case of any error, close is
-			is.close();
-			throw e;
+		int code = connection.getResponseCode();
+		if (code != HttpURLConnection.HTTP_OK) {
+			ProtocolErrorCode errorCode = deriveErrorCode(code);
+			throw new ProtocolException(errorCode);
 		}
+
+		String encoding = connection.getContentEncoding();
+		if ("gzip".equals(encoding) || "x-gzip".equals(encoding))
+			return new GZIPInputStream(is);
+		else if ("deflate".equals(encoding)) {
+			Inflater inflater = new Inflater(true);
+			return new InflaterInputStream(is, inflater);
+		}
+		return is;
 	}
 
 	private ProtocolErrorCode deriveErrorCode(int code) {

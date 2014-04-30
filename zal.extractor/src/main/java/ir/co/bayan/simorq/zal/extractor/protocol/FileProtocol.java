@@ -3,15 +3,14 @@ package ir.co.bayan.simorq.zal.extractor.protocol;
 import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.protocol.ProtocolException.ProtocolErrorCode;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.FileTime;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.hadoop.conf.Configuration;
@@ -42,24 +41,25 @@ public class FileProtocol implements Protocol {
 		Validate.notNull(parameters);
 
 		try {
-			Path path = Paths.get(url.toURI());
-
+			File path = new File(url.toURI());
 			// Checks whether the file is changed since the last modified time
 			Long lastModified = (Long) parameters.get(PARAM_LAST_MODIFIED);
 			if (lastModified != null) {
-				FileTime fileTime = Files.getLastModifiedTime(path);
-				if (lastModified >= fileTime.toMillis()) {
+				long fileTime = path.lastModified();
+				if (lastModified >= fileTime) {
 					throw new ProtocolException(ProtocolErrorCode.NOT_CHANGED);
 				}
 			}
 
-			byte[] data = Files.readAllBytes(path);
+			byte[] data = FileUtils.readFileToByteArray(path);
 			String encoding = StringUtils.defaultString((String) parameters.get(PARAM_ENCODING), defaultEncoding);
 			String contentType = StringUtils.defaultString((String) parameters.get(PARAM_CONTENT_TYPE),
 					defaultContentType);
 
-			return new Content(url, data, encoding, contentType);
-		} catch (IOException | URISyntaxException e) {
+			return new Content(url, new ByteArrayInputStream(data), encoding, contentType);
+		} catch (IOException e) {
+			throw new ProtocolException(ProtocolErrorCode.UNREACHABLE, e);
+		} catch (URISyntaxException e) {
 			throw new ProtocolException(ProtocolErrorCode.UNREACHABLE, e);
 		}
 	}

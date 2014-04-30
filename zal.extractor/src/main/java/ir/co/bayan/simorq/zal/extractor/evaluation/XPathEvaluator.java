@@ -3,7 +3,6 @@ package ir.co.bayan.simorq.zal.extractor.evaluation;
 import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractUtil;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +78,7 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 		if (context.getNsContext() != null)
 			xPath.setNamespaceContext(context.getNsContext());
 		NodeList nodeList = (NodeList) xPath.compile(value).evaluate(root, XPathConstants.NODESET);
-		List<Node> list = new ArrayList<>(nodeList.getLength());
+		List<Node> list = new ArrayList<Node>(nodeList.getLength());
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			list.add(nodeList.item(i));
 		}
@@ -90,7 +89,7 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 	@Override
 	public List<?> getAttribute(XPathContext context, List<?> res, String name) throws Exception {
 		List<Node> nodes = (List<Node>) res;
-		List<String> texts = new ArrayList<>(nodes.size());
+		List<String> texts = new ArrayList<String>(nodes.size());
 		String localName;
 		String ns;
 		String[] parts = name.split(":");
@@ -114,7 +113,7 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 	@Override
 	public List<?> getText(XPathContext context, List<?> input) throws Exception {
 		List<Node> nodes = (List<Node>) input;
-		List<String> texts = new ArrayList<>(nodes.size());
+		List<String> texts = new ArrayList<String>(nodes.size());
 		for (Node node : nodes) {
 			texts.add(node.getTextContent());
 		}
@@ -123,7 +122,7 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 
 	@Override
 	public XPathContext createContext(Content content) throws Exception {
-		InputSource is = new InputSource(new ByteArrayInputStream(content.getData()));
+		InputSource is = new InputSource(content.getData());
 		is.setEncoding(content.getEncoding());
 		Element root = null;
 		if (ExtractUtil.isHtml(content.getType())) {

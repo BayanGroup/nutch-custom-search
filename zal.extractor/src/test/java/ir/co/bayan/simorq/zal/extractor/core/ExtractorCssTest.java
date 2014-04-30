@@ -10,8 +10,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -20,17 +19,16 @@ import org.junit.Test;
  */
 public class ExtractorCssTest {
 
-	private static ExtractEngine extractEngine;
-	private static byte[] testPageContent;
+	private ExtractEngine extractEngine;
+	private InputStream testPageContent;
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
+	@Before
+	public void setUpBeforeClass() throws Exception {
 		InputStreamReader configReader = new InputStreamReader(
 				ExtractorCssTest.class.getResourceAsStream("/extractors-css-test.xml"));
 		ExtractorConfig extractorConfig = ExtractorConfig.readConfig(configReader);
 		extractEngine = new ExtractEngine(extractorConfig);
-		InputStream testPage = ExtractorCssTest.class.getResourceAsStream("/test.htm");
-		testPageContent = IOUtils.toByteArray(testPage);
+		testPageContent = ExtractorCssTest.class.getResourceAsStream("/test.htm");
 	}
 
 	@Test

@@ -1,5 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
+import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -10,12 +11,12 @@ import java.net.URL;
  */
 public class Content {
 
-	private byte[] data;
+	private InputStream data;
 	private String encoding;
 	private String type;
 	private URL url;
 
-	public Content(URL url, byte[] data, String encoding, String contentType) {
+	public Content(URL url, InputStream data, String encoding, String contentType) {
 		super();
 		this.url = url;
 		this.data = data;
@@ -33,7 +34,7 @@ public class Content {
 	/**
 	 * @return the data
 	 */
-	public byte[] getData() {
+	public InputStream getData() {
 		return data;
 	}
 

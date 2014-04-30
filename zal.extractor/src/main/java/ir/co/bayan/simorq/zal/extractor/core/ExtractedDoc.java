@@ -47,10 +47,10 @@ public class ExtractedDoc {
 
 	}
 
-	private final Map<String, Object> fields = new HashMap<>();
+	private final Map<String, Object> fields = new HashMap<String, Object>();
 	private String url;
 	private String title;
-	private List<LinkData> outlinks = new ArrayList<>();
+	private List<LinkData> outlinks = new ArrayList<LinkData>();
 	private String text;
 	private boolean update;
 

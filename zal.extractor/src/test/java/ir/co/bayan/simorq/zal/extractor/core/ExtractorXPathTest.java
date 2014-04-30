@@ -5,12 +5,14 @@ import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc.LinkData;
 import ir.co.bayan.simorq.zal.extractor.evaluation.XPathEvaluator;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -19,17 +21,23 @@ import org.junit.Test;
  */
 public class ExtractorXPathTest {
 
-	private static ExtractEngine extractEngine;
-	private static byte[] data;
-	private static byte[] data_ns;
+	private ExtractEngine extractEngine;
+	private InputStream data;
+	private InputStream data_ns;
 
-	@BeforeClass
-	public static void init() throws Exception {
+	@Before
+	public void init() throws Exception {
 		ExtractorConfig extractorConfig = ExtractorConfig.readConfig(new InputStreamReader(XPathEvaluator.class
 				.getResourceAsStream("/extractors-xpath-test.xml")));
 		extractEngine = new ExtractEngine(extractorConfig);
-		data = IOUtils.toByteArray(XPathEvaluator.class.getResourceAsStream("/test.xml"));
-		data_ns = IOUtils.toByteArray(XPathEvaluator.class.getResourceAsStream("/test-ns.xml"));
+		data = XPathEvaluator.class.getResourceAsStream("/test.xml");
+		data_ns = XPathEvaluator.class.getResourceAsStream("/test-ns.xml");
+	}
+
+	@After
+	public void close() throws IOException {
+		data.close();
+		data_ns.close();
 	}
 
 	@Test

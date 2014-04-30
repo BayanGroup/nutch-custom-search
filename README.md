@@ -4,7 +4,7 @@ nutch-custom-search
 The goal of this project is to develope plugins/extentions for Nutch to make it a perfect tool for building custom search solutions. 
 The project is an open-source project released under Apache License Version 2.0.
 
-Note: This project is tested with nutch 1.7 (nutch 2.X is not supported yet).
+Note: This project is tested with nutch 1.7 and nutch 1.8 (nutch 2.X is not supported yet).
 
 Extractor
 ---------
@@ -21,7 +21,7 @@ Extractor consists of a parser plugin, an html parser filter, and an indexer fil
 
 ### Setup
 
-1) Copy plugins/extractor to your nutch's plugins directory. Note that the jar is built with java 7, so if you are using a lower version of java, you should compile it yourself by downloading the zal.extractor project and built it using maven.
+1) Extract plugins/zal.extractor-X-distribution.zip to your nutch's plugins directory. After the extraction, you must have a directory named "extractor" under your nutch's plugins directory. In "extractor" directory, there must be several jars with a file named "plugin.xml".  Note that the jar is built with java 6.
 
 2) Enable extractor plugin by adding its name to the plugin.includes property in the nutch-site.xml (inside nutch conf directory). 
 

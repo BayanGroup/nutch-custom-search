@@ -7,11 +7,11 @@ import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 import ir.co.bayan.simorq.zal.extractor.protocol.Protocol;
 import ir.co.bayan.simorq.zal.extractor.protocol.ProtocolFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.Reader;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,11 +37,17 @@ public class UrlTester {
 		}
 	}
 
-	private static void testUrl(String urlStr, String extracotrPath) throws Exception {
-		System.out.println("Read config form " + Paths.get(extracotrPath).toAbsolutePath());
+	public static void testUrl(String urlStr, String extracotrPath) throws Exception {
+		File path = new File(extracotrPath);
+		System.out.println("Read config form " + path.getAbsolutePath());
 		ExtractorConfig extractorConfig = null;
-		try (Reader configReader = Files.newBufferedReader(Paths.get(extracotrPath), Charset.forName("UTF-8"))) {
+		Reader configReader = null;
+		try {
+			configReader = new BufferedReader(new FileReader(path));
 			extractorConfig = ExtractorConfig.readConfig(configReader);
+		} finally {
+			if (configReader != null)
+				configReader.close();
 		}
 		ExtractEngine engine = new ExtractEngine(extractorConfig);
 

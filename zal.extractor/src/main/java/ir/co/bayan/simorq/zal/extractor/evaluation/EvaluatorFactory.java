@@ -26,7 +26,7 @@ public class EvaluatorFactory {
 	}
 
 	public EvaluatorFactory() {
-		evaluators = new HashMap<>();
+		evaluators = new HashMap<String, Evaluator<? extends EvaluationContext>>();
 		addEvaluator(new CssEvaluator());
 		addEvaluator(new XPathEvaluator());
 		addEvaluator(new TextEvaluator());

@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlElementRef;
  */
 public class FunctionHolder implements Extractor {
 
-	@XmlElementRef(required = true)
+	@XmlElementRef
 	private Function value;
 
 	/**

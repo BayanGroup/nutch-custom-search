@@ -23,7 +23,7 @@ public class Fragment extends Rooted {
 	public static final String URL_FIELD = "url";
 
 	@XmlElement(name = "extract-to")
-	private List<ExtractTo> extractTos = new ArrayList<>();
+	private List<ExtractTo> extractTos = new ArrayList<ExtractTo>();
 
 	@XmlElementWrapper(name = "outlinks")
 	@XmlElementRef
@@ -35,7 +35,7 @@ public class Fragment extends Rooted {
 
 	@Override
 	public List<ExtractedDoc> extract(Object root, EvaluationContext context) throws Exception {
-		List<ExtractedDoc> docs = new ArrayList<>();
+		List<ExtractedDoc> docs = new ArrayList<ExtractedDoc>();
 
 		for (Object subRoot : getRoots(root, context)) {
 			ExtractedDoc extractedDoc = new ExtractedDoc();
@@ -64,7 +64,7 @@ public class Fragment extends Rooted {
 					if (values != null) {
 						((List<String>) values).add(fieldValue.toString());
 					} else {
-						List<String> fieldValueList = new ArrayList<>();
+						List<String> fieldValueList = new ArrayList<String>();
 						fieldValueList.add(fieldValue.toString());
 						extractedDoc.addField(field.getName(), fieldValueList);
 					}

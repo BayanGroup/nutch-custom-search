@@ -65,7 +65,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 			addFieldsToDoc(doc, metadata);
 			if ("true".equals(metadata.get(UPDATE_DOC))) {
 				// Passing a map will activate partial update process of solr
-				doc.add("updateIndicator", new HashMap<>());
+				doc.add("updateIndicator", new HashMap<Object, Object>());
 			}
 			return doc;
 		} else if (extractorConfig.isOmitNonMatching()) {

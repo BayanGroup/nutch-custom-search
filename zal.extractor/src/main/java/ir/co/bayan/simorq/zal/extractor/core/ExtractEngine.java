@@ -60,7 +60,7 @@ public class ExtractEngine {
 			return;
 
 		this.extractorConfig = extractorConfig;
-		docById = new HashMap<>(extractorConfig.getDocuments().size() * 2 + 1);
+		docById = new HashMap<String, Document>(extractorConfig.getDocuments().size() * 2 + 1);
 		for (Document doc : extractorConfig.getDocuments()) {
 			if (doc.getId() != null) {
 				docById.put(doc.getId(), doc);

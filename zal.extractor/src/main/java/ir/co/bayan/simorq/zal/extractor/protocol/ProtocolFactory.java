@@ -28,7 +28,7 @@ public class ProtocolFactory {
 		return instance;
 	}
 
-	private Map<String, Protocol> protocolsByName = new HashMap<>();
+	private Map<String, Protocol> protocolsByName = new HashMap<String, Protocol>();
 
 	public ProtocolFactory() {
 		addProtocol("file", new FileProtocol());

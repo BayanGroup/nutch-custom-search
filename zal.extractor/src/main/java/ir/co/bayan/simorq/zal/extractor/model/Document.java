@@ -221,7 +221,7 @@ public class Document extends Fragment {
 	}
 
 	public List<ExtractedDoc> extract(EvaluationContext context) throws Exception {
-		List<ExtractedDoc> res = new ArrayList<>();
+		List<ExtractedDoc> res = new ArrayList<ExtractedDoc>();
 
 		for (Object root : getRoots(context.getMainRoot(), context)) {
 			ExtractedDoc mainDoc = new ExtractedDoc();

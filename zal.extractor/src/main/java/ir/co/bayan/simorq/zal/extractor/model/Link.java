@@ -29,7 +29,7 @@ public class Link extends Function {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<?> extract(Object root, EvaluationContext context) throws Exception {
-		List<LinkData> res = new ArrayList<>();
+		List<LinkData> res = new ArrayList<LinkData>();
 		List<String> hrefs = href.extract(root, context);
 		List<String> anchors = anchor == null ? Collections.EMPTY_LIST : anchor.extract(root, context);
 		Iterator<String> anchorI = anchors.iterator();

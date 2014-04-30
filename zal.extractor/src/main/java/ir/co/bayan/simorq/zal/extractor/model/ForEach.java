@@ -29,7 +29,7 @@ public class ForEach extends Function {
 
 	@Override
 	public List<?> extract(Object root, EvaluationContext context) throws Exception {
-		List<Object> res = new ArrayList<>();
+		List<Object> res = new ArrayList<Object>();
 		for (Object newRoot : getRoots(root, context)) {
 			res.addAll(args.get(0).extract(newRoot, context));
 		}

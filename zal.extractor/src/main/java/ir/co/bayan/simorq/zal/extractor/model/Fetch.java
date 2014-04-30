@@ -45,7 +45,7 @@ public class Fetch extends Function {
 	@XmlAttribute
 	private boolean checkModified = true;
 
-	private Map<String, Long> lastModificationPerUrl = new HashMap<>();
+	private Map<String, Long> lastModificationPerUrl = new HashMap<String, Long>();
 
 	/**
 	 * @param url
@@ -156,7 +156,7 @@ public class Fetch extends Function {
 
 	@Override
 	public List<?> extract(Object root, EvaluationContext context) throws Exception {
-		List<Object> res = new ArrayList<>();
+		List<Object> res = new ArrayList<Object>();
 		if (checkModified) {
 			paramObjects.put(Protocol.PARAM_LAST_MODIFIED, lastModificationPerUrl.get(url));
 		}

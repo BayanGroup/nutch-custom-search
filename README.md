@@ -119,7 +119,7 @@ The root element of extractors.xml must be named "config" and define the namesap
 Here is a sample extractors.xml file containing all of the above sections:
 
 ```xml
-<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd" omitNonMatching="false">
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
 	<types>
 		<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
 	</types>
@@ -214,8 +214,46 @@ There are three implict fields that you might use them without needing to be def
 2. title: the title of current document. If not specified, the url will be used as the title.
 3. content: the html content of this document which can be used by nutch plugins.
 
-For each field, you can set its "multi" attribute to true which enables multiple values to be defined for this field.
+For each field, you can set its "multi" attribute to true which enables multiple values to be defined for this field. In this case, the value of this field is a list and each extracted item are added to this list. Note that you must also change your solr schema for that field to accept multiple values. As an example, suppose in our google example mentioned above, we wanted  "all-items" field to be a multi-value field. We can write our extractors.xml like this:
 
+```xml
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+	<fields>
+		<field name="all-items" multi="true"/>
+	</fields>
+	<documents>
+		<document url="^http://.+?\.google\.com/?$" engine="css">
+			<extract-to field="all-items">
+				<text>
+					<expr value="li.gbt span.gbts" />
+				</text>
+			</extract-to>
+		</document>
+	</documents>
+</config>
+```
+
+Note that if a field is multi field, you can write multiple extract-to rules for it and all these values are added to it. For instance, in the following example, we always add a fixed item named "tools" besides the available google top-bar items:
+
+```xml
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+	<fields>
+		<field name="all-items" multi="true"/>
+	</fields>
+	<documents>
+		<document url="^http://.+?\.google\.com/?$" engine="css">
+			<extract-to field="all-items">
+				<text>
+					<expr value="li.gbt span.gbts" />
+				</text>
+			</extract-to>
+			<extract-to field="all-items">
+				<constant value="tools" />
+			</extract-to>
+		</document>
+	</documents>
+</config>
+```
 
 ### Documents
 

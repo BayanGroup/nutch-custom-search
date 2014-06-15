@@ -10,6 +10,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A fragment represents a subset of data in the document.
  * 
@@ -17,6 +20,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
  * 
  */
 public class Fragment extends Rooted {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Fragment.class);
 
 	public static final String TEXT_FIELD = "content";
 	public static final String TITLE_FIELD = "title";
@@ -54,6 +59,8 @@ public class Fragment extends Rooted {
 	@SuppressWarnings("unchecked")
 	protected void extractFields(Object subRoot, EvaluationContext context, ExtractedDoc extractedDoc) throws Exception {
 		for (ExtractTo extractTo : extractTos) {
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug(extractTo.toString());
 			List<String> res = extractTo.extract(subRoot, context);
 			if (res != null) {
 				Field field = extractTo.getField();

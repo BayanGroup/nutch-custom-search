@@ -13,6 +13,8 @@ import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlIDREF;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A document defines a set of extract-to rules to be used in the extraction process. These rules are evaluated using
@@ -24,6 +26,8 @@ import org.apache.commons.lang3.StringUtils;
  * 
  */
 public class Document extends Fragment {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(Document.class);
 
 	private String url;
 	private Pattern urlPattern;
@@ -242,6 +246,8 @@ public class Document extends Fragment {
 			extract(parent, mainDoc, extractedDocs, root, context);
 		}
 
+		if (LOGGER.isDebugEnabled())
+			LOGGER.debug(this.toString());
 		document.extractFields(root, context, mainDoc);
 		document.insertSpecialFields(context, mainDoc);
 		document.extractOutlinks(root, context, mainDoc);

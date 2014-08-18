@@ -3,7 +3,7 @@
 <plugin id="extractor" name="Extractor based XML/HTML Parser/Indexing Filter" version="1.6" provider-name="bayan.ir">
 
    	<runtime>
-      	<library name="zal.extractor-0.0.1-SNAPSHOT.jar">
+      	<library name="zal.extractor-0.0.2-SNAPSHOT.jar">
          	<export name="*"/>
       	</library>
       	<library name="commons-lang3-3.1.jar"/>

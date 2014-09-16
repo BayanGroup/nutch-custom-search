@@ -172,7 +172,7 @@ attribute | Extracts the value of attribute with the specified name from the inp
 concat | Concats its inputs by the provided delimiter.
 constant | Always returns a fixed constant.
 decode | Decodes the given url string.
-expr | Evaluates an expression using the current engine and returnes the list of result elements. The evaluation is done in the scope of current root. By default the document elemen is the root unless it is changed using for-each.
+expr | Evaluates an expression using the current engine and returnes the list of result elements. The evaluation is done in the scope of current root. By default the document elemen is the root unless it is changed using for-each, root attribute of document element, a fragment. By default expression "." refers to the current root.
 fetch | Fetches a content from the given url and evaluates it with the specified engine.
 field-value | Returns the extracted value of the given field.
 first | Returns the first object in the list of its argument.

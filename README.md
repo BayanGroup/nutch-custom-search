@@ -23,7 +23,7 @@ Extractor consists of a parser plugin, an html parser filter, and an indexer fil
 
 1) Extract plugins/zal.extractor-X-distribution.zip to your nutch's plugins directory. After the extraction, you must have a directory named "extractor" under your nutch's plugins directory. In "extractor" directory, there must be several jars with a file named "plugin.xml".  Note that the jar is built with java 6.
 
-2) Enable extractor plugin by adding its name to the plugin.includes property in the nutch-site.xml (inside nutch conf directory). 
+2) Enable extractor plugin by adding its name (which is 'extractor') to the plugin.includes property in the nutch-site.xml (inside nutch conf directory). 
 
 If you are using mode 2, you can disable other parser/indexer plugins, if you don't need them. For instance, you can use something like this:
 
@@ -290,29 +290,6 @@ Each document may specifiy an outlinks section that tells extractor how outlinks
 </document>
 ```
 
-```xml
-<document url="sitemap.xml" engine="xpath">
-	<outlinks>
-		<for-each root="dns:url"> 
-			<link>
-				<href>
-					<text>
-						<expr value="./dns:loc" />
-					</text>
-				</href>
-				<anchor>
-					<text>
-						<expr value="./blog:dloc" />
-					</text>
-				</anchor>
-			</link>
-		</for-each>
-	</outlinks>
-</document>
-```
-
-Note that "dns" is a reserved word which stands for "default xml name space".
-
 Also each document can have an id and other documents can inherit its fields and outlinks by specifying its id in their inherits attribute. For example:
 
 ```xml
@@ -361,3 +338,109 @@ There is an option to extract several documents from one given resource. To enab
 ```
 
 In the above example, for each html element with css class "doc", one document will be created. The url of this document is extracted from the first href inside this element.
+
+### Parsing XML documents
+You can use extractor plugin to extract parts of xml documents. First, you must configure the plugin in mode 2 and set it as the default parser for xml mime types. Second, you must set your evaluation engine to xpath in your documents since clearly css engine can not parse xml documents. As an example, suppose we want to extract all person names from the following xml file:
+
+```xml
+<persons>
+	<person>
+		<name>Foo</name>
+		<addr>Somewhere</addr>
+	</person>
+	<person>
+		<name>Bar</name>
+		<addr>SomewhereElse</addr>
+	</person>
+</persons>
+```
+
+We can use a configuration like this:
+
+```xml
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+	<fields>
+		<field name="content"/>
+	</fields>
+	<documents>
+		<document url="*.xml" engine="xpath">
+			<extract-to field="content">
+				<concat delimiter=",">
+					<text>
+						<expr value="//person/name" />
+					</text>
+				</concat>
+			</extract-to>
+		</document>
+	</documents>
+</config>
+```
+
+If your xml elements defined in a specific namespace, you should write your xpath with ns_name:elem_name syntax. If your xml elements are defined in the default namespace you can refer to this namespace by "dns" as the namespace name.  For example, if your xml is look like this:
+
+```xml
+<persons xmlns="http://bayan.ir" xmlns:b="http://bayan.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir data.xsd">>
+	<person>
+		<b:name>Foo</b:name>
+		<b:addr>Somewhere</b:addr>
+	</person>
+	<person>
+		<b:name>Bar</b:name>
+		<b:addr>SomewhereElse</b:addr>
+	</person>
+</persons>
+```
+
+Note that in the above xml file, the "person" element defined in the default namespace but the "name" element is defiend in the "b" namespace. Then your xpath expression should look like this:
+
+```xml
+	<expr value="//dns:person/b:name" />
+```
+
+You can extract links for further crawling from xml documents too. Here is an exmple that extract links from a sitemap file like this:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/media/css/sitemap/sitemap.xsl?ataLCF"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+		xmlns:blog="http://schemas.bayan.ir/2012/blog"
+		xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+	<url>
+		<loc blog:dloc="http://a.blog.ir/1">http://a.blog.ir/1</loc>
+		<changefreq>weekly</changefreq>
+		<priority>1.0</priority>
+	</url>
+	<url>
+		<loc blog:dloc="http://a.blog.ir/2">http://a.blog.ir/2</loc>
+		<changefreq>weekly</changefreq>
+		<priority>1.0</priority>
+	</url>
+	
+</urlset>
+```
+
+```xml
+<document url="sitemap.xml" engine="xpath">
+	<outlinks>
+		<for-each root="dns:url"> 
+			<link>
+				<href>
+					<text>
+						<expr value="./dns:loc" />
+					</text>
+				</href>
+				<anchor>
+					<text>
+						<expr value="./blog:dloc" />
+					</text>
+				</anchor>
+			</link>
+		</for-each>
+	</outlinks>
+</document>
+```
+
+
+	
+

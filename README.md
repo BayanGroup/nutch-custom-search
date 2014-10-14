@@ -1,5 +1,5 @@
-nutch-custom-search
-===================
+Custom Search Tools For Nutch
+=============================
 
 The goal of this project is to develope plugins/extentions for Nutch to make it a perfect tool for building custom search solutions. 
 The project is an open-source project released under Apache License Version 2.0.
@@ -391,7 +391,7 @@ If your xml elements defined in a specific namespace, you should write your xpat
 </persons>
 ```
 
-Note that in the above xml file, the "person" element defined in the default namespace but the "name" element is defiend in the "b" namespace. Then your xpath expression should look like this:
+Then your xpath expression should look like this: (Note that in the above xml file, the "person" element defined in the default namespace but the "name" element is defiend in the "b" namespace.)
 
 ```xml
 	<expr value="//dns:person/b:name" />
@@ -432,7 +432,7 @@ You can extract links for further crawling from xml documents too. Here is an ex
 				</href>
 				<anchor>
 					<text>
-						<expr value="./blog:dloc" />
+						<expr value="./dns:loc/@blog:dloc" />
 					</text>
 				</anchor>
 			</link>

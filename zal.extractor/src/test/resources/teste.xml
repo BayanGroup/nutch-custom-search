@@ -1,0 +1,14 @@
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+    <fields>
+        <field name="target" />
+    </fields>
+    <documents>
+        <document url="." engine="xpath">
+            <extract-to field="target">
+                <text>
+                    <expr value="//*[@id='home_right']/DIV[1]/DIV[1]/H2/A" />
+                </text>
+            </extract-to>
+        </document>
+    </documents>
+</config>

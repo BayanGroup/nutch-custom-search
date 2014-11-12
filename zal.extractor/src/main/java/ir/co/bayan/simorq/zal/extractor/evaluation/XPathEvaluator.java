@@ -15,6 +15,12 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.xerces.xni.Augmentations;
+import org.apache.xerces.xni.QName;
+import org.apache.xerces.xni.XMLAttributes;
+import org.apache.xerces.xni.XNIException;
+import org.apache.xerces.xni.parser.XMLDocumentFilter;
+import org.cyberneko.html.filters.DefaultFilter;
 import org.cyberneko.html.parsers.DOMParser;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -117,6 +123,7 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 		for (Node node : nodes) {
 			texts.add(node.getTextContent());
 		}
+		// TODO support extraction of anchors and check for readable elements like CssEvaluator
 		return texts;
 	}
 
@@ -130,6 +137,21 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 			parser.setProperty("http://cyberneko.org/html/properties/default-encoding", content.getEncoding());
 			parser.setFeature("http://cyberneko.org/html/features/scanner/ignore-specified-charset", true);
 			parser.setFeature("http://cyberneko.org/html/features/balance-tags/ignore-outside-content", false);
+			// No effect, why?
+			// parser.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
+			// parser.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
+
+			// There is a problem with namespaces as described in http://nekohtml.sourceforge.net/faq.html
+			// parser.setFeature("http://xml.org/sax/features/namespaces", false);
+			parser.setProperty("http://cyberneko.org/html/properties/filters",
+					new XMLDocumentFilter[] { new DefaultFilter() {
+						@Override
+						public void startElement(QName element, XMLAttributes attrs, Augmentations augs)
+								throws XNIException {
+							element.uri = null;
+							super.startElement(element, attrs, augs);
+						}
+					} });
 			parser.parse(is);
 			root = parser.getDocument().getDocumentElement();
 		} else if (ExtractUtil.isXml(content.getType())) {

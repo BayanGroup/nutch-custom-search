@@ -60,8 +60,7 @@
 		<dependency>
 			<groupId>net.sourceforge.nekohtml</groupId>
 			<artifactId>nekohtml</artifactId>
-			<version>1.9.18</version>
-			<scope>provided</scope>
+			<version>1.9.21</version>
 		</dependency>
 		
 		<dependency>

@@ -9,6 +9,7 @@
       	<library name="commons-lang3-3.1.jar"/>
       	<library name="jsoup-1.8.1.jar"/>
       	<library name="slf4j-api-1.7.5.jar"/>
+      	<library name="nekohtml-1.9.21.jar"/>
    	</runtime>
 
    	<requires>

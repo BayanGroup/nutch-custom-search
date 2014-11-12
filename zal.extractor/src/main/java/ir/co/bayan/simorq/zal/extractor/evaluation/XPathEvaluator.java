@@ -137,9 +137,9 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 			parser.setProperty("http://cyberneko.org/html/properties/default-encoding", content.getEncoding());
 			parser.setFeature("http://cyberneko.org/html/features/scanner/ignore-specified-charset", true);
 			parser.setFeature("http://cyberneko.org/html/features/balance-tags/ignore-outside-content", false);
-			// No effect, why?
-			// parser.setProperty("http://cyberneko.org/html/properties/names/elems", "lower");
-			// parser.setProperty("http://cyberneko.org/html/properties/names/attrs", "lower");
+			parser.setFeature("http://cyberneko.org/html/features/scanner/allow-selfclosing-tags", true);
+			parser.setProperty("http://cyberneko.org/html/properties/names/elems", "match");
+			parser.setProperty("http://cyberneko.org/html/properties/names/attrs", "no-change");
 
 			// There is a problem with namespaces as described in http://nekohtml.sourceforge.net/faq.html
 			// parser.setFeature("http://xml.org/sax/features/namespaces", false);

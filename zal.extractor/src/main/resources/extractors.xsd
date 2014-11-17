@@ -13,6 +13,8 @@
 		<xs:attribute type="xs:ID" name="name" use="required" />
 		<xs:attribute type="xs:IDREF" name="type" use="optional" />
 		<xs:attribute type="xs:boolean" name="multi" use="optional" default="false"/>
+		<xs:attribute type="xs:boolean" name="required" use="optional" default="false"/>
+		<xs:attribute type="xs:boolean" name="index" use="optional" default="true"/>
 	</xs:complexType>
 	
 	<xs:complexType name="extractToType">
@@ -51,6 +53,7 @@
 		<xs:attribute name="id" type="xs:ID" use="optional" />
 		<xs:attribute name="url" type="xs:string" use="optional" />
 		<xs:attribute name="contentType" type="xs:string" use="optional" />
+		<xs:attribute name="ip" type="xs:string" use="optional" />
 		<xs:attribute name="inherits" type="xs:IDREF" use="optional" />
 		<xs:attribute name="engine" type="xs:string" use="optional" default="css"/>
 		<xs:attribute name="root" type="xs:string"/>

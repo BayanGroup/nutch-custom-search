@@ -21,6 +21,12 @@ public class Field {
 	@XmlAttribute
 	private boolean multi = false;
 
+	@XmlAttribute
+	private boolean required = false;
+
+	@XmlAttribute
+	private boolean index = true;
+
 	/**
 	 * @return the name
 	 */
@@ -37,6 +43,20 @@ public class Field {
 	 */
 	public boolean isMulti() {
 		return multi;
+	}
+
+	/**
+	 * @return the required
+	 */
+	public boolean isRequired() {
+		return required;
+	}
+
+	/**
+	 * @return the index
+	 */
+	public boolean isIndex() {
+		return index;
 	}
 
 	@Override

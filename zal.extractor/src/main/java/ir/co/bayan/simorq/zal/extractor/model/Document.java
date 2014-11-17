@@ -3,6 +3,8 @@ package ir.co.bayan.simorq.zal.extractor.model;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc;
 import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 
+import java.net.InetAddress;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -34,6 +36,9 @@ public class Document extends Fragment {
 
 	private String contentType;
 	private Pattern contentTypePattern;
+
+	private String ip;
+	private Pattern ipPattern;
 
 	@XmlAttribute
 	@XmlID
@@ -103,6 +108,7 @@ public class Document extends Fragment {
 	 * @param contentType
 	 *            the contentType to set
 	 */
+	@XmlAttribute
 	public void setContentType(String contentType) {
 		this.contentType = contentType;
 		this.contentTypePattern = Pattern.compile(contentType);
@@ -262,11 +268,19 @@ public class Document extends Fragment {
 
 	public boolean matches(String url, String contentType) {
 		boolean matches = false;
-		if (urlPattern != null) {
+		if (urlPattern != null) { // url pattern is mandatory for match
 			matches = urlPattern.matcher(url).find();
 		}
-		if (!matches && contentTypePattern != null) {
+		if (matches && contentTypePattern != null) {
 			matches = contentTypePattern.matcher(contentType).find();
+		}
+		if (matches && ipPattern != null) {
+			try {
+				InetAddress inet = InetAddress.getByName(new URL(url).getHost());
+				matches = ipPattern.matcher(inet.getHostAddress()).find();
+			} catch (Exception e) {
+				LOGGER.warn("Counld not determine the ip of " + url, e);
+			}
 		}
 		return matches;
 	}

@@ -79,17 +79,19 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 
 	void addFieldsToDoc(NutchDocument doc, Metadata metadata) {
 		for (Field field : extractorConfig.getFields()) {
-			String name = field.getName();
-			for (String value : metadata.getValues(name)) {
-				if (!StringUtils.isEmpty(value)) {
-					Object finalValue = value;
-					TypeDef type = field.getType();
-					if (type != null) {
-						if (type.getConverterInstance() != null) {
-							finalValue = type.getConverterInstance().convert(value);
+			if (field.isIndex()) {
+				String name = field.getName();
+				for (String value : metadata.getValues(name)) {
+					if (!StringUtils.isEmpty(value)) {
+						Object finalValue = value;
+						TypeDef type = field.getType();
+						if (type != null) {
+							if (type.getConverterInstance() != null) {
+								finalValue = type.getConverterInstance().convert(value);
+							}
 						}
+						doc.add(name, finalValue);
 					}
-					doc.add(name, finalValue);
 				}
 			}
 		}

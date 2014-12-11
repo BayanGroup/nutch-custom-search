@@ -6,6 +6,20 @@ The project is an open-source project released under Apache License Version 2.0.
 
 Note: This project is tested with nutch 1.7-1.9 (nutch 2.X is not supported yet).
 
+Table of Contents
+-----------------
+* [Extractor](#Extractor)
+  * [Setup](#Setup)
+  * [Configuration](#Configuration)
+    * [Functions](#Functions)
+    * [Types](#Types)
+    * [Fields](#Fields)
+    * [Documents](#Documents)
+  * [Usage](#Usage)
+    * [Parsing HTML documents](#Parsing HTML documents)
+    * [Parsing XML documents](#Parsing XML documents)
+  * [Troubleshooting](#Troubleshooting)
+
 Extractor
 ---------
 
@@ -160,7 +174,7 @@ The size function, returns the number of items in its argument which here is the
 This extracted value is copied into a field named "num-items".
 In the second rule, we first extract the text value of all li.gbt span.gbts nodes, then concat them with comma as the seperator and then limit their size to have less than 100 charcters. 
 
-### Functions
+#### Functions
 
 The following table lists the available functions which can be used in the extract-to rules. You can find their descriptions and attributes in the schema file.
 
@@ -187,7 +201,7 @@ truncate | Truncates a string if its size is greater than max.
 trim | Trims a string.
 url | Returns the current url (the url of matched resource) in the context.
 
-### Types
+#### Types
 The following types are avaialbe out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
 
 ```xml
@@ -206,7 +220,7 @@ float | converts string to float
 date-time | converts a string in the yyyy-MM-dd'T'HH:mm:ss format to a date
 date | converts a string in the dd/MM/yyyy format to a date
 
-### Fields
+#### Fields
 
 There are three implict fields that you might use them without needing to be defined:
 
@@ -255,7 +269,7 @@ Note that if a field is multi field, you can write multiple extract-to rules for
 </config>
 ```
 
-### Documents
+#### Documents
 
 Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are three samples:
 
@@ -339,7 +353,12 @@ There is an option to extract several documents from one given resource. To enab
 
 In the above example, for each html element with css class "doc", one document will be created. The url of this document is extracted from the first href inside this element.
 
-### Parsing XML documents
+### Usage
+
+#### Parsing HTML documents
+(TODO)
+
+#### Parsing XML documents
 You can use extractor plugin to extract parts of xml documents. First, you must configure the plugin in mode 2 and set it as the default parser for xml mime types. Second, you must set your evaluation engine to xpath in your documents since clearly css engine can not parse xml documents. As an example, suppose we want to extract all person names from the following xml file:
 
 ```xml
@@ -440,6 +459,12 @@ You can extract links for further crawling from xml documents too. Here is an ex
 	</outlinks>
 </document>
 ```
+
+#### Using without nutch (standalone)
+(TODO)
+
+###Troubleshooting
+(TODO)
 
 
 	

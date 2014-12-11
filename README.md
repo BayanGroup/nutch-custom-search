@@ -118,10 +118,7 @@ The main configuration file is extractors.xml. This file has three sections:
 2. fields: contains all the fields that the extracted parts should be put into them. These fields should be define in the solrschema.xml file too to be recongnizable by solr. Each field has a name and an optional type which is one of the types defined in the types section. If no type is specified, the field is considered as of type string.
 3. documents: contains one or several documents. For each resource (e.g. a web page) that you want to extract its content into the fields, you need to define a document. Each docuement declares its accepting urls by means of regex expressions. When a resource with a specific url and some content is fetched by nutch, 
 the extractor looks for a docuemnt that its url matches the resoruce url. If multiple matching documents are fround, the first one will be used. 
-Then, the contnet of the resource is parsed using an engine that specified by the dccument (or using the default engine if no engine is specified). Currently there are three engines avaialbe: 
-css (which parses the content using jsoup library and is able to answer css selectors expressions), 
-xpath (which uses the standard JAXP infrastrucutre and is able to answer xpath expressions),
-txt (suitable for line oriented processing of text files). 
+Then, the contnet of the resource is parsed using an engine that specified by the document (or using the default engine if no engine is specified). 
 Each document consits of a set of extract-to rules. An extract-to rule extracts a value from the content and put the extracted value into its defined field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions. 
 
 The root element of extractors.xml must be named "config" and define the namesapce "http://bayan.ir" as the defualt namesapce. This element has the following optional attributes:
@@ -177,7 +174,7 @@ In the second rule, we first extract the text value of all li.gbt span.gbts node
 
 #### Functions
 
-The following table lists the available functions which can be used in the extract-to rules. You can find their descriptions and attributes in the schema file.
+Functions are used inside extract-to rules to compute a value from the parsed content. The following table lists the available functions which can be used in the extract-to rules. You can find their descriptions and attributes in the schema file.
 
 All functions output a list of objects and take as input a list of objects. Hence they can be nested (chained) to use output of one function as an input of another function. Note that when Extractor wants to compute the value of an extract-to rule, it first calls the chain of functions and then the returned list first concatenated (with space as the separator char) and then, after a possible conversion, if this value is not null or empty, it will be copied to the field.
 
@@ -203,10 +200,11 @@ trim | Trims a string.
 url | Returns the current url (the url of matched resource) in the context.
 
 #### Types
-The following types are avaialbe out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
+Each field might have a type. The following types are avaialbe out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
 
 ```xml
 <types>
+	<type name="string" />
 	<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
 	<type name="float" converter="ir.co.bayan.simorq.zal.extractor.convert.FloatConverter" />
 	<type name="date" converter="ir.co.bayan.simorq.zal.extractor.convert.DateConverter" />
@@ -216,6 +214,7 @@ The following types are avaialbe out of the box. You can define your own types a
 
 Type | Description
 ------------- | -----------
+string | (the default type of nothing is specified)
 long | converts string to long
 float | converts string to float
 date-time | converts a string in the yyyy-MM-dd'T'HH:mm:ss format to a date
@@ -225,9 +224,9 @@ date | converts a string in the dd/MM/yyyy format to a date
 
 There are three implict fields that you might use them without needing to be defined:
 
-1. url: the url of current document. This is mandantory and defaults to the matched resource url.
-2. title: the title of current document. If not specified, the url will be used as the title.
-3. content: the html content of this document which can be used by nutch plugins.
+1. url: the url of the current document. This is mandantory and defaults to the matched resource url.
+2. title: the title of current document. In mode 2, if title is not specified, the url will be used as the title.
+3. content: the textual content of this document which can be used by other nutch plugins (for instance the TextProfileSignature use this).
 
 For each field, you can set its "multi" attribute to true which enables multiple values to be defined for this field. In this case, the value of this field is a list and each extracted item are added to this list. Note that you must also change your solr schema for that field to accept multiple values. As an example, suppose in our google example mentioned above, we wanted  "all-items" field to be a multi-value field. We can write our extractors.xml like this:
 
@@ -271,6 +270,12 @@ Note that if a field is multi field, you can write multiple extract-to rules for
 ```
 
 #### Documents
+
+A document represents one type of resource that you want to extract its content in a particular way. Each document can specify which engine should be used for parsing its content. Currently there are three engines avaialbe: 
+* css: parses the content using jsoup library and is able to answer css selectors expressions
+* xpath: uses the standard JAXP infrastrucutre and is able to answer xpath expressions
+* txt: suitable for line oriented processing of text files. 
+
 
 Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are three samples:
 

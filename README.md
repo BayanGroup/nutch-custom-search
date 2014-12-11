@@ -8,17 +8,18 @@ Note: This project is tested with nutch 1.7-1.9 (nutch 2.X is not supported yet)
 
 Table of Contents
 -----------------
-* [Extractor](#Extractor)
-  * [Setup](#Setup)
-  * [Configuration](#Configuration)
-    * [Functions](#Functions)
-    * [Types](#Types)
-    * [Fields](#Fields)
-    * [Documents](#Documents)
-  * [Usage](#Usage)
-    * [Parsing HTML documents](#Parsing HTML documents)
-    * [Parsing XML documents](#Parsing XML documents)
-  * [Troubleshooting](#Troubleshooting)
+* [Extractor](#extractor)
+  * [Setup](#setup)
+  * [Configuration](#configuration)
+    * [Functions](#functions)
+    * [Types](#types)
+    * [Fields](#fields)
+    * [Documents](#documents)
+  * [Usage](#usage)
+    * [Parsing HTML documents](#parsing-html-documents)
+    * [Parsing XML documents](#parsing-xml-documents)
+    * [Using without nutch (standalone)](#using-without-nutch-standalone)
+  * [Troubleshooting](#troubleshooting)
 
 Extractor
 ---------

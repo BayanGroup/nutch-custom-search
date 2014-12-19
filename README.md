@@ -180,10 +180,11 @@ All functions output a list of objects and take as input a list of objects. Henc
 
 Function name | Description
 ------------- | -----------
-attribute | Extracts the value of a attribute with the specified name from the input elements.
+attribute | Extracts the value of an attribute with the specified name from the input elements.
 concat | Concats its inputs by the provided delimiter.
 constant | Always returns a fixed constant.
 decode | Decodes the given url string.
+default | Returns its first non-empty argument. An argument is empty if it is null, 0-sized, or contains only empty strings.
 expr | Evaluates an expression using the current engine and returns the list of resulted elements. The evaluation is done in the scope of current root. By default the document elemen is the root unless it is changed using for-each, root attribute of document element, or a fragment. By default expression "." refers to the current root.
 fetch | Fetches a content from the given url and evaluates it with the specified engine. (Experimental)
 field-value | Returns the extracted value of the given field.

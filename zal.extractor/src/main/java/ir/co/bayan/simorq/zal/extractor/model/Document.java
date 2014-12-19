@@ -253,7 +253,7 @@ public class Document extends Fragment {
 		}
 
 		if (LOGGER.isDebugEnabled())
-			LOGGER.debug(this.toString());
+			LOGGER.debug(document.toString());
 		document.extractFields(root, context, mainDoc);
 		document.insertSpecialFields(context, mainDoc);
 		document.extractOutlinks(root, context, mainDoc);

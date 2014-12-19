@@ -22,6 +22,7 @@
 			<xs:element name="fetch" type="fetchType" />
 			<xs:element name="field-value" type="fieldValueType" />
 			<xs:element name="decode" type="decodeType" />
+			<xs:element name="default" type="defaultType" />
 		</xs:choice>
 	</xs:group>
 	
@@ -244,6 +245,18 @@
 			</xs:documentation>
 		</xs:annotation>
 		<xs:attribute name="field" use="required" type="xs:IDREF"/>
+	</xs:complexType>
+	
+	<xs:complexType name="defaultType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Returns its first non-empty argument. An argument is empty if it is null, 0-sized, or contains only empty strings.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="functionType">
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	
 </xs:schema>

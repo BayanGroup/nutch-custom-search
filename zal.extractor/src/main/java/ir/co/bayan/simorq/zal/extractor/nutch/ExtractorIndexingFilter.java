@@ -82,7 +82,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 			if (field.isIndex()) {
 				String name = field.getName();
 				for (String value : metadata.getValues(name)) {
-					if (!StringUtils.isEmpty(value)) {
+					if (!StringUtils.isBlank(value)) {
 						Object finalValue = value;
 						TypeDef type = field.getType();
 						if (type != null) {

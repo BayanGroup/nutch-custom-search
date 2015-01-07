@@ -272,13 +272,13 @@ Note that if a field is multi field, you can write multiple extract-to rules for
 
 #### Documents
 
-A document represents one type of resource that you want to extract its content in a particular way. Each document can specify which engine should be used for parsing its content. Currently there are three engines avaialbe: 
-* css: parses the content using jsoup library and is able to answer css selectors expressions
+A document represents one type of resource that you want to extract its content in a particular way. Each document can specify one engine for parsing its content. Currently there are three engines avaialbe: 
+* css: parses the content using Jsoup library and is able to answer css selectors expressions
 * xpath: uses the standard JAXP infrastrucutre and is able to answer xpath expressions
 * txt: suitable for line oriented processing of text files. 
 
 
-Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are three samples:
+Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are two samples:
 
 ```xml
 <document url=".">
@@ -302,7 +302,7 @@ Each document may specifiy an outlinks section that tells extractor how outlinks
 			<href>
 				<resolve>
 					<attribute name="href">
-						<expr value="a[rel!=nofollow]"/>
+						<expr value="a[rel!=nofollow], link[rel=canonical]"/>
 					</attribute>
 				</resolve>
 			</href>
@@ -320,8 +320,8 @@ Also each document can have an id and other documents can inherit its fields and
 			<url />
 		</decode>
 	</extract-to>
-	<extract-to field="subdomain">
-		<replace pattern="^[^:]+://([^:/]+)(:([0-9]+))?/.*" substitution="$1">
+	<extract-to field="site">
+		<replace pattern="^.+?://(.+?)/.*" substitution="$1">
 			<url />
 		</replace>
 	</extract-to>
@@ -337,7 +337,7 @@ Also each document can have an id and other documents can inherit its fields and
 
 The inheritence chain can be of any length but note that the evaluation engine can not be changed along the inheritance hierarchy. 
 
-There is an option to extract several documents from one given resource. To enable this, you can specify a root for your document or define one or several fragments inside your docuemtn each with a root. The root must be an expression in terms of the current engine, that specifies the new root for evaluation. e.g.
+There is an option to extract several documents from one given resource. To enable this, you can specify a root for your document or define one or several fragments inside your document each with a root. The root must be an expression in terms of the current engine, that specifies the new root for evaluation. Since each fragment is going to be a distinct document recognizable by nutch, it is required to have a field named "url" inside your fragment. You can also use the predifined fields such as title and content insider your fragment, to specify the title and content of your extracted document. As an example:
 
 ```xml
 <document url="test.html" engine="css">

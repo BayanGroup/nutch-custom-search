@@ -6,6 +6,21 @@ The project is an open-source project released under Apache License Version 2.0.
 
 Note: This project is tested with nutch 1.7-1.9 (nutch 2.X is not supported yet).
 
+Table of Contents
+-----------------
+* [Extractor](#extractor)
+  * [Setup](#setup)
+  * [Configuration](#configuration)
+    * [Functions](#functions)
+    * [Types](#types)
+    * [Fields](#fields)
+    * [Documents](#documents)
+  * [Usage](#usage)
+    * [Parsing HTML documents](#parsing-html-documents)
+    * [Parsing XML documents](#parsing-xml-documents)
+    * [Using without nutch (standalone)](#using-without-nutch-standalone)
+  * [Troubleshooting](#troubleshooting)
+
 Extractor
 ---------
 
@@ -102,11 +117,8 @@ The main configuration file is extractors.xml. This file has three sections:
 1. types: you can define your required types and their corresponding converters here. This section is optional.
 2. fields: contains all the fields that the extracted parts should be put into them. These fields should be define in the solrschema.xml file too to be recongnizable by solr. Each field has a name and an optional type which is one of the types defined in the types section. If no type is specified, the field is considered as of type string.
 3. documents: contains one or several documents. For each resource (e.g. a web page) that you want to extract its content into the fields, you need to define a document. Each docuement declares its accepting urls by means of regex expressions. When a resource with a specific url and some content is fetched by nutch, 
-the extractor looks for a docuemnt that its url matches the resoruce url. If multiple matching documents are fround, the first one will be used. 
-Then, the contnet of the resource is parsed using an engine that specified by the dccument (or using the default engine if no engine is specified). Currently there are three engines avaialbe: 
-css (which parses the content using jsoup library and is able to answer css selectors expressions), 
-xpath (which uses the standard JAXP infrastrucutre and is able to answer xpath expressions),
-txt (suitable for line oriented processing of text files). 
+the extractor looks for a docuemnt that its url matches the resoruce url. If multiple matching documents are found, the first one will be used. 
+Then, the contnet of the resource is parsed using the engine specified by the document (or using the default engine if no engine is specified). 
 Each document consits of a set of extract-to rules. An extract-to rule extracts a value from the content and put the extracted value into its defined field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions. 
 
 The root element of extractors.xml must be named "config" and define the namesapce "http://bayan.ir" as the defualt namesapce. This element has the following optional attributes:
@@ -160,25 +172,26 @@ The size function, returns the number of items in its argument which here is the
 This extracted value is copied into a field named "num-items".
 In the second rule, we first extract the text value of all li.gbt span.gbts nodes, then concat them with comma as the seperator and then limit their size to have less than 100 charcters. 
 
-### Functions
+#### Functions
 
-The following table lists the available functions which can be used in the extract-to rules. You can find their descriptions and attributes in the schema file.
+Functions are used inside the extract-to rules to compute a value from the parsed content. The following table lists the available functions which can be used in the extract-to rules. You can find their descriptions and attributes in the schema file.
 
 All functions output a list of objects and take as input a list of objects. Hence they can be nested (chained) to use output of one function as an input of another function. Note that when Extractor wants to compute the value of an extract-to rule, it first calls the chain of functions and then the returned list first concatenated (with space as the separator char) and then, after a possible conversion, if this value is not null or empty, it will be copied to the field.
 
 Function name | Description
 ------------- | -----------
-attribute | Extracts the value of attribute with the specified name from the input elements.
+attribute | Extracts the value of an attribute with the specified name from the input elements.
 concat | Concats its inputs by the provided delimiter.
 constant | Always returns a fixed constant.
 decode | Decodes the given url string.
-expr | Evaluates an expression using the current engine and returnes the list of result elements. The evaluation is done in the scope of current root. By default the document elemen is the root unless it is changed using for-each, root attribute of document element, a fragment. By default expression "." refers to the current root.
-fetch | Fetches a content from the given url and evaluates it with the specified engine.
+default | Returns its first non-empty argument. An argument is empty if it is null, 0-sized, or contains only empty strings.
+expr | Evaluates an expression using the current engine and returns the list of resulted elements. The evaluation is done in the scope of current root. By default the document elemen is the root unless it is changed using for-each, root attribute of document element, or a fragment. By default expression "." refers to the current root.
+fetch | Fetches a content from the given url and evaluates it with the specified engine. (Experimental)
 field-value | Returns the extracted value of the given field.
 first | Returns the first object in the list of its argument.
 for-each |  Iterates through its children with the given root as the new root.
 last | Returns the last object in the list of its argument.
-link  | Retunes a set of links with href and anchors.
+link  | Retuns a set of links with href and anchors.
 replace | Replaces its input using the provided regex pattern by the provided substitution.
 resolve | Resolves a possible relative url to absolute one based on the current url in the context.
 size | Returns the number of objects in its argument (which is a list).
@@ -187,11 +200,12 @@ truncate | Truncates a string if its size is greater than max.
 trim | Trims a string.
 url | Returns the current url (the url of matched resource) in the context.
 
-### Types
-The following types are avaialbe out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
+#### Types
+Each field might have a type. The following types are avaialbe out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
 
 ```xml
 <types>
+	<type name="string" />
 	<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
 	<type name="float" converter="ir.co.bayan.simorq.zal.extractor.convert.FloatConverter" />
 	<type name="date" converter="ir.co.bayan.simorq.zal.extractor.convert.DateConverter" />
@@ -201,18 +215,19 @@ The following types are avaialbe out of the box. You can define your own types a
 
 Type | Description
 ------------- | -----------
+string | (the default type of nothing is specified)
 long | converts string to long
 float | converts string to float
 date-time | converts a string in the yyyy-MM-dd'T'HH:mm:ss format to a date
 date | converts a string in the dd/MM/yyyy format to a date
 
-### Fields
+#### Fields
 
 There are three implict fields that you might use them without needing to be defined:
 
-1. url: the url of current document. This is mandantory and defaults to the matched resource url.
-2. title: the title of current document. If not specified, the url will be used as the title.
-3. content: the html content of this document which can be used by nutch plugins.
+1. url: the url of the current document. This is mandantory and defaults to the matched resource url.
+2. title: the title of the current document. In mode 2, if title is not specified, the url will be used as the title.
+3. content: the textual content of this document which can be used by other nutch plugins (for instance the TextProfileSignature use this).
 
 For each field, you can set its "multi" attribute to true which enables multiple values to be defined for this field. In this case, the value of this field is a list and each extracted item are added to this list. Note that you must also change your solr schema for that field to accept multiple values. As an example, suppose in our google example mentioned above, we wanted  "all-items" field to be a multi-value field. We can write our extractors.xml like this:
 
@@ -255,9 +270,15 @@ Note that if a field is multi field, you can write multiple extract-to rules for
 </config>
 ```
 
-### Documents
+#### Documents
 
-Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are three samples:
+A document represents one type of resource that you want to extract its content in a particular way. Each document can specify one engine for parsing its content. Currently there are three engines avaialbe: 
+* css: parses the content using Jsoup library and is able to answer css selectors expressions
+* xpath: uses the standard JAXP infrastrucutre and is able to answer xpath expressions
+* txt: suitable for line oriented processing of text files. 
+
+
+Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are two samples:
 
 ```xml
 <document url=".">
@@ -281,7 +302,7 @@ Each document may specifiy an outlinks section that tells extractor how outlinks
 			<href>
 				<resolve>
 					<attribute name="href">
-						<expr value="a[rel!=nofollow]"/>
+						<expr value="a[rel!=nofollow], link[rel=canonical]"/>
 					</attribute>
 				</resolve>
 			</href>
@@ -299,8 +320,8 @@ Also each document can have an id and other documents can inherit its fields and
 			<url />
 		</decode>
 	</extract-to>
-	<extract-to field="subdomain">
-		<replace pattern="^[^:]+://([^:/]+)(:([0-9]+))?/.*" substitution="$1">
+	<extract-to field="site">
+		<replace pattern="^.+?://(.+?)/.*" substitution="$1">
 			<url />
 		</replace>
 	</extract-to>
@@ -316,7 +337,7 @@ Also each document can have an id and other documents can inherit its fields and
 
 The inheritence chain can be of any length but note that the evaluation engine can not be changed along the inheritance hierarchy. 
 
-There is an option to extract several documents from one given resource. To enable this, you can specify a root for your document or define one or several fragments inside your docuemtn each with a root. The root must be an expression in terms of the current engine, that specifies the new root for evaluation. e.g.
+There is an option to extract several documents from one given resource. To enable this, you can specify a root for your document or define one or several fragments inside your document each with a root. The root must be an expression in terms of the current engine, that specifies the new root for evaluation. Since each fragment is going to be a distinct document recognizable by nutch, it is required to have a field named "url" inside your fragment. You can also use the predifined fields such as title and content insider your fragment, to specify the title and content of your extracted document. As an example:
 
 ```xml
 <document url="test.html" engine="css">
@@ -339,7 +360,12 @@ There is an option to extract several documents from one given resource. To enab
 
 In the above example, for each html element with css class "doc", one document will be created. The url of this document is extracted from the first href inside this element.
 
-### Parsing XML documents
+### Usage
+
+#### Parsing HTML documents
+(TODO)
+
+#### Parsing XML documents
 You can use extractor plugin to extract parts of xml documents. First, you must configure the plugin in mode 2 and set it as the default parser for xml mime types. Second, you must set your evaluation engine to xpath in your documents since clearly css engine can not parse xml documents. As an example, suppose we want to extract all person names from the following xml file:
 
 ```xml
@@ -440,6 +466,12 @@ You can extract links for further crawling from xml documents too. Here is an ex
 	</outlinks>
 </document>
 ```
+
+#### Using without nutch (standalone)
+(TODO)
+
+###Troubleshooting
+(TODO)
 
 
 	

@@ -66,6 +66,9 @@ public class Document extends Fragment {
 	@XmlAttribute
 	private boolean adaptive = true;
 
+	@XmlAttribute
+	private boolean stopProcessing = false;
+
 	/**
 	 * @return the url
 	 */
@@ -220,6 +223,13 @@ public class Document extends Fragment {
 	 */
 	public boolean isAdaptive() {
 		return adaptive;
+	}
+
+	/**
+	 * @return the stopProcessing
+	 */
+	public boolean isStopProcessing() {
+		return stopProcessing;
 	}
 
 	private String getEngine(Document document) {

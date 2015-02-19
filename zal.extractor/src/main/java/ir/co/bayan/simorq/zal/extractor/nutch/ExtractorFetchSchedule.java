@@ -1,5 +1,7 @@
 package ir.co.bayan.simorq.zal.extractor.nutch;
 
+import java.util.List;
+
 import ir.co.bayan.simorq.zal.extractor.core.ExtractEngine;
 import ir.co.bayan.simorq.zal.extractor.model.Document;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
@@ -42,15 +44,18 @@ public class ExtractorFetchSchedule extends AdaptiveFetchSchedule {
 			long fetchTime, long modifiedTime, int state) {
 		// Check whether it previously being set
 		if (!datum.getMetaData().containsKey(WRITABLE_SET_INTERVAL)) {
-			Document doc = ExtractEngine.getInstance().findMatchingDoc(url.toString(), null);
-			if (doc != null && doc.getEveryInMiliSecond() != null) {
-				datum.setFetchInterval(doc.getEveryInMiliSecond());
-				if (!doc.isAdaptive())
-					datum.getMetaData().put(Nutch.WRITABLE_FIXED_INTERVAL_KEY,
-							new FloatWritable(doc.getEveryInMiliSecond()));
+			List<Document> docs = ExtractEngine.getInstance().findMatchingDoc(url.toString(), null);
+			if (docs != null && !docs.isEmpty()) {
+				Document doc = docs.get(0);
+				if (doc != null && doc.getEveryInMiliSecond() != null) {
+					datum.setFetchInterval(doc.getEveryInMiliSecond());
+					if (!doc.isAdaptive())
+						datum.getMetaData().put(Nutch.WRITABLE_FIXED_INTERVAL_KEY,
+								new FloatWritable(doc.getEveryInMiliSecond()));
+				}
+				// set the flag
+				datum.getMetaData().put(WRITABLE_SET_INTERVAL, new BooleanWritable(true));
 			}
-			// set the flag
-			datum.getMetaData().put(WRITABLE_SET_INTERVAL, new BooleanWritable(true));
 		}
 		return super.setFetchSchedule(url, datum, prevFetchTime, prevModifiedTime, fetchTime, modifiedTime, state);
 	}

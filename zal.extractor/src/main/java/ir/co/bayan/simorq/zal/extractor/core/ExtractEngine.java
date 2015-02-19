@@ -1,5 +1,6 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
+import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc.LinkData;
 import ir.co.bayan.simorq.zal.extractor.evaluation.CssEvaluator;
 import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
 import ir.co.bayan.simorq.zal.extractor.evaluation.Evaluator;
@@ -8,6 +9,7 @@ import ir.co.bayan.simorq.zal.extractor.evaluation.XPathEvaluator;
 import ir.co.bayan.simorq.zal.extractor.model.Document;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,37 +95,98 @@ public class ExtractEngine {
 	public List<ExtractedDoc> extract(Content content) throws Exception {
 		Validate.notNull(content);
 
+		List<ExtractedDoc> res = new ArrayList<ExtractedDoc>();
+		
 		// 1. Decide on which document matches the url and contentType
-		Document document = findMatchingDoc(content.getUrl().toString(), content.getType());
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("Matched document with url={} and contentType={} is {}", content.getUrl().toString(),
-					content.getType(), document);
-		}
-		if (document == null) {
+		List<Document> documents = findMatchingDoc(content.getUrl().toString(), content.getType());
+		if (documents == null || documents.isEmpty()) {
 			return null;
 		}
+		for (Document document : documents) {
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Matched document with url={} and contentType={} is {}", new Object[] { content.getUrl().toString(),
+						content.getType(), document });
+			}
 
-		// 2. Select an engine for parsing the document
-		String engine = deriveEngineName(document);
-		Evaluator<? extends EvaluationContext> evalEngine = EvaluatorFactory.getInstance().getEvaluator(engine);
-		if (evalEngine == null)
-			throw new IllegalArgumentException("No engine found with the name " + engine);
+			// 2. Select an engine for parsing the document
+			String engine = deriveEngineName(document);
+			Evaluator<? extends EvaluationContext> evalEngine = EvaluatorFactory.getInstance().getEvaluator(engine);
+			if (evalEngine == null)
+				throw new IllegalArgumentException("No engine found with the name " + engine);
+	
+			// 3. Parse the document and start the extraction process
+			EvaluationContext context = evalEngine.createContext(content);
+			List<ExtractedDoc> thisRes = document.extract(context);
+			res.addAll(thisRes);
+		}
+		return merge(res);
+	}
+	
+	private List<ExtractedDoc> merge(List<ExtractedDoc> documents) {
+		Validate.notNull(documents);
 
-		// 3. Parse the document and start the extraction process
-		EvaluationContext context = evalEngine.createContext(content);
-		return document.extract(context);
+		// If we're not in multiple match mode, do nothing
+		if (!extractorConfig.isMultipleMatchMode()) return documents;
+		
+		List<ExtractedDoc> res = new ArrayList<ExtractedDoc>();
+		
+		for (ExtractedDoc document : documents) {
+			ExtractedDoc foundDoc = null;
+			for (ExtractedDoc doc : res) {
+				if (document.getUrl().equalsIgnoreCase(doc.getUrl())) {
+					foundDoc = doc; 
+					break;
+				}
+			}
+			if (foundDoc == null) {
+				// This url isn't in our result set, so just add it
+				res.add(document);
+			} else {
+				// This url is already in our results, so merge in the fields and outlinks
+				Map<String, Object> existingFields = foundDoc.getFields();
+				Map<String, Object> newFields = document.getFields();
+				for (String newKey : newFields.keySet()) {
+					Object newField = newFields.get(newKey);
+					if (!existingFields.containsKey(newKey)) {
+						foundDoc.addField(newKey, newField);
+					} else if (newField instanceof ArrayList<?>) {
+						try {
+							// Multi-value field, so append new to existing
+							@SuppressWarnings("unchecked")
+							List<String> existingField = (ArrayList<String>)existingFields.get(newKey);
+							@SuppressWarnings("unchecked")
+							List<String> newFieldList = (ArrayList<String>)newFields.get(newKey);
+							existingField.addAll(newFieldList);
+						}
+						catch (ClassCastException ex) {
+							// Ignore this - we'll stick with the original value(s)
+						}
+					}
+				}
+				List<LinkData> existingLinks = foundDoc.getOutlinks();
+				existingLinks.addAll(document.getOutlinks());
+				foundDoc.setOutlinks(existingLinks);
+			}
+		}
+		
+		return res;
 	}
 
 	private String deriveEngineName(Document document) {
 		return StringUtils.defaultIfEmpty(document.getInheritedEngine(), extractorConfig.getDefaultEngine());
 	}
 
-	public Document findMatchingDoc(String url, String contentType) {
+	public List<Document> findMatchingDoc(String url, String contentType) {
+		List<Document> res = new ArrayList<Document>();
+
 		for (Document doc : extractorConfig.getDocuments()) {
-			if (doc.matches(url, contentType))
-				return doc;
+			if (doc.matches(url, contentType)) {
+				res.add(doc);
+				if (!extractorConfig.isMultipleMatchMode() 
+						|| doc.isStopProcessing()) break;
+			}
 		}
-		return null;
+		return res;
 	}
 
 	public Document getDocById(String id) {

@@ -60,6 +60,7 @@
 		<xs:attribute name="update" type="xs:boolean" default="false"/>
 		<xs:attribute name="every" type="xs:string" use="optional" />
 		<xs:attribute name="adaptive" type="xs:boolean" use="optional" default="true"/>
+		<xs:attribute name="stopProcessing" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
 
 	<xs:element name="config">
@@ -90,6 +91,7 @@
 			<xs:attribute name="omitNonMatching" type="xs:boolean" default="false"/>
 			<xs:attribute name="filterNonMatching" type="xs:boolean" default="false"/>
 			<xs:attribute name="defaultEngine" type="xs:string" default="css"/>
+			<xs:attribute name="matchMode" type="xs:string" use="optional" default="single"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

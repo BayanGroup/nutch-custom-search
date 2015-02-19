@@ -1,7 +1,10 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import org.apache.commons.io.IOUtils;
 
 /**
  * Represents a content fetched from specific url.
@@ -11,15 +14,15 @@ import java.net.URL;
  */
 public class Content {
 
-	private InputStream data;
+	private byte[] data;
 	private String encoding;
 	private String type;
 	private URL url;
 
-	public Content(URL url, InputStream data, String encoding, String contentType) {
+	public Content(URL url, InputStream data, String encoding, String contentType) throws IOException {
 		super();
 		this.url = url;
-		this.data = data;
+		this.data = IOUtils.toByteArray(data);
 		this.encoding = encoding;
 		this.type = contentType;
 	}
@@ -35,7 +38,7 @@ public class Content {
 	 * @return the data
 	 */
 	public InputStream getData() {
-		return data;
+		return new ByteArrayInputStream(data);
 	}
 
 	/**

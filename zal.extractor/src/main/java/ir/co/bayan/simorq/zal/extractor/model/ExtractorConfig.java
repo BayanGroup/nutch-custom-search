@@ -38,6 +38,9 @@ public class ExtractorConfig {
 	@XmlAttribute
 	private String defaultEngine = "css";
 
+	@XmlAttribute
+	private String matchMode = "single";
+
 	@XmlElementWrapper(name = "types")
 	@XmlElement(name = "type")
 	private List<TypeDef> types;
@@ -81,6 +84,17 @@ public class ExtractorConfig {
 	 */
 	public String getDefaultEngine() {
 		return defaultEngine;
+	}
+
+	/**
+	 * @return the matchMode
+	 */
+	public String getMatchMode() {
+		return matchMode;
+	}
+	
+	public boolean isMultipleMatchMode() {
+		return matchMode.equals("multiple");
 	}
 
 	public static ExtractorConfig readConfig(Reader configReader) throws Exception {

@@ -38,7 +38,7 @@ public class ExtractorUrlFilter implements URLFilter {
 	@Override
 	public String filter(String urlString) {
 		if (enable)
-			return ExtractEngine.getInstance().findMatchingDoc(urlString, null) == null ? null : urlString;
+			return ExtractEngine.getInstance().findMatchingDocs(urlString, null) == null ? null : urlString;
 		return urlString;
 	}
 }

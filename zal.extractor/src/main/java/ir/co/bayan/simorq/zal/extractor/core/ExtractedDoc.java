@@ -1,12 +1,14 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.nutch.parse.Outlink;
+
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.nutch.parse.Outlink;
+import java.util.Map.Entry;
 
 /**
  * Represents an extracted fragment from a given content (HTML or XML). It is possible that from a single content,
@@ -47,7 +49,7 @@ public class ExtractedDoc {
 
 	}
 
-	private final Map<String, Object> fields = new HashMap<String, Object>();
+	private Map<String, Object> fields = new HashMap<String, Object>();
 	private String url;
 	private String title;
 	private List<LinkData> outlinks = new ArrayList<LinkData>();
@@ -157,6 +159,46 @@ public class ExtractedDoc {
 		}
 		return res;
 	}
+
+    /**
+     * Merge this document the given document with this document. The properties
+     * of this document have priority over the given document.
+     */
+    public void mergeWith(ExtractedDoc document) {
+        //merge fields
+        Map<String, Object> existingFields = getFields();
+        Map<String, Object> newFields = document.getFields();
+        for (Entry<String, Object> newField: newFields.entrySet()) {
+            String newKey = newField.getKey();
+            Object newValue = newField.getValue();
+            if (!existingFields.containsKey(newKey)) {
+                addField(newKey, newValue);
+            } else if (newValue instanceof List<?>) {
+                try {
+                    // Multi-value field, so append new to existing
+                    @SuppressWarnings("unchecked")
+                    List<String> existingField = (List<String>) existingFields.get(newKey);
+                    @SuppressWarnings("unchecked")
+                    List<String> newFieldList = (List<String>) newFields.get(newKey);
+                    existingField.addAll(newFieldList);
+                } catch (ClassCastException ex) {
+                    // Ignore this - we'll stick with the original value(s)
+                }
+            }
+        }
+
+        //merge outlinks
+        //TODO possible duplicates, no problem when using nutch though
+        List<LinkData> existingLinks = getOutlinks();
+        existingLinks.addAll(document.getOutlinks());
+        setOutlinks(existingLinks);
+
+        //merge nutch specific fields
+        if(StringUtils.isEmpty(getTitle()))
+            setTitle(document.getTitle());
+        if(StringUtils.isEmpty(getText()))
+            setText(document.getText());
+    }
 
 	@Override
 	public String toString() {

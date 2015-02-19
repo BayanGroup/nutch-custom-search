@@ -1,33 +1,29 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
-import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc.LinkData;
-import ir.co.bayan.simorq.zal.extractor.evaluation.CssEvaluator;
-import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
-import ir.co.bayan.simorq.zal.extractor.evaluation.Evaluator;
-import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluatorFactory;
-import ir.co.bayan.simorq.zal.extractor.evaluation.XPathEvaluator;
+import ir.co.bayan.simorq.zal.extractor.evaluation.*;
 import ir.co.bayan.simorq.zal.extractor.model.Document;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Extracts parts of an HTML or XML file based on the defined extract rules in the provided config file. Note that
  * although the configuration file has the types section, this class does not perform any type specific actions such as
  * type conversions. This class is thread-safe and you can configure it only once.
+ * Note: the API of this class is subject to change, till version 1.0 comes out.
  * 
  * @see XPathEvaluator
  * @see CssEvaluator
  * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
+ *
  * 
  */
 public class ExtractEngine {
@@ -86,11 +82,10 @@ public class ExtractEngine {
 	}
 
 	/**
-	 * Extracts parts of the given content based on the defined extract-to rules in the config file. It uses the first
-	 * matching document with the given url as the document that defines those extract-to rules.
+	 * Extracts parts of the given content based on the defined extract-to rules in the config file.
+     * The extract-to rules are computed from the matching document(s) with the given url and content type.
 	 * 
-	 * @return a map of field names to the extracted value for that field according to the last last extract-to rule
-	 *         that matches the field name. If no document matches the given url, null will be returned.
+	 * @return List of extracted documents from the given content. Null if no document matched with the given content.
 	 */
 	public List<ExtractedDoc> extract(Content content) throws Exception {
 		Validate.notNull(content);
@@ -98,14 +93,14 @@ public class ExtractEngine {
 		List<ExtractedDoc> res = new ArrayList<ExtractedDoc>();
 		
 		// 1. Decide on which document matches the url and contentType
-		List<Document> documents = findMatchingDoc(content.getUrl().toString(), content.getType());
+		List<Document> documents = findMatchingDocs(content.getUrl().toString(), content.getType());
 		if (documents == null || documents.isEmpty()) {
 			return null;
 		}
 		for (Document document : documents) {
 			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Matched document with url={} and contentType={} is {}", new Object[] { content.getUrl().toString(),
-						content.getType(), document });
+				LOGGER.debug("Matched document with url={} and contentType={} is {}", content.getUrl().toString(),
+						content.getType(), document);
 			}
 
 			// 2. Select an engine for parsing the document
@@ -143,29 +138,7 @@ public class ExtractEngine {
 				res.add(document);
 			} else {
 				// This url is already in our results, so merge in the fields and outlinks
-				Map<String, Object> existingFields = foundDoc.getFields();
-				Map<String, Object> newFields = document.getFields();
-				for (String newKey : newFields.keySet()) {
-					Object newField = newFields.get(newKey);
-					if (!existingFields.containsKey(newKey)) {
-						foundDoc.addField(newKey, newField);
-					} else if (newField instanceof ArrayList<?>) {
-						try {
-							// Multi-value field, so append new to existing
-							@SuppressWarnings("unchecked")
-							List<String> existingField = (ArrayList<String>)existingFields.get(newKey);
-							@SuppressWarnings("unchecked")
-							List<String> newFieldList = (ArrayList<String>)newFields.get(newKey);
-							existingField.addAll(newFieldList);
-						}
-						catch (ClassCastException ex) {
-							// Ignore this - we'll stick with the original value(s)
-						}
-					}
-				}
-				List<LinkData> existingLinks = foundDoc.getOutlinks();
-				existingLinks.addAll(document.getOutlinks());
-				foundDoc.setOutlinks(existingLinks);
+                foundDoc.mergeWith(document);
 			}
 		}
 		
@@ -176,7 +149,7 @@ public class ExtractEngine {
 		return StringUtils.defaultIfEmpty(document.getInheritedEngine(), extractorConfig.getDefaultEngine());
 	}
 
-	public List<Document> findMatchingDoc(String url, String contentType) {
+	public List<Document> findMatchingDocs(String url, String contentType) {
 		List<Document> res = new ArrayList<Document>();
 
 		for (Document doc : extractorConfig.getDocuments()) {

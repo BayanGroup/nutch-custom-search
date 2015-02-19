@@ -44,7 +44,7 @@ public class ExtractorFetchSchedule extends AdaptiveFetchSchedule {
 			long fetchTime, long modifiedTime, int state) {
 		// Check whether it previously being set
 		if (!datum.getMetaData().containsKey(WRITABLE_SET_INTERVAL)) {
-			List<Document> docs = ExtractEngine.getInstance().findMatchingDoc(url.toString(), null);
+			List<Document> docs = ExtractEngine.getInstance().findMatchingDocs(url.toString(), null);
 			if (docs != null && !docs.isEmpty()) {
 				Document doc = docs.get(0);
 				if (doc != null && doc.getEveryInMiliSecond() != null) {

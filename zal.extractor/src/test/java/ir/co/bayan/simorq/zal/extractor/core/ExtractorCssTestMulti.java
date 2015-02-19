@@ -1,8 +1,9 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
-import static org.junit.Assert.*;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc.LinkData;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,14 +11,13 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class ExtractorCssTest2 {
+public class ExtractorCssTestMulti {
 
 	private ExtractEngine extractEngine;
 	private InputStream testPageContent;
@@ -25,7 +25,7 @@ public class ExtractorCssTest2 {
 	@Before
 	public void setUpBeforeClass() throws Exception {
 		InputStreamReader configReader = new InputStreamReader(
-				ExtractorCssTest.class.getResourceAsStream("/extractors-css-test2.xml"));
+				ExtractorCssTest.class.getResourceAsStream("/extractors-css-test-multi.xml"));
 		ExtractorConfig extractorConfig = ExtractorConfig.readConfig(configReader);
 		extractEngine = new ExtractEngine(extractorConfig);
 		testPageContent = ExtractorCssTest.class.getResourceAsStream("/test.htm");

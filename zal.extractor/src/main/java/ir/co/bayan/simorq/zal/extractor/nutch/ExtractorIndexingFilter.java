@@ -3,9 +3,6 @@ package ir.co.bayan.simorq.zal.extractor.nutch;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 import ir.co.bayan.simorq.zal.extractor.model.Field;
 import ir.co.bayan.simorq.zal.extractor.model.TypeDef;
-
-import java.util.HashMap;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
@@ -18,6 +15,8 @@ import org.apache.nutch.metadata.Metadata;
 import org.apache.nutch.parse.Parse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 
 /**
  * 
@@ -50,7 +49,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 	}
 
 	private void initConfig(Configuration configuration) throws Exception {
-		extractorConfig = ExtractorConfig.readConfig(configuration);
+		extractorConfig = NutchUtils.config(configuration);
 	}
 
 	@Override

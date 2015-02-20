@@ -18,6 +18,7 @@ public class ExtractUtil {
 			Pattern.CASE_INSENSITIVE);
 	private static Pattern charsetPattern = Pattern.compile("charset=\\s*([a-z][_\\-0-9a-z]*)",
 			Pattern.CASE_INSENSITIVE);
+    private static final String SEPARATOR = ";";
 
 	public static boolean isHtml(String contentType) {
 		return "text/html".equals(contentType) || "application/xhtml+xml".equals(contentType);
@@ -52,5 +53,20 @@ public class ExtractUtil {
 
 		return encoding;
 	}
+
+    public static String cleanMimeType(String origType) {
+        if (origType == null)
+            return null;
+
+        // take the origType and split it on ';'
+        String[] tokenizedMimeType = origType.split(SEPARATOR);
+        if (tokenizedMimeType.length > 1) {
+            // there was a ';' in there, take the first value
+            return tokenizedMimeType[0];
+        } else {
+            // there wasn't a ';', so just return the orig type
+            return origType;
+        }
+    }
 
 }

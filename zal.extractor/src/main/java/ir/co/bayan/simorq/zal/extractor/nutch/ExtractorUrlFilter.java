@@ -27,11 +27,11 @@ public class ExtractorUrlFilter implements URLFilter {
 	@Override
 	public void setConf(Configuration conf) {
 		try {
-			ExtractorConfig config = ExtractorConfig.readConfig(conf);
+			ExtractorConfig config = NutchUtils.config(conf);
 			ExtractEngine.getInstance().setConf(config);
 			enable = config.isFilterNonMatching();
 		} catch (Exception e) {
-			LOGGER.error("Exception occured", e);
+			LOGGER.error("Exception occurred", e);
 		}
 	}
 

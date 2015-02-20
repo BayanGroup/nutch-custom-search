@@ -1,22 +1,15 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.List;
+import org.apache.commons.lang3.Validate;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import org.apache.commons.lang3.Validate;
-import org.apache.hadoop.conf.Configuration;
+import java.io.Reader;
+import java.util.List;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
@@ -25,9 +18,6 @@ import org.apache.hadoop.conf.Configuration;
 @XmlRootElement(name = "config")
 @XmlType(propOrder = { "types", "fields", "documents" })
 public class ExtractorConfig {
-
-	private static final String FILE_CONFIG_KEY = "extractor.file";
-	private static final String DEFATUL_CONFIG_FILE = "extractors.xml";
 
 	@XmlAttribute
 	private boolean omitNonMatching = false;
@@ -112,15 +102,6 @@ public class ExtractorConfig {
 		unmarshaller.setSchema(schema);
 
 		return (ExtractorConfig) unmarshaller.unmarshal(configReader);
-	}
-
-	public static ExtractorConfig readConfig(Configuration configuration) throws Exception {
-		Validate.notNull(configuration);
-
-		String configFileName = configuration.get(FILE_CONFIG_KEY, DEFATUL_CONFIG_FILE);
-		InputStreamReader configReader = new InputStreamReader(
-				configuration.getConfResourceAsInputStream(configFileName), "UTF-8");
-		return readConfig(configReader);
 	}
 
 }

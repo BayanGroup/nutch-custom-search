@@ -3,6 +3,14 @@ package ir.co.bayan.simorq.zal.extractor.protocol;
 import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractUtil;
 import ir.co.bayan.simorq.zal.extractor.protocol.ProtocolException.ProtocolErrorCode;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.nutch.net.protocols.HttpDateFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
@@ -17,17 +25,6 @@ import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.nutch.net.protocols.HttpDateFormat;
-import org.apache.nutch.util.EncodingDetector;
-import org.apache.nutch.util.MimeUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Uses the java.net for implementing the http protocol.
@@ -118,11 +115,11 @@ public class DirectHttpProtocol implements Protocol {
 			byte[] data = IOUtils.toByteArray(is);
 
 			String contentType = connection.getContentType();
-			String encoding = EncodingDetector.parseCharacterEncoding(contentType);
+			String encoding = null; //EncodingDetector.parseCharacterEncoding(contentType);
 			if (StringUtils.isEmpty(encoding))
 				encoding = ExtractUtil.sniffCharacterEncoding(data);
 
-			return new Content(url, new ByteArrayInputStream(data), encoding, MimeUtil.cleanMimeType(contentType));
+			return new Content(url, new ByteArrayInputStream(data), encoding, ExtractUtil.cleanMimeType(contentType));
 		} catch (IOException e) {
 			throw new ProtocolException(ProtocolErrorCode.UNREACHABLE, e);
 		} finally {

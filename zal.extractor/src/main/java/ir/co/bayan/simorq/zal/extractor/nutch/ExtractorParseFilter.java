@@ -2,28 +2,20 @@ package ir.co.bayan.simorq.zal.extractor.nutch;
 
 import ir.co.bayan.simorq.zal.extractor.core.ExtractEngine;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc;
-import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.nutch.metadata.Metadata;
+import org.apache.nutch.parse.*;
+import org.apache.nutch.protocol.Content;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.DocumentFragment;
 
 import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map.Entry;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.nutch.metadata.Metadata;
-import org.apache.nutch.parse.HTMLMetaTags;
-import org.apache.nutch.parse.HtmlParseFilter;
-import org.apache.nutch.parse.Parse;
-import org.apache.nutch.parse.ParseData;
-import org.apache.nutch.parse.ParseResult;
-import org.apache.nutch.parse.ParseStatus;
-import org.apache.nutch.parse.ParseText;
-import org.apache.nutch.protocol.Content;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.DocumentFragment;
 
 /**
  * An html parser plugin using extractor engine.
@@ -107,7 +99,7 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 		this.configuration = configuration;
 		defaultEncoding = configuration.get("parser.character.encoding.default", "UTF-8");
 		try {
-			ExtractEngine.getInstance().setConf(ExtractorConfig.readConfig(configuration));
+			ExtractEngine.getInstance().setConf(NutchUtils.config(configuration));
 		} catch (Exception e) {
 			LOGGER.error("", e);
 		}

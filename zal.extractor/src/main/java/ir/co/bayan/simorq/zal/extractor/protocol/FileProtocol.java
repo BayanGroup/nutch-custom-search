@@ -2,6 +2,10 @@ package ir.co.bayan.simorq.zal.extractor.protocol;
 
 import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.protocol.ProtocolException.ProtocolErrorCode;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
+import org.apache.hadoop.conf.Configuration;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -9,11 +13,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Validate;
-import org.apache.hadoop.conf.Configuration;
 
 /**
  * Reads from local file system.
@@ -31,8 +30,8 @@ public class FileProtocol implements Protocol {
 
 	@Override
 	public void setConf(Configuration conf) {
-		defaultEncoding = conf.get("watcher.file.encoding", "UTF-8");
-		defaultContentType = conf.get("wathcer.file.contnetType", "application/text");
+		defaultEncoding = conf.get("file.encoding", "UTF-8");
+		defaultContentType = conf.get("file.contnetType", "application/text");
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class FileProtocol implements Protocol {
 			byte[] data = FileUtils.readFileToByteArray(path);
 			String encoding = StringUtils.defaultString((String) parameters.get(PARAM_ENCODING), defaultEncoding);
 			String contentType = StringUtils.defaultString((String) parameters.get(PARAM_CONTENT_TYPE),
-					defaultContentType);
+                    StringUtils.defaultString(guessContentType(path), defaultContentType));
 
 			return new Content(url, new ByteArrayInputStream(data), encoding, contentType);
 		} catch (IOException e) {
@@ -63,4 +62,12 @@ public class FileProtocol implements Protocol {
 			throw new ProtocolException(ProtocolErrorCode.UNREACHABLE, e);
 		}
 	}
+
+    private String guessContentType(File file) {
+        if(StringUtils.endsWithAny(file.getName(),".html",".htm",".xhtml"))
+            return "text/html";
+        if(StringUtils.endsWithAny(file.getName(),".xml"))
+            return "text/xml";
+        return null;
+    }
 }

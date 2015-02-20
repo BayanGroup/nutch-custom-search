@@ -3,26 +3,20 @@ package ir.co.bayan.simorq.zal.extractor.nutch;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractEngine;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractUtil;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc;
-import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.nutch.metadata.Metadata;
+import org.apache.nutch.metadata.Nutch;
+import org.apache.nutch.parse.*;
+import org.apache.nutch.protocol.Content;
+import org.apache.nutch.util.EncodingDetector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map.Entry;
-
-import org.apache.hadoop.conf.Configuration;
-import org.apache.nutch.metadata.Metadata;
-import org.apache.nutch.metadata.Nutch;
-import org.apache.nutch.parse.ParseData;
-import org.apache.nutch.parse.ParseResult;
-import org.apache.nutch.parse.ParseStatus;
-import org.apache.nutch.parse.ParseText;
-import org.apache.nutch.parse.Parser;
-import org.apache.nutch.protocol.Content;
-import org.apache.nutch.util.EncodingDetector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A parser based on the extractor engine.
@@ -47,7 +41,7 @@ public class ExtractorParser implements Parser {
 		this.conf = configuration;
 		defaultEncoding = configuration.get("parser.character.encoding.default", "UTF-8");
 		try {
-			ExtractEngine.getInstance().setConf(ExtractorConfig.readConfig(conf));
+			ExtractEngine.getInstance().setConf(NutchUtils.config(conf));
 		} catch (Exception e) {
 			LOGGER.error("", e);
 		}

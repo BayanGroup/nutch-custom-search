@@ -1,11 +1,7 @@
 package ir.co.bayan.simorq.zal.extractor.nutch;
 
-import java.util.List;
-
 import ir.co.bayan.simorq.zal.extractor.core.ExtractEngine;
 import ir.co.bayan.simorq.zal.extractor.model.Document;
-import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.FloatWritable;
@@ -15,6 +11,8 @@ import org.apache.nutch.crawl.CrawlDatum;
 import org.apache.nutch.metadata.Nutch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * A fetch schedule that determines revisit schedules based on the values provided in extractors.xml file per document
@@ -33,7 +31,7 @@ public class ExtractorFetchSchedule extends AdaptiveFetchSchedule {
 	public void setConf(Configuration conf) {
 		super.setConf(conf);
 		try {
-			ExtractEngine.getInstance().setConf(ExtractorConfig.readConfig(conf));
+			ExtractEngine.getInstance().setConf(NutchUtils.config(conf));
 		} catch (Exception e) {
 			LOGGER.error("Exception occured", e);
 		}

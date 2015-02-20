@@ -1,14 +1,12 @@
 package ir.co.bayan.simorq.zal.extractor.model;
 
 import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
-
-import java.util.List;
+import org.apache.commons.lang3.Validate;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlIDREF;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.apache.commons.lang3.Validate;
+import java.util.List;
 
 /**
  * Evaluates the content.

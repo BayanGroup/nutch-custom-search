@@ -25,10 +25,11 @@ public class UrlTester {
 
 	public static void main(String[] args) {
 		// args = new String[] { "http://www.google.com", "src/test/resources/extractors.xml" };
-		//args = new String[] { "file:/e:/data/spam/normals/0.orig", "E:\\dev\\Pishfa\\nutch-custom-search\\zal.extractor\\src\\test\\resources\\teste.xml" };
+		//args = new String[] { "file:/e:/data/spam/normals/0.orig", "E:\\dev\\Pishfa\\nutch-custom-search\\zal.extractor.core\\src\\test\\resources\\teste.xml" };
 		if (args.length != 2) {
 			System.out.println("UrlTester <url> <location-of extractors.xml>");
 			System.out.println("e.g. UrlTester http://www.google.com /conf/extractors.xml");
+			System.out.println("e.g. UrlTester file:/saved.html /conf/extractors.xml");
 			return;
 		}
 		try {

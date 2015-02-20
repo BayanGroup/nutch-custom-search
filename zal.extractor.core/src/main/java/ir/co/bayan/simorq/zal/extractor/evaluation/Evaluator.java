@@ -30,6 +30,11 @@ public interface Evaluator<C extends EvaluationContext> {
 	 */
 	List<?> getText(C context, List<?> input) throws Exception;
 
+    /**
+     * Retrieves the raw data (value) from each item in the input and return their list as the result.
+     */
+    List<?> getRaw(C context, List<?> input) throws Exception;
+
 	/**
 	 * Creates a context for evaluation. This context will be passed in the subsequent calls.
 	 */

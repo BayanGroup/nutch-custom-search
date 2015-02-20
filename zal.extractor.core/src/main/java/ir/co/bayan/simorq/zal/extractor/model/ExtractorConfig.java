@@ -99,7 +99,7 @@ public class ExtractorConfig {
 				Attribute.class, Concat.class, Expr.class, Replace.class, Truncate.class, Trim.class, Url.class,
 				First.class, Last.class, Size.class, Matches.class, Link.class, FunctionHolder.class, Resolve.class,
 				ForEach.class, Fetch.class, FieldValue.class, Decode.class, Default.class, ProcessorDef.class,
-                Process.class);
+                Process.class, Raw.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 
 		Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(

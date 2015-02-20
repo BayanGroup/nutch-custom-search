@@ -5,9 +5,9 @@
     <documents>
         <document url="." engine="css">
             <extract-to field="target">
-                <text mode="raw">
+                <raw>
                     <expr value="script" />
-                </text>
+                </raw>
             </extract-to>
         </document>
     </documents>

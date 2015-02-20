@@ -124,6 +124,17 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 		return texts;
 	}
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<?> getRaw(XPathContext context, List<?> input) throws Exception {
+        List<Node> nodes = (List<Node>) input;
+        List<String> texts = new ArrayList<String>(nodes.size());
+        for (Node node : nodes) {
+            texts.add(node.getNodeValue());
+        }
+        return texts;
+    }
+
 	@Override
 	public XPathContext createContext(Content content) throws Exception {
 		InputSource is = new InputSource(content.getData());

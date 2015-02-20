@@ -44,6 +44,11 @@ public class TextEvaluator implements Evaluator<TextEvaluationContext> {
 		return input;
 	}
 
+    @Override
+    public List<?> getRaw(TextEvaluationContext context, List<?> input) throws Exception {
+        return input;
+    }
+
 	@Override
 	public TextEvaluationContext createContext(Content content) throws Exception {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(content.getData(), content.getEncoding()));

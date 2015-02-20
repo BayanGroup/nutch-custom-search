@@ -11,6 +11,7 @@
 			<xs:element name="trim" type="trimType" />
 			<xs:element name="truncate" type="truncateType" />
 			<xs:element name="text" type="textType" />
+			<xs:element name="raw" type="rawType" />
 			<xs:element name="attribute" type="attributeType" />
 			<xs:element name="first" type="firstType" />
 			<xs:element name="last" type="lastType" />
@@ -116,6 +117,18 @@
         <xs:annotation>
             <xs:documentation source="description">
                 Returns the text content of its input.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="singleFunctionType">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="rawType">
+        <xs:annotation>
+            <xs:documentation source="description">
+                Returns the raw content of its input.
             </xs:documentation>
         </xs:annotation>
         <xs:complexContent>

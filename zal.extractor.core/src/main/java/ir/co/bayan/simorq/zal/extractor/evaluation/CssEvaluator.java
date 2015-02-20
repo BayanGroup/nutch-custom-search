@@ -53,6 +53,17 @@ public class CssEvaluator implements Evaluator<CssContext> {
 		return texts;
 	}
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<?> getRaw(CssContext context, List<?> input) throws Exception {
+        List<Element> elements = (List<Element>) input;
+        List<String> texts = new ArrayList<String>(elements.size());
+        for (Element element : elements) {
+            texts.add(element.html());
+        }
+        return texts;
+    }
+
 	@Override
 	public String getName() {
 		return "css";

@@ -110,18 +110,18 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
-	<xs:complexType name="textType">
-		<xs:annotation>
-			<xs:documentation source="description">
-				Returns the text content of its input.
-			</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="singleFunctionType">
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
+
+    <xs:complexType name="textType">
+        <xs:annotation>
+            <xs:documentation source="description">
+                Returns the text content of its input.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="singleFunctionType">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 	
 	<xs:complexType name="attributeType">
 		<xs:annotation>

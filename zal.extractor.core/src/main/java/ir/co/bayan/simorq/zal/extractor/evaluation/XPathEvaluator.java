@@ -2,18 +2,6 @@ package ir.co.bayan.simorq.zal.extractor.evaluation;
 
 import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.xerces.xni.Augmentations;
 import org.apache.xerces.xni.QName;
@@ -27,6 +15,16 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An implementation of ExtractEngine which uses JAXP xpath engine to evaluate expressions. It also handles the
@@ -123,7 +121,6 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 		for (Node node : nodes) {
 			texts.add(node.getTextContent());
 		}
-		// TODO support extraction of anchors and check for readable elements like CssEvaluator
 		return texts;
 	}
 
@@ -154,7 +151,7 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 					} });
 			parser.parse(is);
 			root = parser.getDocument().getDocumentElement();
-		} else if (ExtractUtil.isXml(content.getType())) {
+		} else {
 			root = builder.parse(is).getDocumentElement();
 		}
 		if (root != null) {

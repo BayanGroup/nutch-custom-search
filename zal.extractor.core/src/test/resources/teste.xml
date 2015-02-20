@@ -3,10 +3,10 @@
         <field name="target" />
     </fields>
     <documents>
-        <document url="." engine="xpath">
+        <document url="." engine="css">
             <extract-to field="target">
-                <text>
-                    <expr value="//*[@id='home_right']/DIV[1]/DIV[1]/H2/A" />
+                <text mode="raw">
+                    <expr value="script" />
                 </text>
             </extract-to>
         </document>

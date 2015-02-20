@@ -1,9 +1,7 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.nutch.parse.Outlink;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,20 +142,6 @@ public class ExtractedDoc {
 	 */
 	public void setUpdate(boolean update) {
 		this.update = update;
-	}
-
-	public Outlink[] getOutlinksAsArray() throws MalformedURLException {
-		Outlink[] res;
-		if (outlinks == null)
-			res = new Outlink[0];
-		else {
-			res = new Outlink[outlinks.size()];
-			for (int i = 0; i < outlinks.size(); i++) {
-				LinkData linkData = outlinks.get(i);
-				res[i] = new Outlink(linkData.getUrl(), linkData.getAnchor());
-			}
-		}
-		return res;
 	}
 
     /**

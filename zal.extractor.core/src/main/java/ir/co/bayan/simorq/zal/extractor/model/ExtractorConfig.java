@@ -16,7 +16,7 @@ import java.util.List;
  * 
  */
 @XmlRootElement(name = "config")
-@XmlType(propOrder = { "types", "fields", "documents" })
+@XmlType(propOrder = { "types", "processors", "fields", "documents" })
 public class ExtractorConfig {
 
 	@XmlAttribute
@@ -34,6 +34,10 @@ public class ExtractorConfig {
 	@XmlElementWrapper(name = "types")
 	@XmlElement(name = "type")
 	private List<TypeDef> types;
+
+    @XmlElementWrapper(name = "processors")
+    @XmlElement(name = "processor")
+    private List<ProcessorDef> processors;
 
 	@XmlElementWrapper(name = "fields")
 	@XmlElement(name = "field")
@@ -94,7 +98,8 @@ public class ExtractorConfig {
 				Filter.class, Fragment.class, Field.class, Function.class, Constant.class, TypeDef.class, Text.class,
 				Attribute.class, Concat.class, Expr.class, Replace.class, Truncate.class, Trim.class, Url.class,
 				First.class, Last.class, Size.class, Matches.class, Link.class, FunctionHolder.class, Resolve.class,
-				ForEach.class, Fetch.class, FieldValue.class, Decode.class, Default.class);
+				ForEach.class, Fetch.class, FieldValue.class, Decode.class, Default.class, ProcessorDef.class,
+                Process.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 
 		Schema schema = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(

@@ -57,6 +57,10 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 			throws IndexingException {
 		if (parse == null || parse.getData() == null || parse.getData().getParseMeta() == null)
 			return doc;
+        if(extractorConfig == null) {
+            LOGGER.warn("Extractor config is not loaded.");
+            return doc;
+        }
 
 		Metadata metadata = parse.getData().getParseMeta();
 		if ("true".equals(metadata.get(MATCHED_DOC))) {

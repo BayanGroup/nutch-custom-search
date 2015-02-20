@@ -98,7 +98,7 @@ public class ExtractorParser implements Parser {
 		if (doc.isUpdate())
 			parseMeta.add(ExtractorIndexingFilter.UPDATE_DOC, "true");
 
-		return new ParseData(ParseStatus.STATUS_SUCCESS, doc.getTitle(), doc.getOutlinksAsArray(),
+		return new ParseData(ParseStatus.STATUS_SUCCESS, doc.getTitle(), NutchUtils.getOutlinksAsArray(doc.getOutlinks()),
 				content.getMetadata(), parseMeta);
 	}
 

@@ -3,12 +3,9 @@ package ir.co.bayan.simorq.zal.extractor.protocol;
 import ir.co.bayan.simorq.zal.extractor.core.Content;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractUtil;
 import ir.co.bayan.simorq.zal.extractor.protocol.ProtocolException.ProtocolErrorCode;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.nutch.net.protocols.HttpDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +25,7 @@ import java.util.zip.InflaterInputStream;
 
 /**
  * Uses the java.net for implementing the http protocol.
+ * Inspired from nutch codes.
  * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
@@ -49,7 +47,7 @@ public class DirectHttpProtocol implements Protocol {
 	private String accept;
 
 	@Override
-	public void setConf(Configuration conf) {
+	public void setConf(Config conf) {
 		proxyHost = conf.get("http.proxy.host");
 		proxyPort = conf.getInt("http.proxy.port", 8080);
 		connectTimeout = conf.getInt("http.timeout", 10000);
@@ -160,15 +158,16 @@ public class DirectHttpProtocol implements Protocol {
 			connection.setRequestProperty("Accept", accept);
 
 		// Set the last modified time
-		Long lastModified = (Long) parameters.get(PARAM_LAST_MODIFIED);
-		if (lastModified != null)
-			connection.setRequestProperty("If-Modified-Since", HttpDateFormat.toString(lastModified));
+        // Set basic authentication
+        /*Long lastModified = (Long) parameters.get(PARAM_LAST_MODIFIED);
+        if (lastModified != null) {
+            connection.setRequestProperty("If-Modified-Since", HttpDateFormat.toString(lastModified));
+        }
 
-		// Set basic authentication
 		if (url.getUserInfo() != null) {
 			String basicAuth = "Basic " + new String(new Base64().encode(url.getUserInfo().getBytes()));
 			connection.setRequestProperty("Authorization", basicAuth);
-		}
+		}*/
 
 		// set method
 		String method = (String) parameters.get(PARAM_METHOD);

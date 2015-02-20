@@ -9,6 +9,11 @@
 		<xs:attribute type="xs:string" name="converter" use="optional" />
 	</xs:complexType>
 
+    <xs:complexType name="processorType">
+        <xs:attribute type="xs:ID" name="name" use="required" />
+        <xs:attribute type="xs:string" name="class" use="required" />
+    </xs:complexType>
+
 	<xs:complexType name="fieldType">
 		<xs:attribute type="xs:ID" name="name" use="required" />
 		<xs:attribute type="xs:IDREF" name="type" use="optional" />
@@ -73,6 +78,13 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
+                <xs:element name="processors" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="processor" maxOccurs="unbounded" minOccurs="0" type="processorType" />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
 				<xs:element name="fields">
 					<xs:complexType>
 						<xs:sequence>

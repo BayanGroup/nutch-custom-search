@@ -5,7 +5,6 @@ import ir.co.bayan.simorq.zal.extractor.protocol.ProtocolException.ProtocolError
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import org.apache.hadoop.conf.Configuration;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -29,7 +28,7 @@ public class FileProtocol implements Protocol {
 	private String defaultContentType;
 
 	@Override
-	public void setConf(Configuration conf) {
+	public void setConf(Config conf) {
 		defaultEncoding = conf.get("file.encoding", "UTF-8");
 		defaultContentType = conf.get("file.contnetType", "application/text");
 	}

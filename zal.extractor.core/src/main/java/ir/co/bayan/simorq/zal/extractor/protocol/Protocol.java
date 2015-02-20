@@ -5,8 +5,6 @@ import ir.co.bayan.simorq.zal.extractor.core.Content;
 import java.net.URL;
 import java.util.Map;
 
-import org.apache.hadoop.conf.Configuration;
-
 /**
  * Fetches a content according to a specific protocol. Protocol is thread-safe and it works only in sync mode. Each
  * protocol implementation should retrieve its protocol specific configurations such as timeout, proxy,.. from the
@@ -22,7 +20,7 @@ public interface Protocol {
 	/**
 	 * Protocol should read its configuration data from provided conf upon calling this method.
 	 */
-	void setConf(Configuration conf);
+	void setConf(Config conf);
 
 	/**
 	 * Fetches the resource available in the specified url. Use parameters for adjusting protocol specific settings.

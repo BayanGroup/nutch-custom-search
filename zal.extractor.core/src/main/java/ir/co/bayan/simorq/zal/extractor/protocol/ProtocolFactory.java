@@ -1,12 +1,11 @@
 package ir.co.bayan.simorq.zal.extractor.protocol;
 
+import org.apache.commons.lang3.Validate;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.lang3.Validate;
-import org.apache.hadoop.conf.Configuration;
 
 /**
  * Maintains the set of available protocols. This class is responsible for returning best matching protocol to the url
@@ -54,7 +53,7 @@ public class ProtocolFactory {
 		return protocol;
 	}
 
-	public void setConf(Configuration conf) {
+	public void setConf(Config conf) {
 		for (Protocol protocol : protocolsByName.values()) {
 			protocol.setConf(conf);
 		}

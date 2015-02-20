@@ -1,7 +1,5 @@
 package ir.co.bayan.simorq.zal.extractor.convert;
 
-import ir.co.bayan.simorq.zal.extractor.convert.Converter;
-
 /**
  * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>

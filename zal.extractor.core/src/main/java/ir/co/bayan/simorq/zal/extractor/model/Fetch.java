@@ -7,6 +7,10 @@ import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluatorFactory;
 import ir.co.bayan.simorq.zal.extractor.protocol.Protocol;
 import ir.co.bayan.simorq.zal.extractor.protocol.ProtocolFactory;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,14 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
- * Fetches a content from the given url and evaluates it with the specified engine. If checkModified is set (default),
- * the evaluation is only done if the resource is changed since the last fetch time.
+ * Fetches a content from the given url and evaluates it with the specified engine.
  * 
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * @see Protocol
@@ -41,11 +39,6 @@ public class Fetch extends Function {
 
 	private String engine;
 	private Evaluator<? extends EvaluationContext> evaluator;
-
-	@XmlAttribute
-	private boolean checkModified = true;
-
-	private Map<String, Long> lastModificationPerUrl = new HashMap<String, Long>();
 
 	/**
 	 * @param url
@@ -79,21 +72,6 @@ public class Fetch extends Function {
 		this.parameters = parameters;
 		for (FetchParameter fetchParameter : parameters)
 			paramObjects.put(fetchParameter.getName(), fetchParameter.getValue());
-	}
-
-	/**
-	 * @return the checkModified
-	 */
-	public boolean isCheckModified() {
-		return checkModified;
-	}
-
-	/**
-	 * @param checkModified
-	 *            the checkModified to set
-	 */
-	public void setCheckModified(boolean checkModified) {
-		this.checkModified = checkModified;
 	}
 
 	/**
@@ -157,20 +135,11 @@ public class Fetch extends Function {
 	@Override
 	public List<?> extract(Object root, EvaluationContext context) throws Exception {
 		List<Object> res = new ArrayList<Object>();
-		if (checkModified) {
-			paramObjects.put(Protocol.PARAM_LAST_MODIFIED, lastModificationPerUrl.get(url));
-		}
 		Content content = protocol.fetch(targetURL, paramObjects);
 		EvaluationContext newContext = evaluator.createContext(content);
 
 		for (Function arg : args) {
 			res.addAll(arg.extract(newContext.getMainRoot(), newContext));
-		}
-
-		if (checkModified) {
-			synchronized (lastModificationPerUrl) {
-				lastModificationPerUrl.put(url, System.currentTimeMillis());
-			}
 		}
 
 		return res;

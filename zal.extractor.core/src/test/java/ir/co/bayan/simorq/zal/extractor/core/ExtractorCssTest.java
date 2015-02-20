@@ -1,8 +1,9 @@
 package ir.co.bayan.simorq.zal.extractor.core;
 
-import static org.junit.Assert.*;
 import ir.co.bayan.simorq.zal.extractor.core.ExtractedDoc.LinkData;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,8 +11,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
@@ -133,4 +133,13 @@ public class ExtractorCssTest {
 
 		assertEquals("t1 t2", result.get("content"));
 	}
+
+    @Test
+    public void testProcess() throws Exception {
+        Content content = new Content(new URL("http://some.blog.ir"), testPageContent, "UTF-8", "text/html");
+        List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
+
+        Map<String, Object> result = extractedDocs.get(0).getFields();
+        assertEquals("hello", result.get("to_lower"));
+    }
 }

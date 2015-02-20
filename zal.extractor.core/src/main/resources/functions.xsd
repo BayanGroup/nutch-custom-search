@@ -23,6 +23,7 @@
 			<xs:element name="field-value" type="fieldValueType" />
 			<xs:element name="decode" type="decodeType" />
 			<xs:element name="default" type="defaultType" />
+            <xs:element name="process" type="processType" />
 		</xs:choice>
 	</xs:group>
 	
@@ -235,7 +236,6 @@
 		</xs:sequence>
 		<xs:attribute name="url" type="xs:string" use="required"/>
 		<xs:attribute name="engine" type="xs:string" use="required"/>
-		<xs:attribute name="checkModified" type="xs:boolean" use="optional" default="true"/>
 	</xs:complexType>
 	
 	<xs:complexType name="fieldValueType">
@@ -258,5 +258,18 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+
+    <xs:complexType name="processType">
+        <xs:annotation>
+            <xs:documentation source="description">
+                Processes the content of its argument using the specified processor and produces a new content.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="singleFunctionType">
+                <xs:attribute type="xs:IDREF" name="processor" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
 	
 </xs:schema>

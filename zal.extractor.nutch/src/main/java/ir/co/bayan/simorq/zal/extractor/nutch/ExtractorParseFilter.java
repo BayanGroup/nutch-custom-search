@@ -70,7 +70,7 @@ public class ExtractorParseFilter implements HtmlParseFilter {
 			parseResult.put(
 					doc.getUrl(),
 					new ParseText(doc.getText()),
-					new ParseData(ParseStatus.STATUS_SUCCESS, doc.getTitle(), doc.getOutlinksAsArray(), content
+					new ParseData(ParseStatus.STATUS_SUCCESS, doc.getTitle(), NutchUtils.getOutlinksAsArray(doc.getOutlinks()), content
 							.getMetadata(), parseMetadata));
 		} else
 			parseMetadata = parse.getData().getParseMeta();

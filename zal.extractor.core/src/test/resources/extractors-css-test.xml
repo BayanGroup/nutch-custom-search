@@ -4,6 +4,9 @@
 	<types>
 		<type name="hello" converter="ir.co.bayan.simorq.zal.extractor.convert.TestConverter" />
 	</types>
+    <processors>
+        <processor name="lower" class="ir.co.bayan.simorq.zal.extractor.process.Lower"/>
+    </processors>
 	<fields>
 		<field name="f1" />
 		<field name="f2" />
@@ -28,6 +31,8 @@
 		
 		<field name="multi" multi="true"/>
 		<field name="no-multi" multi="false"/>
+
+        <field name="to_lower" />
 	</fields>
 	<documents>
 		<document id="base" url="^http://.+?\.blog.ir$">
@@ -120,6 +125,12 @@
 			<extract-to field="no-multi">
 				<constant value="v2"/>
 			</extract-to>
+
+            <extract-to field="to_lower">
+                <process processor="lower">
+                    <constant value="HELLO"/>
+                </process>
+            </extract-to>
 		</document>
 		
 		<document url="^http://.+?\.blog.ir2$" inherits="base">

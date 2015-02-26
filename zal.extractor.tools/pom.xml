@@ -36,6 +36,11 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.5.3</version>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>ir.co.bayan.simorq.zal.extractor.util.UrlTester</mainClass>
+                        </manifest>
+                    </archive>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>

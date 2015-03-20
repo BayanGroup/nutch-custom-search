@@ -84,6 +84,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 		for (Field field : extractorConfig.getFields()) {
 			if (field.isIndex()) {
 				String name = field.getName();
+				String indexAs = field.getIndexAs();
 				for (String value : metadata.getValues(name)) {
 					if (!StringUtils.isBlank(value)) {
 						Object finalValue = value;
@@ -93,7 +94,7 @@ public class ExtractorIndexingFilter implements IndexingFilter {
 								finalValue = type.getConverterInstance().convert(value);
 							}
 						}
-						doc.add(name, finalValue);
+						doc.add(indexAs, finalValue);
 					}
 				}
 			}

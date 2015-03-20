@@ -20,6 +20,7 @@
 		<xs:attribute type="xs:boolean" name="multi" use="optional" default="false"/>
 		<xs:attribute type="xs:boolean" name="required" use="optional" default="false"/>
 		<xs:attribute type="xs:boolean" name="index" use="optional" default="true"/>
+		<xs:attribute type="xs:string" name="indexAs" use="optional" />
 	</xs:complexType>
 	
 	<xs:complexType name="extractToType">

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir extractors.xsd">
+	<types>
+		<type name="hello" converter="ir.co.bayan.simorq.zal.extractor.convert.TestConverter" />
+	</types>
+    <processors>
+        <processor name="lower" class="ir.co.bayan.simorq.zal.extractor.process.Lower"/>
+    </processors>
+	<fields>
+		<field name="f1" />
+		<field name="f2" />
+		<field name="f3" />
+		<field name="f4" />
+		<field name="f5" />
+		
+		<field name="f6" />
+		<field name="f6.1" />
+		
+		<field name="f7" />
+		<field name="f8" />
+		<field name="f9" />
+		<field name="f10" />
+		
+		<field name="f11" />
+		
+		<field name="f12" type="hello"/>
+		
+		<field name="url" />
+		<field name="content" />
+		
+		<field name="multi" multi="true"/>
+		<field name="no-multi" multi="false"/>
+
+        <field name="to_lower" />
+	</fields>
+	<documents>
+		<document id="base" url="^http://.+?\.blog.ir$">
+			<extract-to field="f1">
+				<constant value="t1"/>
+			</extract-to>
+			<extract-to field="f2">
+				<text>
+					<expr value="head > title"/>
+				</text>
+			</extract-to>
+			<extract-to field="f3">
+				<attribute name="title">
+					<expr value=".title-div"/>
+				</attribute>
+			</extract-to>
+			<extract-to field="f4">
+				<url />
+			</extract-to>
+			
+			<extract-to field="f5">
+				<concat>
+					<constant value="t1"/>
+					<text>
+						<expr value="head > title"/>
+					</text>
+					<attribute name="title">
+						<expr value=".title-div"/>
+					</attribute>
+					<url />
+				</concat>
+			</extract-to>
+			
+			<extract-to field="f6">
+				<replace pattern="(t)(\d)+" substitution="$2-$1">
+					<text>
+						<expr value="head > title"/>
+					</text>
+				</replace>
+			</extract-to>
+			<extract-to field="f6.1">
+				<replace pattern="(.+?)T(.+)" substitution="$1">
+					<attribute name="content">
+						<expr value="meta[name=date]"/>
+					</attribute>
+				</replace>
+			</extract-to>
+			
+			<extract-to field="f7">
+				<text>
+					<expr value="div.target"/>
+				</text>
+			</extract-to>
+			<extract-to field="f8">
+				<text>
+					<first>
+						<expr value="div.target"/>
+					</first>
+				</text>
+			</extract-to>
+			<extract-to field="f9">
+				<size>
+					<expr value="div.target"/>
+				</size>
+			</extract-to>
+			<extract-to field="f10">
+				<text>
+					<last>
+						<expr value="div.target"/>
+					</last>
+				</text>
+			</extract-to>
+			<extract-to field="content">
+				<concat>
+					<field-value field="f1" />
+					<field-value field="f2" />
+				</concat>
+			</extract-to>
+			
+			<extract-to field="multi">
+				<constant value="v1"/>
+			</extract-to>
+			<extract-to field="multi">
+				<constant value="v2"/>
+			</extract-to>
+			
+			<extract-to field="no-multi">
+				<constant value="v1"/>
+			</extract-to>
+			<extract-to field="no-multi">
+				<constant value="v2"/>
+			</extract-to>
+
+            <extract-to field="to_lower">
+                <process processor="lower">
+                    <constant value="HELLO"/>
+                </process>
+            </extract-to>
+		</document>
+		
+		<document url="^http://.+?\.blog.ir2$" inherits="base">
+			<extract-to field="f11">
+				<constant value="t1" />
+			</extract-to>
+			<extract-to field="f12">
+				<constant value="world!" />
+			</extract-to>
+		</document>
+		
+		<document url="^http://.+?\.blog.ir3$">
+			<fragment root=".doc">
+				<extract-to field="url">
+					<attribute name="href">
+					 	<expr value="a"/>
+					 </attribute>
+				</extract-to>
+				<extract-to field="content">
+					<text>
+						<expr value="a" />
+					</text>
+				</extract-to>
+			</fragment>
+		</document>
+		
+		<document url="^http://.+?\.blog.ir4$">
+			<outlinks>
+				<for-each root="a.outlink">
+					<link>
+						<href>
+							<resolve>
+								<attribute name="href">
+									<expr value="." />
+								</attribute>
+							</resolve>
+						</href>
+						<anchor>
+							<text>
+								<expr value="." />
+							</text>
+						</anchor>
+					</link>
+				</for-each>
+			</outlinks>
+		</document>
+	</documents>
+</config>

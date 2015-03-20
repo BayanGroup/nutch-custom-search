@@ -1,0 +1,288 @@
+<xs:schema attributeFormDefault="unqualified"
+	elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://bayan.ir" xmlns="http://bayan.ir">
+
+	<xs:group name="functions">
+		<xs:choice>
+			<xs:element name="expr" type="exprType"/>
+			<xs:element name="constant" type="constantType"/>
+			<xs:element name="concat" type="concatType" />
+			<xs:element name="replace" type="replaceType" />
+			<xs:element name="trim" type="trimType" />
+			<xs:element name="truncate" type="truncateType" />
+			<xs:element name="text" type="textType" />
+			<xs:element name="raw" type="rawType" />
+			<xs:element name="attribute" type="attributeType" />
+			<xs:element name="first" type="firstType" />
+			<xs:element name="last" type="lastType" />
+			<xs:element name="size" type="sizeType" />
+			<xs:element name="url" type="urlType" />
+			<xs:element name="resolve" type="resolveType" />
+			<xs:element name="link" type="linkType" />
+			<xs:element name="for-each" type="forEachType" />
+			<xs:element name="fetch" type="fetchType" />
+			<xs:element name="field-value" type="fieldValueType" />
+			<xs:element name="decode" type="decodeType" />
+			<xs:element name="default" type="defaultType" />
+            <xs:element name="process" type="processType" />
+		</xs:choice>
+	</xs:group>
+	
+	<xs:complexType name="functionType">
+		<xs:sequence>
+			<xs:group ref="functions" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="singleFunctionType">
+		<xs:sequence>
+			<xs:group ref="functions" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="exprType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Evaluates an expression using current engine.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="value" use="required">
+			<xs:annotation>
+			<xs:documentation source="description">
+				The expression which is understandable by current engine.
+			</xs:documentation>
+		</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	
+	<xs:complexType name="constantType">
+		<xs:attribute name="value" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="concatType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Concats its inputs by the provided delimiter.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="functionType">
+				<xs:attribute name="delimiter" default=" "/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="replaceType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Replaces its input using the provided regex pattern by the provided substitution.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+				<xs:attribute name="pattern" use="required" />
+				<xs:attribute name="substitution" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="truncateType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Truncates a string if its size is greater than max. In this case, it appends, the specified append string to the result
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+				<xs:attribute name="max" type="xs:integer" use="required" />
+				<xs:attribute name="append" type="xs:string" use="optional" />
+				<xs:attribute name="breakOnWhitespaces" type="xs:boolean" use="optional" default="false"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="trimType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Trims a string.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+    <xs:complexType name="textType">
+        <xs:annotation>
+            <xs:documentation source="description">
+                Returns the text content of its input.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="singleFunctionType">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="rawType">
+        <xs:annotation>
+            <xs:documentation source="description">
+                Returns the raw content of its input.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="singleFunctionType">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+	
+	<xs:complexType name="attributeType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Extracts the value of attribute with specified name from underling elements.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+				<xs:attribute name="name" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="firstType">
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="lastType">
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="sizeType">
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="urlType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				Returns the current url in the context.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string"></xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	
+	<xs:complexType name="resolveType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Resolves a possible relative url to absolute one based on the current url in the context.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="decodeType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Decodes the given url string.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="forEachType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Iterates through its children with the given root as the new root.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="singleFunctionType">
+				<xs:attribute name="root" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="linkType">
+		<xs:all>
+			<xs:element name="href" type="singleFunctionType" minOccurs="1"/>
+			<xs:element name="anchor" type="singleFunctionType" minOccurs="0"/>
+		</xs:all>
+	</xs:complexType>
+	
+	<xs:complexType name="fetchType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Fetches a content from the given url and evaluates it with the specified engine. If checkModified is set (default), the evaluation is only done if the resource is changed since the last fetch time.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="parameters" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="parameter" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="name" use="required"/>
+								<xs:attribute name="value" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:group ref="functions" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="url" type="xs:string" use="required"/>
+		<xs:attribute name="engine" type="xs:string" use="required"/>
+	</xs:complexType>
+	
+	<xs:complexType name="fieldValueType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Returns the extracted value of the given field.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="field" use="required" type="xs:IDREF"/>
+	</xs:complexType>
+	
+	<xs:complexType name="defaultType">
+		<xs:annotation>
+			<xs:documentation source="description">
+				 Returns its first non-empty argument. An argument is empty if it is null, 0-sized, or contains only empty strings.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="functionType">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+    <xs:complexType name="processType">
+        <xs:annotation>
+            <xs:documentation source="description">
+                Processes the content of its argument using the specified processor and produces a new content.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="singleFunctionType">
+                <xs:attribute type="xs:IDREF" name="processor" use="required" />
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+	
+</xs:schema>

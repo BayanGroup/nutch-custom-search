@@ -1,0 +1,14 @@
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+    <fields>
+        <field name="target" />
+    </fields>
+    <documents>
+        <document url="." engine="css">
+            <extract-to field="target">
+                <raw>
+                    <expr value="script" />
+                </raw>
+            </extract-to>
+        </document>
+    </documents>
+</config>

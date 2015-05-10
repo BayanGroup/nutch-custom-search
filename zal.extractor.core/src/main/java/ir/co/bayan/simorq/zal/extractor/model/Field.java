@@ -27,6 +27,9 @@ public class Field {
 	@XmlAttribute
 	private boolean index = true;
 
+	@XmlAttribute
+	private String indexAs;
+
 	/**
 	 * @return the name
 	 */
@@ -57,6 +60,14 @@ public class Field {
 	 */
 	public boolean isIndex() {
 		return index;
+	}
+
+	/**
+	 * @return the indexAs
+	 */
+	public String getIndexAs() {
+		if (indexAs == null || indexAs.equals("")) return name;
+		return indexAs;
 	}
 
 	@Override

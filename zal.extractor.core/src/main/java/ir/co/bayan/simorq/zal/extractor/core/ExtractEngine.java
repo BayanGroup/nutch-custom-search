@@ -3,6 +3,7 @@ package ir.co.bayan.simorq.zal.extractor.core;
 import ir.co.bayan.simorq.zal.extractor.evaluation.*;
 import ir.co.bayan.simorq.zal.extractor.model.Document;
 import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
+import ir.co.bayan.simorq.zal.extractor.model.MatchMode;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -121,7 +122,7 @@ public class ExtractEngine {
 		Validate.notNull(documents);
 
 		// If we're not in multiple match mode, do nothing
-		if (!extractorConfig.isMultipleMatchMode()) return documents;
+		if (extractorConfig.getMatchMode() != MatchMode.MULTIPLE) return documents;
 		
 		List<ExtractedDoc> res = new ArrayList<ExtractedDoc>();
 		
@@ -155,7 +156,7 @@ public class ExtractEngine {
 		for (Document doc : extractorConfig.getDocuments()) {
 			if (doc.matches(url, contentType)) {
 				res.add(doc);
-				if (!extractorConfig.isMultipleMatchMode() 
+				if (extractorConfig.getMatchMode() != MatchMode.MULTIPLE
 						|| doc.isStopProcessing()) break;
 			}
 		}

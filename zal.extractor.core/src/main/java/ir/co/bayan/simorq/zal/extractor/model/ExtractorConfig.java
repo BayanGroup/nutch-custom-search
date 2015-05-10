@@ -29,7 +29,7 @@ public class ExtractorConfig {
 	private String defaultEngine = "css";
 
 	@XmlAttribute
-	private String matchMode = "single";
+	private MatchMode matchMode = MatchMode.SINGLE;
 
 	@XmlElementWrapper(name = "types")
 	@XmlElement(name = "type")
@@ -83,14 +83,10 @@ public class ExtractorConfig {
 	/**
 	 * @return the matchMode
 	 */
-	public String getMatchMode() {
+	public MatchMode getMatchMode() {
 		return matchMode;
 	}
 	
-	public boolean isMultipleMatchMode() {
-		return matchMode.equals("multiple");
-	}
-
 	public static ExtractorConfig readConfig(Reader configReader) throws Exception {
 		Validate.notNull(configReader);
 

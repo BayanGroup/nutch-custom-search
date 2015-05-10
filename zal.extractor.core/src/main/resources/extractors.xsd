@@ -69,6 +69,13 @@
 		<xs:attribute name="stopProcessing" type="xs:boolean" use="optional" default="false"/>
 	</xs:complexType>
 
+    <xs:simpleType name="matchModeType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="single"/>
+            <xs:enumeration value="multiple"/>
+        </xs:restriction>
+    </xs:simpleType>
+
 	<xs:element name="config">
 		<xs:complexType>
 			<xs:sequence>
@@ -104,7 +111,7 @@
 			<xs:attribute name="omitNonMatching" type="xs:boolean" default="false"/>
 			<xs:attribute name="filterNonMatching" type="xs:boolean" default="false"/>
 			<xs:attribute name="defaultEngine" type="xs:string" default="css"/>
-			<xs:attribute name="matchMode" type="xs:string" use="optional" default="single"/>
+			<xs:attribute name="matchMode" type="matchModeType" use="optional" default="single"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

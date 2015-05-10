@@ -289,7 +289,7 @@ public class Document extends Fragment {
 				InetAddress inet = InetAddress.getByName(new URL(url).getHost());
 				matches = ipPattern.matcher(inet.getHostAddress()).find();
 			} catch (Exception e) {
-				LOGGER.warn("Counld not determine the ip of " + url, e);
+				LOGGER.warn("Could not determine the ip of " + url, e);
 			}
 		}
 		return matches;

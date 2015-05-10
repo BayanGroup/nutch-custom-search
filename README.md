@@ -126,10 +126,10 @@ The matching criteria of a document are url , content type, and ip address. All 
 
 The root element of extractors.xml must be named "config" and define the namespace "http://bayan.ir" as the default namespace. This element has the following optional attributes:
 
-1. omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is false.
-2. filterNonMatching: if true, all urls that don't match with any of the urls defined by documents will be filtered (not crawled or parsed or indexed). Default value is false.
-3. defaultEngine: the default engine for parsing contents of resources, if it is not defined by document (or any of its ancestors). Default value is css.
-4. matchMode: determines when multiple documents are matched, how to select them to apply extract-to rules. Default value is single.
+* omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is false.
+* filterNonMatching: if true, all urls that don't match with any of the urls defined by documents will be filtered (not crawled or parsed or indexed). Default value is false.
+* defaultEngine: the default engine for parsing contents of resources, if it is not defined by document (or any of its ancestors). Default value is css.
+* matchMode: determines when multiple documents are matched, how to select them to apply extract-to rules. Default value is single.
 
 
 Here is a sample extractors.xml file containing all of the above sections:
@@ -206,6 +206,7 @@ url | Returns the current url (the url of matched resource) in the context.
 
 #### Types
 Each field might have a type. The following types are available out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
+Extractor only creates one converter instance for each type.
 
 ```xml
 <types>
@@ -225,13 +226,22 @@ float | converts string to float
 date-time | converts a string in the yyyy-MM-dd'T'HH:mm:ss format to a date
 date | converts a string in the dd/MM/yyyy format to a date
 
+Note that the type conversion is only applied during the indexing phase.
+
 #### Fields
+
+Each field has these attributes:
+* name: name of the field (required)
+* type: the type of this field. must be one of the types defined in the types section. default value: string.
+* multi: if true, field can get multiple values from extract-to rules. default value: false
+* index: if true, the field will be added during indexing. default value: true.
+* indexAs: specifies a different name as the name of the field for indexing. default value: the name of field.
 
 There are three implicit fields that you might use them without needing to be defined:
 
-1. url: the url of the current document. This is mandatory and defaults to the matched resource url.
-2. title: the title of the current document. In mode 2, if title is not specified, the url will be used as the title.
-3. content: the textual content of this document which can be used by other nutch plugins (for instance the TextProfileSignature use this).
+* url: the url of the current document. This is mandatory and defaults to the matched resource url.
+* title: the title of the current document. In mode 2, if title is not specified, the url will be used as the title.
+* content: the textual content of this document which can be used by other nutch plugins (for instance the TextProfileSignature use this).
 
 For each field, you can set its "multi" attribute to true which enables multiple values to be defined for this field. In this case, the value of this field is a list and each extracted item are added to this list. Note that you must also change your solr schema for that field to accept multiple values. As an example, suppose in our google example mentioned above, we wanted  "all-items" field to be a multi-value field. We can write our extractors.xml like this:
 

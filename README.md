@@ -1,7 +1,7 @@
 Custom Search Tools For Nutch
 =============================
 
-The goal of this project is to develope plugins/extentions for Nutch to make it a perfect tool for building custom search solutions. 
+The goal of this project is to develop plugins/extensions for Nutch to make it a perfect tool for building custom search solutions.
 The project is an open-source project released under Apache License Version 2.0.
 
 Note: This project is tested with nutch 1.7-1.9 (nutch 2.X is not supported yet).
@@ -24,13 +24,13 @@ Table of Contents
 Extractor
 ---------
 
-Extractor helps to extract specific parts of an html/xml page using xpath expressioins or css selectors. 
+Extractor helps to extract specific parts of an html/xml page using xpath expressions or css selectors.
 The extracted parts are copied into one or several fields.
 
 
 Extractor consists of a parser plugin, an html parser filter, and an indexer filter. You can use extractor in two modes:
 
-1. Use extractor to extract additional fields inaddition of the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to the standard html parser as a parser filter. Html parser first parses the content, extracts its fields and outlinks, and then passes the content to the extractor parser filter. Extractor, parses the content again and adds some additional fields to the parse metadata. Later, the extractor indexer filter reads this parse metadata and adds the corresponding fields to solr documents.
+1. Use extractor to extract additional fields in addition of the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to the standard html parser as a parser filter. Html parser first parses the content, extracts its fields and outlinks, and then passes the content to the extractor parser filter. Extractor, parses the content again and adds some additional fields to the parse metadata. Later, the extractor indexer filter reads this parse metadata and adds the corresponding fields to solr documents.
 
 2. Use extractor as a standalone parser. In this mode, extractor is responsible for the whole parsing process including the extraction of title, outlinks, .... In this mode, you can use extractor to parse both xml and html files. 
 
@@ -49,7 +49,7 @@ If you are using mode 2, you can disable other parser/indexer plugins, if you do
 </property>
 ```
 
-3) If you are using mode 2, you should introduce the extractor parser to nutch by modifiying the parse-plugins.xml (inside nutch conf directory). First, add its alias in the aliases section:
+3) If you are using mode 2, you should introduce the extractor parser to nutch by modifying the parse-plugins.xml (inside nutch conf directory). First, add its alias in the aliases section:
 
 ```xml
 <aliases>
@@ -116,16 +116,20 @@ The main configuration file is extractors.xml. This file has three sections:
 
 1. types: you can define your required types and their corresponding converters here. This section is optional.
 2. fields: contains all the fields that the extracted parts should be put into them. These fields should be define in the solrschema.xml file too to be recongnizable by solr. Each field has a name and an optional type which is one of the types defined in the types section. If no type is specified, the field is considered as of type string.
-3. documents: contains one or several documents. For each resource (e.g. a web page) that you want to extract its content into the fields, you need to define a document. Each docuement declares its accepting urls by means of regex expressions. When a resource with a specific url and some content is fetched by nutch, 
-the extractor looks for a docuemnt that its url matches the resoruce url. If multiple matching documents are found, the first one will be used. 
-Then, the contnet of the resource is parsed using the engine specified by the document (or using the default engine if no engine is specified). 
-Each document consits of a set of extract-to rules. An extract-to rule extracts a value from the content and put the extracted value into its defined field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions. 
+3. documents: contains one or several documents.
 
-The root element of extractors.xml must be named "config" and define the namesapce "http://bayan.ir" as the defualt namesapce. This element has the following optional attributes:
+Each document consists of several matching criteria and several extract-to rules.
+In the single match mode, when a resource (such as a web page) is passed to extractor, it looks for the first document that matches with this resource.
+It then applies the extract-to rules of this document to this resource. In the multiple match mode, the extract-to rules of all the matching documents are applied.
+An extract-to rule extracts a value from the resource and put the extracted value into its defined field which is one of the fields defined in the fields section. The value of the field is extracted by means of functions.
+The matching criteria of a document are url , content type, and ip address. All the criteria are expressed by means of regex expressions.
+
+The root element of extractors.xml must be named "config" and define the namespace "http://bayan.ir" as the default namespace. This element has the following optional attributes:
 
 1. omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is false.
 2. filterNonMatching: if true, all urls that don't match with any of the urls defined by documents will be filtered (not crawled or parsed or indexed). Default value is false.
-3. defaultEngine: the default engine for parsing resource contents if it is not defined by document (or any of its ancesstors). Default value is css.
+3. defaultEngine: the default engine for parsing contents of resources, if it is not defined by document (or any of its ancestors). Default value is css.
+4. matchMode: determines when multiple documents are matched, how to select them to apply extract-to rules. Default value is single.
 
 
 Here is a sample extractors.xml file containing all of the above sections:
@@ -164,13 +168,13 @@ The purpose of this file is to extract the number of items in the topmost bar of
 In this file, we have one type named long with a converter. This converter is used to convert the extracted value (a string) to the desired type.
 
 In the fields section, we have a field named "num-items" of type long and a field named "all-items" of type string.
-In the documents section, we defined a document which accepts all resoruces with url ending with .google.com. Since the extractor uses the partial regex matching we could write this as "google\.com/?$" too. The document specifies that its content should be parsed using the css engine.
+In the documents section, we defined a document which accepts all resources with url ending with .google.com. Since the extractor uses the partial regex matching we could write this as "google\.com/?$" too. The document specifies that its content should be parsed using the css engine.
 
 This document has two extract-to rules. The first rule consists of two nested functions size and expr. 
-The "expr" function returns a set of objects by quering the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
+The "expr" function returns a set of objects by querying the content using the provided engine. Here since our engine is css, li.gbt means all li elements with class .gbt.
 The size function, returns the number of items in its argument which here is the list of elements that satisfy li.gbt expression.
 This extracted value is copied into a field named "num-items".
-In the second rule, we first extract the text value of all li.gbt span.gbts nodes, then concat them with comma as the seperator and then limit their size to have less than 100 charcters. 
+In the second rule, we first extract the text value of all li.gbt span.gbts nodes, then concat them with comma as the separator and then limit their size to have less than 100 charcters.
 
 #### Functions
 
@@ -191,7 +195,7 @@ field-value | Returns the extracted value of the given field.
 first | Returns the first object in the list of its argument.
 for-each |  Iterates through its children with the given root as the new root.
 last | Returns the last object in the list of its argument.
-link  | Retuns a set of links with href and anchors.
+link  | Returns a set of links with href and anchors.
 replace | Replaces its input using the provided regex pattern by the provided substitution.
 resolve | Resolves a possible relative url to absolute one based on the current url in the context.
 size | Returns the number of objects in its argument (which is a list).
@@ -201,7 +205,7 @@ trim | Trims a string.
 url | Returns the current url (the url of matched resource) in the context.
 
 #### Types
-Each field might have a type. The following types are avaialbe out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
+Each field might have a type. The following types are available out of the box. You can define your own types and converters by implementing the ir.co.bayan.simorq.zal.extractor.convert.Converter interface.
 
 ```xml
 <types>
@@ -223,9 +227,9 @@ date | converts a string in the dd/MM/yyyy format to a date
 
 #### Fields
 
-There are three implict fields that you might use them without needing to be defined:
+There are three implicit fields that you might use them without needing to be defined:
 
-1. url: the url of the current document. This is mandantory and defaults to the matched resource url.
+1. url: the url of the current document. This is mandatory and defaults to the matched resource url.
 2. title: the title of the current document. In mode 2, if title is not specified, the url will be used as the title.
 3. content: the textual content of this document which can be used by other nutch plugins (for instance the TextProfileSignature use this).
 
@@ -272,13 +276,20 @@ Note that if a field is multi field, you can write multiple extract-to rules for
 
 #### Documents
 
-A document represents one type of resource that you want to extract its content in a particular way. Each document can specify one engine for parsing its content. Currently there are three engines avaialbe: 
+Each document can define three regex patterns as its matching criteria:
+* url: specifies with what urls this document can be matched.
+* contentType: specifies the content types of resources that this document can be matched to.
+* ip: specifies the ip address of serving host of resource that must be matched.
+These three criteria are ANDed together to determine whether the resource is matched or not.
+
+
+Each document can specify one engine for parsing its content. Currently there are three engines available:
 * css: parses the content using Jsoup library and is able to answer css selectors expressions
-* xpath: uses the standard JAXP infrastrucutre and is able to answer xpath expressions
+* xpath: uses the standard JAXP infrastructure and is able to answer xpath expressions
 * txt: suitable for line oriented processing of text files. 
 
 
-Each document may specifiy an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are two samples:
+Each document may specify an outlinks section that tells extractor how outlinks should be extracted from the current content. Here are two samples:
 
 ```xml
 <document url=".">
@@ -335,7 +346,7 @@ Also each document can have an id and other documents can inherit its fields and
 </document>
 ```
 
-The inheritence chain can be of any length but note that the evaluation engine can not be changed along the inheritance hierarchy. 
+The inheritance chain can be of any length but note that the evaluation engine can not be changed along the inheritance hierarchy.
 
 There is an option to extract several documents from one given resource. To enable this, you can specify a root for your document or define one or several fragments inside your document each with a root. The root must be an expression in terms of the current engine, that specifies the new root for evaluation. Since each fragment is going to be a distinct document recognizable by nutch, it is required to have a field named "url" inside your fragment. You can also use the predifined fields such as title and content insider your fragment, to specify the title and content of your extracted document. As an example:
 
@@ -423,7 +434,7 @@ Then your xpath expression should look like this: (Note that in the above xml fi
 	<expr value="//dns:person/b:name" />
 ```
 
-You can extract links for further crawling from xml documents too. Here is an exmple that extract links from a sitemap file like this:
+You can extract links for further crawling from xml documents too. Here is an example that extract links from a sitemap file like this:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>

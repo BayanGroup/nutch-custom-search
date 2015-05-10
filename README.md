@@ -30,7 +30,7 @@ The extracted parts are copied into one or several fields.
 
 Extractor consists of a parser plugin, an html parser filter, and an indexer filter. You can use extractor in two modes:
 
-1. Use extractor to extract additional fields in addition of the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to the standard html parser as a parser filter. Html parser first parses the content, extracts its fields and outlinks, and then passes the content to the extractor parser filter. Extractor, parses the content again and adds some additional fields to the parse metadata. Later, the extractor indexer filter reads this parse metadata and adds the corresponding fields to solr documents.
+1. Use extractor to extract additional fields in addition of the standard html parser fields (such as title, metatags, outlinks,...). In this mode, extractor is attached to the standard html parser as a parser filter. Html parser first parses the content, extracts its fields and outlinks, and then passes the content to the extractor parser filter. Extractor, parses the content again and adds some additional fields to the parse metadata. Later, the extractor indexer filter reads this parse metadata and adds the corresponding fields to index documents.
 
 2. Use extractor as a standalone parser. In this mode, extractor is responsible for the whole parsing process including the extraction of title, outlinks, .... In this mode, you can use extractor to parse both xml and html files. 
 
@@ -115,7 +115,7 @@ You can define a different name for this file by defining extractor.file propert
 The main configuration file is extractors.xml. This file has three sections:
 
 1. types: you can define your required types and their corresponding converters here. This section is optional.
-2. fields: contains all the fields that the extracted parts should be put into them. These fields should be define in the solrschema.xml file too to be recongnizable by solr. Each field has a name and an optional type which is one of the types defined in the types section. If no type is specified, the field is considered as of type string.
+2. fields: contains all the fields that the extracted parts should be put into them. If indexing target is solr, these fields should be define in the solrschema.xml file too to be recognizable by solr. Each field has a name and an optional type which is one of the types defined in the types section. If no type is specified, the field is considered as of type string.
 3. documents: contains one or several documents.
 
 Each document consists of several matching criteria and several extract-to rules.
@@ -127,7 +127,7 @@ The matching criteria of a document are url , content type, and ip address. All 
 The root element of extractors.xml must be named "config" and define the namespace "http://bayan.ir" as the default namespace. This element has the following optional attributes:
 
 * omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is false.
-* filterNonMatching: if true, all urls that don't match with any of the urls defined by documents will be filtered (not crawled or parsed or indexed). Default value is false.
+* filterNonMatching: if true, all urls that don't match with any of the urls defined by the documents will be filtered (not crawled or parsed or indexed). Default value is false.
 * defaultEngine: the default engine for parsing contents of resources, if it is not defined by document (or any of its ancestors). Default value is css.
 * matchMode: determines when multiple documents are matched, how to select them to apply extract-to rules. Default value is single.
 
@@ -231,10 +231,11 @@ Note that the type conversion is only applied during the indexing phase.
 #### Fields
 
 Each field has these attributes:
+
 * name: name of the field (required)
 * type: the type of this field. must be one of the types defined in the types section. default value: string.
 * multi: if true, field can get multiple values from extract-to rules. default value: false
-* index: if true, the field will be added during indexing. default value: true.
+* index: if true, the field will be added during indexing. default value: true. Note that if indexing target is solr, this fields should be define in the solrschema.xml file too to be recognizable by solr
 * indexAs: specifies a different name as the name of the field for indexing. default value: the name of field.
 
 There are three implicit fields that you might use them without needing to be defined:

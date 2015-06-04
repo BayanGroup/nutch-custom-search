@@ -106,11 +106,15 @@ public class ExtractorCssTest {
 		List<ExtractedDoc> extractedDocs = extractEngine.extract(content);
 		assertEquals(3, extractedDocs.size());
 
-		assertEquals("a", extractedDocs.get(1).getFields().get("content"));
-		assertEquals("http://1", extractedDocs.get(1).getUrl());
+		ExtractedDoc doc1 = extractedDocs.get(1);
+		assertEquals("a", doc1.getFields().get("content"));
+		assertEquals("a", doc1.getText());
+		assertEquals("http://1", doc1.getUrl());
 
-		assertEquals("b", extractedDocs.get(2).getFields().get("content"));
-		assertEquals("http://2", extractedDocs.get(2).getUrl());
+		ExtractedDoc doc2 = extractedDocs.get(2);
+		assertEquals("b", doc2.getFields().get("content"));
+		assertEquals("b", doc2.getText());
+		assertEquals("http://2", doc2.getUrl());
 	}
 
 	@Test

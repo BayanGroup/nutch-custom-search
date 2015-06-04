@@ -1,5 +1,7 @@
 package ir.co.bayan.simorq.zal.extractor.process;
 
+import java.util.List;
+
 /**
  * Processes a given input object an produces a result. Processors can be used in process function to post-process
  * result of other functions.
@@ -9,6 +11,6 @@ package ir.co.bayan.simorq.zal.extractor.process;
  */
 public interface Processor {
 
-	Object process(Object input);
+	List<Object> process(List<Object> input);
 
 }

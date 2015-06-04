@@ -3,6 +3,7 @@ package ir.co.bayan.simorq.zal.extractor.evaluation;
 import java.util.HashMap;
 import java.util.Map;
 
+import ir.co.bayan.simorq.zal.extractor.model.ExtractorConfig;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -13,22 +14,10 @@ public class EvaluatorFactory {
 
 	private final Map<String, Evaluator<? extends EvaluationContext>> evaluators;
 
-	private static EvaluatorFactory instance;
-
-	/**
-	 * @return the instance
-	 */
-	public static EvaluatorFactory getInstance() {
-		if (instance == null) {
-			instance = new EvaluatorFactory();
-		}
-		return instance;
-	}
-
-	public EvaluatorFactory() {
+	public EvaluatorFactory(ExtractorConfig config) {
 		evaluators = new HashMap<String, Evaluator<? extends EvaluationContext>>();
 		addEvaluator(new CssEvaluator());
-		addEvaluator(new XPathEvaluator());
+		addEvaluator(new XPathEvaluator(config.isNamespaceAware()));
 		addEvaluator(new TextEvaluator());
 	}
 

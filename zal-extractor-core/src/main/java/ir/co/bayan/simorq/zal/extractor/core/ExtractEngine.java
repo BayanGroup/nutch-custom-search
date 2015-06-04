@@ -33,6 +33,7 @@ public class ExtractEngine {
 
 	private ExtractorConfig extractorConfig;
 	private Map<String, Document> docById;
+	private EvaluatorFactory evaluatorFactory;
 
 	private static ExtractEngine instance;
 
@@ -59,6 +60,7 @@ public class ExtractEngine {
 			return;
 
 		this.extractorConfig = extractorConfig;
+		evaluatorFactory = new EvaluatorFactory(extractorConfig);
 		docById = new HashMap<String, Document>(extractorConfig.getDocuments().size() * 2 + 1);
 		for (Document doc : extractorConfig.getDocuments()) {
 			if (doc.getId() != null) {
@@ -94,7 +96,7 @@ public class ExtractEngine {
 		List<ExtractedDoc> res = new ArrayList<ExtractedDoc>();
 		
 		// 1. Decide on which document matches the url and contentType
-		List<Document> documents = findMatchingDocs(content.getUrl().toString(), content.getType());
+		List<Document> documents = findMatchingDocs(content);
 		if (documents == null || documents.isEmpty()) {
 			return null;
 		}
@@ -106,7 +108,7 @@ public class ExtractEngine {
 
 			// 2. Select an engine for parsing the document
 			String engine = deriveEngineName(document);
-			Evaluator<? extends EvaluationContext> evalEngine = EvaluatorFactory.getInstance().getEvaluator(engine);
+			Evaluator<? extends EvaluationContext> evalEngine = evaluatorFactory.getEvaluator(engine);
 			if (evalEngine == null)
 				throw new IllegalArgumentException("No engine found with the name " + engine);
 	
@@ -150,7 +152,9 @@ public class ExtractEngine {
 		return StringUtils.defaultIfEmpty(document.getInheritedEngine(), extractorConfig.getDefaultEngine());
 	}
 
-	public List<Document> findMatchingDocs(String url, String contentType) {
+	public List<Document> findMatchingDocs(Content content) {
+		String url = content.getUrl().toString();
+		String contentType = content.getType();
 		List<Document> res = new ArrayList<Document>();
 
 		for (Document doc : extractorConfig.getDocuments()) {

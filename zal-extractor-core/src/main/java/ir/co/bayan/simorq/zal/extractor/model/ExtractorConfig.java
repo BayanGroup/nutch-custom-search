@@ -29,6 +29,9 @@ public class ExtractorConfig {
 	private String defaultEngine = "css";
 
 	@XmlAttribute
+	private boolean namespaceAware = true;
+
+	@XmlAttribute
 	private MatchMode matchMode = MatchMode.SINGLE;
 
 	@XmlElementWrapper(name = "types")
@@ -71,6 +74,10 @@ public class ExtractorConfig {
 	 */
 	public boolean isFilterNonMatching() {
 		return filterNonMatching;
+	}
+
+	public boolean isNamespaceAware() {
+		return namespaceAware;
 	}
 
 	/**

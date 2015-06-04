@@ -41,10 +41,12 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 
 	private final DocumentBuilder builder;
 	private final XPathFactory xPathFactory;
+	private final boolean namespaceAware;
 
-	public XPathEvaluator() {
+	public XPathEvaluator(boolean namespaceAware) {
+		this.namespaceAware = namespaceAware;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setNamespaceAware(true);
+		factory.setNamespaceAware(namespaceAware);
 		try {
 			builder = factory.newDocumentBuilder();
 		} catch (ParserConfigurationException e) {
@@ -54,6 +56,8 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 	}
 
 	protected NamespaceContext getNamespaceContext(Element root) {
+		if(!namespaceAware)
+			return null;
 		NamespaceContext nsContext = null;
 		MapNamespaceContext mapNs = new MapNamespaceContext();
 		NamedNodeMap namedNodeMap = root.getAttributes();
@@ -142,6 +146,7 @@ public class XPathEvaluator implements Evaluator<XPathContext> {
 		Element root = null;
 		if (ExtractUtil.isHtml(content.getType())) {
 			DOMParser parser = new DOMParser();
+			parser.setFeature("http://xml.org/sax/features/namespaces", namespaceAware);
 			parser.setProperty("http://cyberneko.org/html/properties/default-encoding", content.getEncoding());
 			parser.setFeature("http://cyberneko.org/html/features/scanner/ignore-specified-charset", true);
 			parser.setFeature("http://cyberneko.org/html/features/balance-tags/ignore-outside-content", false);

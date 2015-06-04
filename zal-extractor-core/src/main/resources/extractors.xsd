@@ -111,6 +111,7 @@
 			<xs:attribute name="omitNonMatching" type="xs:boolean" default="false"/>
 			<xs:attribute name="filterNonMatching" type="xs:boolean" default="false"/>
 			<xs:attribute name="defaultEngine" type="xs:string" default="css"/>
+			<xs:attribute name="namespaceAware" type="xs:boolean" default="true"/>
 			<xs:attribute name="matchMode" type="matchModeType" use="optional" default="single"/>
 		</xs:complexType>
 	</xs:element>

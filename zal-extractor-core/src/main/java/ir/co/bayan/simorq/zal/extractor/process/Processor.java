@@ -1,5 +1,7 @@
 package ir.co.bayan.simorq.zal.extractor.process;
 
+import ir.co.bayan.simorq.zal.extractor.evaluation.EvaluationContext;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,14 @@ import java.util.List;
  */
 public interface Processor {
 
-	List<Object> process(List<Object> input);
+	/**
+	 * Processes the given input list and produces a list of results.
+	 * @param root The current root object under which evaluation is performed.
+	 * @param context The evaluation content.
+	 * @param input The input list produces by inner functions.
+	 * @return A list of results to be processed by next functions in the chain. Note that
+	 * the result must not be null.
+	 */
+	List<Object> process(Object root, EvaluationContext context, List<Object> input);
 
 }

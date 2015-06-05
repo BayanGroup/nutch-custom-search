@@ -9,13 +9,10 @@ import java.util.List;
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
  * 
  */
-public class Capitalize implements Processor {
+public class Capitalize extends StringProcessor {
 
 	@Override
-	public List<Object> process(List<Object> input) {
-		for(int i = 0; i < input.size(); i++)
-			input.set(i, StringUtils.capitalize((String) input.get(i)));
-		return input;
+	protected String process(String item) {
+		return StringUtils.capitalize(item);
 	}
-
 }

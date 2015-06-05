@@ -27,7 +27,7 @@ public class Process extends Function {
 		Validate.isTrue(args != null && args.size() == 1, "Only one inner functions are expected.");
 
 		List<Object> res = (List<Object>) args.get(0).extract(root, context);
-		return processor.getProcessorInstance().process(res);
+		return processor.getProcessorInstance().process(root, context, res);
 	}
 
 	@Override

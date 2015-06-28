@@ -19,9 +19,9 @@ import java.util.Map.Entry;
 
 /**
  * An html parser plugin using extractor engine.
- * 
+ *
  * @author Taha Ghasemi <taha.ghasemi@gmail.com>
- * 
+ *
  */
 public class ExtractorParseFilter implements HtmlParseFilter {
 

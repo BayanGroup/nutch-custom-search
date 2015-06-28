@@ -129,7 +129,8 @@ The root element of extractors.xml must be named "config" and define the namespa
 * omitNonMatching: if true and the resource url dose not match with any of the urls defined by documents, then that resource will not be indexed. Default value is false.
 * filterNonMatching: if true, all urls that don't match with any of the urls defined by the documents will be filtered (not crawled or parsed or indexed). Default value is false.
 * defaultEngine: the default engine for parsing contents of resources, if it is not defined by document (or any of its ancestors). Default value is css.
-* matchMode: determines when multiple documents are matched, how to select them to apply extract-to rules. Default value is single.
+* matchMode: determines when multiple documents are matched with the given resource, how to select them to apply extract-to rules from the given resource. Default value is single, which means select only the first match. Another value is multiple, which means select all of them. More specifically, the rules of matched documents are applied one-by-one in the same order until we reach either the end of matched documents or reach the first document that sets its stopProcessing attribute to true.
+Note that in each mode, for each matched document the content get parsed seperately, so each document may specify its own engine.
 
 
 Here is a sample extractors.xml file containing all of the above sections:
@@ -243,6 +244,8 @@ There are three implicit fields that you might use them without needing to be de
 * url: the url of the current document. This is mandatory and defaults to the matched resource url.
 * title: the title of the current document. In mode 2, if title is not specified, the url will be used as the title.
 * content: the textual content of this document which can be used by other nutch plugins (for instance the TextProfileSignature use this).
+
+Note that if you want to refer to these fields in your extract-to rules, these fields must be added to fields section due to xml schema checkings.
 
 For each field, you can set its "multi" attribute to true which enables multiple values to be defined for this field. In this case, the value of this field is a list and each extracted item are added to this list. Note that you must also change your solr schema for that field to accept multiple values. As an example, suppose in our google example mentioned above, we wanted  "all-items" field to be a multi-value field. We can write our extractors.xml like this:
 
@@ -359,7 +362,7 @@ Also each document can have an id and other documents can inherit its fields and
 
 The inheritance chain can be of any length but note that the evaluation engine can not be changed along the inheritance hierarchy.
 
-There is an option to extract several documents from one given resource. To enable this, you can specify a root for your document or define one or several fragments inside your document each with a root. The root must be an expression in terms of the current engine, that specifies the new root for evaluation. Since each fragment is going to be a distinct document recognizable by nutch, it is required to have a field named "url" inside your fragment. You can also use the predifined fields such as title and content insider your fragment, to specify the title and content of your extracted document. As an example:
+There is an option to extract several documents from one given resource. To enable this, you can specify a root for your document or define one or several fragments inside your document each with a root. The root must be an expression in terms of the current engine, that specifies the new root for evaluation. Since each fragment is going to be a distinct document recognizable by nutch, it is required to have a field named "url" inside your fragment. You can also use the predifined fields such as title and content insider your fragment, to specify the title and content of your extracted document. The content field is especially important for preventing the nutch deduplication process from detecting your fragments as a duplicate. As an example:
 
 ```xml
 <document url="test.html" engine="css">

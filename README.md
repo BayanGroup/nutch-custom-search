@@ -85,7 +85,7 @@ Or if you want to use it for specific content types, add its name to the corresp
 4) Add your extractors.xml to the nutch conf directory. A simple extractors.xml is look like this:
 
 ```xml
-<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir https://raw.githubusercontent.com/BayanGroup/nutch-custom-search/master/zal-extractor-core/src/main/resources/extractors.xsd">
 	<fields>
 		<field name="title" />
 	</fields>
@@ -136,7 +136,7 @@ Note that in each mode, for each matched document the content get parsed seperat
 Here is a sample extractors.xml file containing all of the above sections:
 
 ```xml
-<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir https://raw.githubusercontent.com/BayanGroup/nutch-custom-search/master/zal-extractor-core/src/main/resources/extractors.xsd">
 	<types>
 		<type name="long" converter="ir.co.bayan.simorq.zal.extractor.convert.LongConverter" />
 	</types>
@@ -250,7 +250,7 @@ Note that if you want to refer to these fields in your extract-to rules, these f
 For each field, you can set its "multi" attribute to true which enables multiple values to be defined for this field. In this case, the value of this field is a list and each extracted item are added to this list. Note that you must also change your solr schema for that field to accept multiple values. As an example, suppose in our google example mentioned above, we wanted  "all-items" field to be a multi-value field. We can write our extractors.xml like this:
 
 ```xml
-<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir https://raw.githubusercontent.com/BayanGroup/nutch-custom-search/master/zal-extractor-core/src/main/resources/extractors.xsd">
 	<fields>
 		<field name="all-items" multi="true"/>
 	</fields>
@@ -409,7 +409,7 @@ You can use extractor plugin to extract parts of xml documents. First, you must 
 We can use a configuration like this:
 
 ```xml
-<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir https://raw.githubusercontent.com/BayanGroup/nutch-custom-search/master/zal-extractor-core/src/main/resources/extractors.xsd">
 	<fields>
 		<field name="content"/>
 	</fields>

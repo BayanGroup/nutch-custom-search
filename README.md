@@ -216,6 +216,7 @@ Extractor only creates one converter instance for each type.
 	<type name="float" converter="ir.co.bayan.simorq.zal.extractor.convert.FloatConverter" />
 	<type name="date" converter="ir.co.bayan.simorq.zal.extractor.convert.DateConverter" />
 	<type name="date-time" converter="ir.co.bayan.simorq.zal.extractor.convert.DateTimeConverter" />
+	<type name="persian-date" converter="ir.co.bayan.simorq.zal.extractor.convert.PersianDateConverter" />
 </types>
 ```
 
@@ -226,6 +227,7 @@ long | converts string to long
 float | converts string to float
 date-time | converts a string in the yyyy-MM-dd'T'HH:mm:ss format to a date
 date | converts a string in the dd/MM/yyyy format to a date
+persian-date | converts a string in the yyyy-MM-dd format to a jalali date
 
 Note that the type conversion is only applied during the indexing phase.
 
